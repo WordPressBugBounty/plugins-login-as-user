@@ -1,6 +1,6 @@
 <?php
 /* ======================================================
- # Login as User for WordPress - v1.5.4 (free version)
+ # Login as User for WordPress - v1.5.5 (free version)
  # -------------------------------------------------------
  # For WordPress
  # Author: Web357
@@ -9,7 +9,7 @@
  # Website: https://www.web357.com/product/login-as-user-wordpress-plugin
  # Demo: https://demo-wordpress.web357.com/try-the-login-as-a-user-wordpress-plugin/
  # Support: https://www.web357.com/support
- # Last modified: Wednesday 02 October 2024, 12:58:47 PM
+ # Last modified: Wednesday 02 October 2024, 04:09:17 PM
  ========================================================= */
 /**
  * Register all actions and filters for the plugin

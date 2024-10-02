@@ -1,6 +1,6 @@
 <?php
 /* ======================================================
- # Login as User for WordPress - v1.5.4 (free version)
+ # Login as User for WordPress - v1.5.5 (free version)
  # -------------------------------------------------------
  # For WordPress
  # Author: Web357
@@ -9,7 +9,7 @@
  # Website: https://www.web357.com/product/login-as-user-wordpress-plugin
  # Demo: https://demo-wordpress.web357.com/try-the-login-as-a-user-wordpress-plugin/
  # Support: https://www.web357.com/support
- # Last modified: Wednesday 02 October 2024, 12:58:47 PM
+ # Last modified: Wednesday 02 October 2024, 04:09:17 PM
  ========================================================= */
  class w357LoginAsUser
 {
@@ -653,20 +653,12 @@ CSS;
 	public function filter_user_has_cap(array $user_caps, array $required_caps, array $args, WP_User $user) {
 		if (isset($args[2]) && 'login_as_user' === $args[0]) {
 			if ((bool)$args[2]) {
-				// Get the target user's roles
-				$target_user = get_userdata($args[2]);
-				$target_user_roles = $target_user->roles;
-
-				// Check if the current user can manage any of the target user's roles
-				$can_manage = false;
-				$current_user_role_has_assignments = false;
-
+				
 				
 
-				// Determine capability based on the presence of role assignments or default setting
-				if ($current_user_role_has_assignments || $login_as_user_options === false) {
-					$user_caps['login_as_user'] = $can_manage;
-				}
+				
+				$user_caps['login_as_user'] = (user_can($user->ID, 'edit_user', $args[2]) && ($args[2] !== $user->ID));
+				
 			}
 		}
 
