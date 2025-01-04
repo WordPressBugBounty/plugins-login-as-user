@@ -3,16 +3,22 @@ Contributors: yiannistaos, johnbillion
 Tags: user, login, admin, login as user, web357
 Donate link: https://www.paypal.me/web357
 Requires at least: 5.3
-Tested up to: 6.6
+Tested up to: 6.7
 Requires PHP: 7.3
-Stable tag: 1.5.6
+Stable tag: 1.5.7
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
-Login as User is a free WordPress plugin that **helps admins switch user accounts instantly** to check data.
+Login as User is a free WordPress plugin that helps admins switch user accounts instantly to check data.
 
 == Description ==
-[Login as a User WordPress plugin](https://www.web357.com/product/login-as-user-wordpress-plugin?utm_source=wp_plugin_repo&utm_medium=wp_listing&utm_campaign=wp_repo_link&utm_content=wp_repo_link_to_plugin_page) **allows admins to have easy access to the frontend as a specific user** and thus solve problems or provide better and faster customer support. **With one click**, the admin logs in as the external user or customer and handles any situation without wasting any time at all. If you want a WordPress plugin to switch accounts in an instant, Login as User is for you.
+[Login as a User WordPress plugin](https://www.web357.com/login-as-user-wordpress-plugin?utm_source=wp_plugin_repo&utm_medium=wp_listing&utm_campaign=wp_repo_link&utm_content=wp_repo_link_to_plugin_page) **allows admins to have easy access to the frontend as a specific user** and thus solve problems or provide better and faster customer support. **With one click**, the admin logs in as the external user or customer and handles any situation without wasting any time at all. If you want a WordPress plugin to switch accounts in an instant, Login as User is for you.
+
+[Try Demo](https://login-as-user-wordpress-demo.web357.com/wp-admin/)
+`
+    Username: demo_admin
+    Password: demo_password
+`
 
 == Video Description ==
 
@@ -58,13 +64,18 @@ Yes, the "Login as User" plugin allows administrators to log in as any user, reg
 Yes, "Login as User" is designed to be compatible with most third-party plugins and custom user roles. It integrates seamlessly with the WordPress user management system, so you can log in as users created by other plugins or with custom roles.
 
 == Screenshots ==
-1. In the Admin area, you select Users in the left-hand side menu and click All Users in the sub-menu. Now, all users of your website appear on the screen along with the Login as... button besides each name. You can click the button of the user you want to switch account.
-2. Are you in a user’s profile and want to login as this user? Just click the button Login as:... at the top left-hand side and you will be able to check data and help this specific user with any problem.
+1. In the Admin area, you select Users in the left-hand side menu and click All Users in the sub-menu. Now, all users of your website appear on the screen along with the Login as… button besides each name. You can click the button of the user you want to switch account.
+2. Are you in a user’s profile and want to login as this user? Just click the button Login as:… at the top left-hand side and you will be able to check data and help this specific user with any problem.
 3. Are you using the WooCommerce plugin? In the WooCommerce orders page, the Login as user button appears besides each customer to help you provide better customer support.
 4. Is one of your customers having trouble with their order? Do you want to check the details of a customer’s order? You can easily check the customer’s problem from his/her perspective by switching with the Login as User button in the WooCommerce order details page.
 5. Settings.
 
 == Changelog ==
+= 04-Jan-2025 : v1.5.7 =
+* Fully compatible with WordPress v6.7.x
+* Fully compatible with WooCommerce v9.5.x
+* Introduce the new demo site: https://login-as-user-wordpress-demo.web357.com/wp-admin
+
 = 17-Oct-2024 : v1.5.6 =
 * Fixed: PHP notices due to accessing properties of a non-object in certain cases when there is no logged-in user. Improved validation of the current user object before accessing display_name and user_login properties.
 * Minor stability and performance improvements.

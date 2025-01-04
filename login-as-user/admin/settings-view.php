@@ -1,15 +1,15 @@
 <?php
 /* ======================================================
- # Login as User for WordPress - v1.5.6 (free version)
+ # Login as User for WordPress - v1.5.7 (free version)
  # -------------------------------------------------------
  # For WordPress
  # Author: Web357
  # Copyright © 2014-2024 Web357. All rights reserved.
  # License: GNU/GPLv3, http://www.gnu.org/licenses/gpl-3.0.html
- # Website: https://www.web357.com/product/login-as-user-wordpress-plugin
- # Demo: https://demo-wordpress.web357.com/try-the-login-as-a-user-wordpress-plugin/
+ # Website: https://www.web357.com/login-as-user-wordpress-plugin
+ # Demo: https://login-as-user-wordpress-demo.web357.com/wp-admin/
  # Support: https://www.web357.com/support
- # Last modified: Thursday 17 October 2024, 09:30:22 AM
+ # Last modified: Saturday 04 January 2025, 03:10:45 AM
  ========================================================= */
 // Settings page
 ?>
@@ -22,10 +22,10 @@
             </h2>
 
             <div style="margin-top: 20px; overflow:hidden;">
-                <a href="https://www.web357.com/product/login-as-user-wordpress-plugin?utm_source=SettingsPage&utm_medium=ReadMoreLink&utm_content=loginasuserwp&utm_campaign=read-more" target="_blank">
+                <a href="https://www.web357.com/login-as-user-wordpress-plugin?utm_source=SettingsPage&utm_medium=ReadMoreLink&utm_content=loginasuserwp&utm_campaign=read-more" target="_blank">
                     <img class="lau-product-img" src="<?php echo esc_url( plugins_url( 'img', (__FILE__) ) ); ?>/login-as-user-wordpress-plugin-120x200.png" alt="Login as User WordPress plugin by Web357" />
                 </a>
-                <p>The Login as a User WordPress plugin allows admins to have easy access to the frontend as a specific user and thus solve problems or provide better and faster customer support. With one click, the admin logs in as the external user or customer and handles any situation without wasting any time at all. If you want a WordPress plugin to switch accounts in an instant, Login as User is for you. <a href="https://www.web357.com/product/login-as-user-wordpress-plugin?utm_source=SettingsPage&utm_medium=ReadMoreLink&utm_content=loginasuserwp&utm_campaign=read-more" target="_blank">Read more &raquo;</a></p>
+                <p>The Login as a User WordPress plugin allows admins to have easy access to the frontend as a specific user and thus solve problems or provide better and faster customer support. With one click, the admin logs in as the external user or customer and handles any situation without wasting any time at all. If you want a WordPress plugin to switch accounts in an instant, Login as User is for you. <a href="https://www.web357.com/login-as-user-wordpress-plugin?utm_source=SettingsPage&utm_medium=ReadMoreLink&utm_content=loginasuserwp&utm_campaign=read-more" target="_blank">Read more &raquo;</a></p>
                 
             </div>
 
@@ -111,7 +111,7 @@
                 
                 
                 <div class="lac-buy-pro-btn-container">
-                    <a href="https://www.web357.com/product/login-as-user-wordpress-plugin?utm_source=SettingsPage&utm_medium=BuyProLink&utm_content=loginasuserwp&utm_campaign=upgrade-pro#pricing" class="button lac-buy-pro-btn" target="_blank">Upgrade to PRO</a>
+                    <a href="https://www.web357.com/login-as-user-wordpress-plugin?utm_source=SettingsPage&utm_medium=BuyProLink&utm_content=loginasuserwp&utm_campaign=upgrade-pro#pricing" class="button lac-buy-pro-btn" target="_blank">Upgrade to PRO</a>
                 </div>
                 
             </div>
