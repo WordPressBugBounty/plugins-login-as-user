@@ -1,18 +1,21 @@
 <?php
 /* ======================================================
- # Login as User for WordPress - v1.5.7 (free version)
+ # Login as User for WordPress - v1.5.8 (free version)
  # -------------------------------------------------------
- # For WordPress
  # Author: Web357
  # Copyright © 2014-2024 Web357. All rights reserved.
  # License: GNU/GPLv3, http://www.gnu.org/licenses/gpl-3.0.html
  # Website: https://www.web357.com/login-as-user-wordpress-plugin
  # Demo: https://login-as-user-wordpress-demo.web357.com/wp-admin/
  # Support: https://www.web357.com/support
- # Last modified: Saturday 04 January 2025, 03:10:45 AM
+ # Last modified: Tuesday 28 January 2025, 02:53:29 AM
  ========================================================= */
- class w357LoginAsUser
+class w357LoginAsUser
 {
+	private $memberpress;
+	private $woocommerce;
+    private $woocommerce_subscriptions;
+
 	/**
 	 * Sets up all the filters and actions.
 	 */
@@ -32,23 +35,67 @@
 		add_action('admin_print_styles', array($this, 'loginasuser_col_style'));
 		add_action('wp_enqueue_scripts', array($this, 'enqueue_styles'));
         add_filter('login_redirect', array($this,'login_redirect'), 20, 3 );
-		add_action('add_meta_boxes', array($this, 'add_login_as_user_metabox'));
 		add_filter('usin_user_db_data', array($this, 'usin_user_db_loginasuser'), 1000);
 		add_filter('usin_single_user_db_data', array($this, 'usin_user_db_loginasuser'), 1000);
 		add_filter('usin_fields', array($this, 'usin_fields_loginasuser'), 1000);
 		add_shortcode('login_as_user', array($this, 'loginasuserShortcode'));
 
-		// WooCommerce
-		add_filter('manage_edit-shop_order_columns', array($this, 'loginasuser_col'), 1000);
-		add_action('manage_shop_order_posts_custom_column', array($this, 'loginasuser_woo_col_content'));
-		add_filter('woocommerce_shop_order_list_table_columns', array($this, 'loginasuser_col'), 1000); 
-		add_action('woocommerce_shop_order_list_table_custom_column', array($this, 'loginasuser_woo_col_content_hpos'), 10, 2);
+		// WooCommerce integration
+		if ($this->isWooCommerceActive()) {
+            require_once plugin_dir_path(dirname(__FILE__)) . 'includes/integrations/class-woocommerce.php';
+            $this->woocommerce = new LoginAsUser_WooCommerce_Integration($this);
+            $this->woocommerce->init();
+        }
 
-		// WooCommerce Subscriptions
-		add_filter( 'manage_edit-shop_subscription_columns', array( $this, 'loginasuser_col' ), 1000);
-		add_action( 'manage_shop_subscription_posts_custom_column', array( $this, 'loginasuser_woo_col_content_hpos' ), 10, 2 );
-		add_filter( 'woocommerce_shop_subscription_list_table_columns', array( $this, 'loginasuser_col' ), 1000 );
-		add_action( 'woocommerce_shop_subscription_list_table_custom_column', array( $this, 'loginasuser_woo_col_content_hpos' ), 10, 2 );
+        // WooCommerce Subscriptions integration
+        if ($this->isWooCommerceSubscriptionsActive()) {
+            require_once plugin_dir_path(dirname(__FILE__)) . 'includes/integrations/class-woocommerce-subscriptions.php';
+            $this->woocommerce_subscriptions = new LoginAsUser_WooCommerce_Subscriptions_Integration($this);
+            $this->woocommerce_subscriptions->init();
+        }
+
+		// MemberPress integration
+        if ($this->isMemberPressActive()) {
+            require_once plugin_dir_path(dirname(__FILE__)) . 'includes/integrations/class-memberpress.php';
+            $this->memberpress = new LoginAsUser_MemberPress_Integration($this);
+            $this->memberpress->init();
+        }
+	}
+
+	/**
+	 * Checks if WooCommerce is active.
+	 *
+	 * @return boolean
+	 */
+	public function isWooCommerceActive() {
+        if (!function_exists('is_plugin_active')) {
+            include_once(ABSPATH . 'wp-admin/includes/plugin.php');
+        }
+        return is_plugin_active('woocommerce/woocommerce.php');
+    }
+
+	/**
+	 * Checks if WooCommerce Subscriptions is active.
+	 *
+	 * @return boolean
+	 */
+    public function isWooCommerceSubscriptionsActive() {
+        if (!function_exists('is_plugin_active')) {
+            include_once(ABSPATH . 'wp-admin/includes/plugin.php');
+        }
+        return is_plugin_active('woocommerce-subscriptions/woocommerce-subscriptions.php');
+    }
+
+	/**
+	 * Checks if MemberPress is active.
+	 *
+	 * @return boolean
+	 */
+	function isMemberPressActive() {
+		if (!function_exists('is_plugin_active')) {
+			include_once(ABSPATH . 'wp-admin/includes/plugin.php');
+		}
+		return is_plugin_active('memberpress/memberpress.php');
 	}
 
 	public function login_redirect($redirect_to, $requested, $user)
@@ -616,24 +663,6 @@ CSS;
 	}
 
 	/**
-	 * Instructs WooCommerce to forget the session for the current user, without deleting it.
-	 *
-	 * @param WooCommerce $wc The WooCommerce instance.
-	 */
-	public static function forget_woocommerce_session(WooCommerce $wc)
-	{
-		if (!property_exists($wc, 'session')) {
-			return false;
-		}
-
-		if (!method_exists($wc->session, 'forget_session')) {
-			return false;
-		}
-
-		$wc->session->forget_session();
-	}
-
-	/**
 	 * Filters a user's capabilities so they can be altered at runtime.
 	 *
 	 * This is used to:
@@ -662,9 +691,9 @@ CSS;
 				
 				
 
-				
+				 
 				$user_caps['login_as_user'] = (user_can($user->ID, 'edit_user', $args[2]) && ($args[2] !== $user->ID));
-				
+				 
 			}
 		}
 
@@ -697,14 +726,6 @@ CSS;
 			$required_caps[] = 'do_not_allow';
 		}
 		return $required_caps;
-	}
-
-	// Add a custom metabox only for shop_order and shop_subscription post types
-	public function add_login_as_user_metabox()
-	{
-		add_meta_box( 'login_as_user_metabox', __( 'Login as User' ), array($this, 'login_as_user_metabox'), 'shop_order', 'side', 'core');	
-		add_meta_box( 'login_as_user_metabox',  __( 'Login as User' ), array($this, 'login_as_user_metabox'), 'woocommerce_page_wc-orders', 'side', 'core' );
-		add_meta_box( 'login_as_user_metabox',  __( 'Login as User' ), array($this, 'login_as_user_metabox'), 'woocommerce_page_wc-orders--shop_subscription', 'side', 'core' );
 	}
 
 	// Get the string type for the Login as ... button.
@@ -761,9 +782,9 @@ CSS;
 	{
 		
 
-		
+		 
 		echo $this->onlyInProTextLink();
-		
+		 
 	}
 
 	public function w357_personal_options( WP_User $user ) 
@@ -821,36 +842,16 @@ CSS;
 		return $val;
 	}
 
-	public function loginasuser_woo_col_content_hpos($column, $order_id)
-	{
-		if ('loginasuser_col' === $column) 
-		{
-			
 
-			
-			echo $this->onlyInProTextLink();
-			
-		}
-	}
 
-	public function loginasuser_woo_col_content($column)
-	{
-		if ('loginasuser_col' === $column) 
-		{
-			
 
-			
-			echo $this->onlyInProTextLink();
-			
-		}
-	}
 
-	
+	 
 	function onlyInProTextLink()
 	{
-		echo '<a title="'.__('The Login as User functionality for WooCommerce is only available in the PRO version.', 'login-as-user').'" href="https://www.web357.com/login-as-user-wordpress-plugin?utm_source=buyprolink-loginasuserwp&utm_medium=CLIENT-WP-Backend-BuyProLink-Web357-loginasuserwp&utm_campaign=buyprolink-loginasuserwp#pricing" target="_blank"><small>Only in PRO version</small></a>';
+		##########echo '<a title="'.__('The Login as User functionality for WooCommerce is only available in the PRO version.', 'login-as-user').'" href="https://www.web357.com/login-as-user-wordpress-plugin?utm_source=buyprolink-loginasuserwp&utm_medium=CLIENT-WP-Backend-BuyProLink-Web357-loginasuserwp&utm_campaign=buyprolink-loginasuserwp#pricing" target="_blank"><small>Only in PRO version</small></a>';
 	}
-	
+	 
 
 	/**
 	 * Add extra column in users/woocommerce orders/subscriptions page.
@@ -1122,8 +1123,8 @@ CSS;
 		}
 
 		// When switching, instruct WooCommerce to forget about the current user's session
-		if (function_exists('WC')) {
-			w357LoginAsUser::forget_woocommerce_session(WC());
+		if (function_exists('WC') && $this->isWooCommerceActive()) {
+			LoginAsUser_WooCommerce_Integration::forget_woocommerce_session(WC());
 		}
 
 		return $user;
@@ -1183,11 +1184,11 @@ CSS;
 	{
 		
 
-		
+		 
 		ob_start(); 
 		echo "<div>".$this->onlyInProTextLink()."</div>";
 		return ob_get_clean();
-		
+		 
 	}
 	
 	
