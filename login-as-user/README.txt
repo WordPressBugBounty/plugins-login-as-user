@@ -5,7 +5,7 @@ Donate link: https://www.paypal.me/web357
 Requires at least: 5.3
 Tested up to: 6.7
 Requires PHP: 7.3
-Stable tag: [WP_PLUGIN_VERSION]
+Stable tag: 1.5.9
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -71,6 +71,9 @@ Yes, "Login as User" is designed to be compatible with most third-party plugins 
 5. Settings.
 
 == Changelog ==
+= 29-Jan-2025 : v1.5.9 =
+* Fix callback method login_as_user_metabox in WooCommerce Subscriptions integration
+
 = 28-Jan-2025 : v1.5.8 =
 * Added: Improved integrations architecture by moving integrations to separate files.
 * Added: Full integration with MemberPress plugin. Now you can login as any MemberPress user. The buttons are displayed in the Members, Subscriptions and Transactions pages in WordPress Admin panel.

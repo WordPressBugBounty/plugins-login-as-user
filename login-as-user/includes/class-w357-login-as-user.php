@@ -1,6 +1,6 @@
 <?php
 /* ======================================================
- # Login as User for WordPress - v1.5.8 (free version)
+ # Login as User for WordPress - v1.5.9 (free version)
  # -------------------------------------------------------
  # Author: Web357
  # Copyright © 2014-2024 Web357. All rights reserved.
@@ -8,7 +8,7 @@
  # Website: https://www.web357.com/login-as-user-wordpress-plugin
  # Demo: https://login-as-user-wordpress-demo.web357.com/wp-admin/
  # Support: https://www.web357.com/support
- # Last modified: Tuesday 28 January 2025, 02:53:29 AM
+ # Last modified: Wednesday 29 January 2025, 04:20:39 AM
  ========================================================= */
 class w357LoginAsUser
 {
@@ -849,7 +849,7 @@ CSS;
 	 
 	function onlyInProTextLink()
 	{
-		##########echo '<a title="'.__('The Login as User functionality for WooCommerce is only available in the PRO version.', 'login-as-user').'" href="https://www.web357.com/login-as-user-wordpress-plugin?utm_source=buyprolink-loginasuserwp&utm_medium=CLIENT-WP-Backend-BuyProLink-Web357-loginasuserwp&utm_campaign=buyprolink-loginasuserwp#pricing" target="_blank"><small>Only in PRO version</small></a>';
+		echo '<a title="'.__('The Login as User functionality for WooCommerce is only available in the PRO version.', 'login-as-user').'" href="https://www.web357.com/login-as-user-wordpress-plugin?utm_source=buyprolink-loginasuserwp&utm_medium=CLIENT-WP-Backend-BuyProLink-Web357-loginasuserwp&utm_campaign=buyprolink-loginasuserwp#pricing" target="_blank"><small>Only in PRO version</small></a>';
 	}
 	 
 
