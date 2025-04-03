@@ -1,6 +1,6 @@
 <?php
 /* ======================================================
- # Login as User for WordPress - v1.5.9 (free version)
+ # Login as User for WordPress - v1.6.0 (free version)
  # -------------------------------------------------------
  # Author: Web357
  # Copyright © 2014-2024 Web357. All rights reserved.
@@ -8,7 +8,7 @@
  # Website: https://www.web357.com/login-as-user-wordpress-plugin
  # Demo: https://login-as-user-wordpress-demo.web357.com/wp-admin/
  # Support: https://www.web357.com/support
- # Last modified: Wednesday 29 January 2025, 04:20:39 AM
+ # Last modified: Wednesday 02 April 2025, 11:37:26 PM
  ========================================================= */
 class w357LoginAsUser
 {
@@ -523,12 +523,18 @@ CSS;
 		$options = get_option('login_as_user_options', array());
 		$message_display_position_option = (!empty($options['message_display_position'])) ? $options['message_display_position'] : 'top';
 		$show_admin_link_in_topbar_option = (!empty($options['show_admin_link_in_topbar'])) ? $options['show_admin_link_in_topbar'] : 'yes';
+		$enable_ping_animation = (!empty($options['enable_ping_animation'])) ? $options['enable_ping_animation'] : 'no';
 
 		// do not proceed if user is not logged in
 		$old_user = $this->get_old_user();
 		if ($old_user instanceof WP_User && ($message_display_position_option !== 'none' || $show_admin_link_in_topbar_option === 'yes')) {
+
 			wp_enqueue_style('login-as-user', plugin_dir_url(dirname(__FILE__)) . 'public/css/public.min.css', array(), LOGINASUSER_VERSION, 'all');
 			wp_enqueue_script('login-as-user', plugin_dir_url(dirname(__FILE__)) . 'public/js/public.min.js', array('jquery'), LOGINASUSER_VERSION, false);
+			// Add localization for the ping animation setting
+			wp_localize_script('login-as-user', 'w357LoginAsUser', array(
+				'enablePing' => $enable_ping_animation === 'yes' ? '1' : '0'
+			));
 			wp_register_style('login-as-user-inline-style', false);
 			wp_enqueue_style('login-as-user-inline-style');
 		}

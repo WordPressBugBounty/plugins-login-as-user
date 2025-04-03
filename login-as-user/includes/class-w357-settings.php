@@ -1,6 +1,6 @@
 <?php
 /* ======================================================
- # Login as User for WordPress - v1.5.9 (free version)
+ # Login as User for WordPress - v1.6.0 (free version)
  # -------------------------------------------------------
  # Author: Web357
  # Copyright © 2014-2024 Web357. All rights reserved.
@@ -8,7 +8,7 @@
  # Website: https://www.web357.com/login-as-user-wordpress-plugin
  # Demo: https://login-as-user-wordpress-demo.web357.com/wp-admin/
  # Support: https://www.web357.com/support
- # Last modified: Wednesday 29 January 2025, 04:20:39 AM
+ # Last modified: Wednesday 02 April 2025, 11:37:26 PM
  ========================================================= */
  
 /**
@@ -136,7 +136,12 @@ class LoginAsUser_settings {
 		$show_admin_link_in_topbar = trim( $fields['show_admin_link_in_topbar'] );
 		$show_admin_link_in_topbar = strip_tags( stripslashes( $show_admin_link_in_topbar ) );
 		$valid_fields['show_admin_link_in_topbar'] = $show_admin_link_in_topbar;
-			
+
+		// Validate "enable_ping_animation" Field
+		$enable_ping_animation = trim( $fields['enable_ping_animation'] );
+		$enable_ping_animation = strip_tags( stripslashes( $enable_ping_animation ) );
+		$valid_fields['enable_ping_animation'] = $enable_ping_animation;
+
 		// Validate "license_key" Field
 		$license_key = trim( $fields['license_key'] );
 		$license_key = strip_tags( stripslashes( $license_key ) );
@@ -335,9 +340,24 @@ class LoginAsUser_settings {
 			]
 		);
 
-		// License Key
-		
+		add_settings_field( 
+			'enable_ping_animation', 
+			esc_html__( 'Enable Attention Animation', 'login-as-user' ), 
+			array($this->fields, 'selectField'),
+			'login-as-user', 
+			'base_settings_section',
+			[
+				'id' => 'enable_ping_animation',
+				'default_value' => 'no',
+				'options' => [
+					['id' => 'yes', 'label' => esc_html__('Yes', 'login-as-user'), 'value' => 'yes'],
+					['id' => 'no', 'label' => esc_html__('No', 'login-as-user'), 'value' => 'no'],
+				],
+				'desc' => __('Show ping animation on the admin button after logging in as a user.', 'login-as-user'),
+			]
+		);
 
+		// License Key
 		 
 		add_settings_field( 
 			'license_key', 
@@ -357,7 +377,9 @@ class LoginAsUser_settings {
 			]
 		);
 		 
+
 		
+
 		
 	}
 }

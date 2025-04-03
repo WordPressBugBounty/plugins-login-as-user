@@ -5,7 +5,7 @@ Donate link: https://www.paypal.me/web357
 Requires at least: 5.3
 Tested up to: 6.7
 Requires PHP: 7.3
-Stable tag: 1.5.9
+Stable tag: 1.6.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -14,7 +14,7 @@ Login as User is a free WordPress plugin that helps admins switch user accounts 
 == Description ==
 [Login as a User WordPress plugin](https://www.web357.com/login-as-user-wordpress-plugin?utm_source=wp_plugin_repo&utm_medium=wp_listing&utm_campaign=wp_repo_link&utm_content=wp_repo_link_to_plugin_page) **allows admins to have easy access to the frontend as a specific user** and thus solve problems or provide better and faster customer support. **With one click**, the admin logs in as the external user or customer and handles any situation without wasting any time at all. If you want a WordPress plugin to switch accounts in an instant, Login as User is for you.
 
-[Try Demo](https://login-as-user-wordpress-demo.web357.com/wp-admin/)
+👉 [Live Demo](https://login-as-user-wordpress-demo.web357.com/wp-admin/)
 `
     Username: demo_admin
     Password: demo_password
@@ -71,6 +71,9 @@ Yes, "Login as User" is designed to be compatible with most third-party plugins 
 5. Settings.
 
 == Changelog ==
+= 03-Apr-2025 : v1.6.0 =
+* Added: New setting "Enable Attention Animation" to allow turning off the pulsing (ping) effect on the admin button after logging in as a user. Disabled by default for a cleaner interface. [Docs »](https://docs.web357.com/article/144-how-to-enable-or-disable-the-attention-animation-in-the-admin-button)
+
 = 29-Jan-2025 : v1.5.9 =
 * Fix callback method login_as_user_metabox in WooCommerce Subscriptions integration
 
@@ -169,7 +172,7 @@ Yes, "Login as User" is designed to be compatible with most third-party plugins 
 = 08-Apr-2021 : v1.4.0 =
 * [Compatibility] Fully compatible with the User Insights WordPress plugin.
 * [Compatibility] Fully compatible with WordPress v5.7 and WooCommerce v5.1.x
-* Minor fixes and improvements
+* Minor fixes and improvements...
 
 = 09-Jan-2021 : v1.3.0 =
 * [Compatibility] Fully compatible with Loco Translate plugin.
