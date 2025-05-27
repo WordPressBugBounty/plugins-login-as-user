@@ -3,9 +3,9 @@ Contributors: yiannistaos, johnbillion
 Tags: user, login, admin, login as user, web357
 Donate link: https://www.paypal.me/web357
 Requires at least: 5.3
-Tested up to: 6.7
+Tested up to: 6.8
 Requires PHP: 7.3
-Stable tag: 1.6.0
+Stable tag: 1.6.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -71,6 +71,19 @@ Yes, "Login as User" is designed to be compatible with most third-party plugins 
 5. Settings.
 
 == Changelog ==
+= 27-May-2025 : v1.6.1 =
+* Feature: Add Column Position Settings for "Login as User" buttons in WooCommerce Orders, Subscriptions, and Users lists. Allows display in default or last column.
+* Feature: Add CSS Editor Settings for Frontend and Backend. Allows custom CSS overrides for the login button and toolbar without editing plugin files.
+* Feature: Integrate "Login as User" with Surecart. Adds login button support in Surecart Orders and Customers views.
+* Feature: Replace verbose login status messages with icons and tooltips in WooCommerce Orders Table. Enhances layout and improves readability.
+* Feature: Add custom redirect URL after logging out from "Login as User" session. Allows admins to define where to be redirected post-impersonation.
+* Refactor: Improve Role-Based Login Permissions Logic. Enforces stricter permission checks and prevents unauthorized role impersonation.
+* Fix: Improve Compatibility with Tutor LMS Login Flow. Prevents forced logout and broken redirects when logging in as users with limited roles under Tutor LMS.
+* Fix: Prevent conflict when both free and pro versions are active. Displays admin notice and avoids critical functionality issues.
+* Fix: Resolve conflict with LoginWP plugin in Login as User (WordPress). Ensures session does not revert to admin after impersonation.
+* Fix: Conflict with ASE plugin on redirect after using "Login as User". Resolves broken login redirection when ASE is active.
+* Bug: Fix column width behavior for "Login as User" in WooCommerce Orders Table. Ensures layout is responsive and doesn't break with more columns or smaller screens.
+
 = 03-Apr-2025 : v1.6.0 =
 * Added: New setting "Enable Attention Animation" to allow turning off the pulsing (ping) effect on the admin button after logging in as a user. Disabled by default for a cleaner interface. [Docs »](https://docs.web357.com/article/144-how-to-enable-or-disable-the-attention-animation-in-the-admin-button)
 

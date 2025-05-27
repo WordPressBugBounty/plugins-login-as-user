@@ -1,6 +1,6 @@
 <?php
 /* ======================================================
- # Login as User for WordPress - v1.6.0 (free version)
+ # Login as User for WordPress - v1.6.1 (free version)
  # -------------------------------------------------------
  # Author: Web357
  # Copyright © 2014-2024 Web357. All rights reserved.
@@ -8,7 +8,7 @@
  # Website: https://www.web357.com/login-as-user-wordpress-plugin
  # Demo: https://login-as-user-wordpress-demo.web357.com/wp-admin/
  # Support: https://www.web357.com/support
- # Last modified: Wednesday 02 April 2025, 11:37:26 PM
+ # Last modified: Tuesday 27 May 2025, 12:23:12 AM
  ========================================================= */
 class LoginAsUser_Admin {
 
@@ -56,12 +56,18 @@ class LoginAsUser_Admin {
 	 *
 	 * @since    1.0.0
 	 */
-	public function enqueue_styles() 
-	{
-		wp_enqueue_style( $this->plugin_name_clean, plugin_dir_url( __FILE__ ) . 'css/admin.min.css', array(), $this->version, 'all' );
-	}
+    public function enqueue_styles()
+    {
+        wp_enqueue_style($this->plugin_name_clean, plugin_dir_url(__FILE__) . 'css/admin.min.css', [], $this->version, 'all');
 
-	/**
+        $css = w357LoginAsUser::$pluginSettings->loginButtonDisplayAs == 'only_icon' ? '.column-loginasuser_col { --column-loginasuser_col-width: 7%} ' : '';
+        
+        if ($css) {
+            wp_add_inline_style($this->plugin_name_clean, $css);
+        }
+    }
+
+    /**
 	 * Register the JavaScript for the admin area.
 	 *
 	 * @since    1.0.0

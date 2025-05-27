@@ -1,6 +1,6 @@
 <?php
 /* ======================================================
- # Login as User for WordPress - v1.6.0 (free version)
+ # Login as User for WordPress - v1.6.1 (free version)
  # -------------------------------------------------------
  # Author: Web357
  # Copyright © 2014-2024 Web357. All rights reserved.
@@ -8,7 +8,7 @@
  # Website: https://www.web357.com/login-as-user-wordpress-plugin
  # Demo: https://login-as-user-wordpress-demo.web357.com/wp-admin/
  # Support: https://www.web357.com/support
- # Last modified: Wednesday 02 April 2025, 11:37:26 PM
+ # Last modified: Tuesday 27 May 2025, 12:23:12 AM
  ========================================================= */
 /**
  * Define the internationalization functionality
@@ -129,6 +129,10 @@ class LoginAsUser_fields {
 			cols="<?php echo absint($args['cols']); ?>" 
 			class="<?php echo esc_attr($class); ?>"
 			placeholder="<?php echo esc_html__($args['placeholder']); ?>"><?php echo esc_textarea(isset($options[$args['name']]) && !empty($options[$args['name']]) ? $options[$args['name']] : $default_value); ?></textarea>
+
+		<?php if (!empty($args['desc'])): ?>
+			<p class="description"><?php echo wp_kses($args['desc'], array('strong' => array(), 'br' => array(), 'code' => array())); ?></p>
+		<?php endif; ?>
 		<?php
 	}
 	
@@ -211,4 +215,41 @@ class LoginAsUser_fields {
 		<?php endif; ?>
 		<?php
 	}
+
+    function numberField($args)
+    {
+        $name = $args['id'];
+        $options = get_option('login_as_user_options');
+        $desc = isset($args['desc']) ? $args['desc'] : '';
+        $current_value = isset($options[$name]) ? $options[$name] : '';
+        $last_column = $current_value === 'last';
+        ?>
+        <div class="w357-number-field-container">
+            <input
+                    type="number"
+                    name="login_as_user_options[<?= esc_attr($name); ?>]"
+                    id="<?= esc_attr($name); ?>"
+                    value="<?= $last_column ? '' : esc_attr($current_value); ?>"
+                    min="1"
+                    step="1"
+                    class="small-text"
+                <?php echo $last_column ? 'disabled' : ''; ?>
+            >
+            <label style="margin-left: 10px;">
+                <input
+                        type="checkbox"
+                        name="login_as_user_options[<?php echo esc_attr($name . '_last_column'); ?>]"
+                        id="<?php echo esc_attr($name . '_last_column'); ?>"
+                        value="1"
+                    <?php checked($last_column, true); ?>
+                        onchange="document.getElementById('<?php echo esc_attr($name); ?>').disabled = this.checked;"
+                >
+                <?php esc_html_e('Last column', 'login-as-user'); ?>
+            </label>
+        </div>
+        <?php if (!empty($desc)): ?>
+        <p class="description"><?php echo wp_kses($desc, ['strong' => [], 'br' => []]); ?></p>
+    <?php endif; ?>
+        <?php
+    }
 }

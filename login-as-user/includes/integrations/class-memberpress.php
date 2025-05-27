@@ -3,12 +3,7 @@ if (!defined('WPINC')) {
     die;
 }
 
-class LoginAsUser_MemberPress_Integration {
-    private $main;
-    
-    public function __construct($main) {
-        $this->main = $main;
-    }
+class LoginAsUser_MemberPress_Integration extends LoginAsUser_Integration_Abstract{
     
     public function init() {
 
@@ -24,7 +19,6 @@ class LoginAsUser_MemberPress_Integration {
         add_filter('mepr-admin-transactions-cols', array($this, 'loginasuser_col'));
         add_filter('mepr-admin-transactions-cell', array($this, 'loginasuser_transactions_cell'), 10, 3);
         
-        add_action('admin_head', array($this, 'loginasuser_col_style'));
     }
     
     public function loginasuser_col($cols) {
@@ -46,47 +40,14 @@ class LoginAsUser_MemberPress_Integration {
      * @param string $user_identifier_type 'login' or 'id'
      * @return string HTML cell content
      */
-    private function render_login_cell($rec, $attributes, $user_identifier_type = 'login') {
+    private function render_login_cell($rec, $attributes, $user_identifier_type = 'login')
+    {
         // Get user based on identifier type
-        $user = ($user_identifier_type === 'login') 
+        $user = ($user_identifier_type === 'login')
             ? get_user_by('login', $rec->username)
             : get_user_by('id', $rec->user_id);
-        
-        if (!$user) {
-            return '<td ' . $attributes . '>' . __('No user found', 'login-as-user') . '</td>';
-        }
 
-        if (get_current_user_id() == $user->ID) {
-            return '<td ' . $attributes . '>' . __('It\'s me.', 'login-as-user') . '</td>';
-        }
-
-        if (!current_user_can('login_as_user', $user->ID)) {
-            return '<td ' . $attributes . '>' . __('Could not login as this user.', 'login-as-user') . '</td>';
-        }
-
-        $login_as_user_url = $this->main->build_the_login_as_user_url($user);
-        
-        if (!$login_as_user_url || empty($user->user_login)) {
-            return '<td ' . $attributes . '>' . __('Already logged in.', 'login-as-user') . '</td>';
-        }
-
-        $options = (object) get_option('login_as_user_options');
-        if (!empty($options->login_as_type) && $options->login_as_type == 'only_icon') {
-            return '<td ' . $attributes . '><a class="button w357-login-as-user-btn w357-login-as-user-col-btn" href="' . 
-                esc_url($login_as_user_url) . '" title="' . 
-                esc_html__('Login as', 'login-as-user') . ': ' . 
-                $this->main->login_as_type($user, false) . 
-                '"><span class="dashicons dashicons-admin-users"></span></a></td>';
-        }
-
-        return '<td ' . $attributes . '><a class="button w357-login-as-user-btn w357-login-as-user-col-btn" href="' . 
-            esc_url($login_as_user_url) . '" title="' . 
-            esc_html__('Login as', 'login-as-user') . ': ' . 
-            $this->main->login_as_type($user, false) . 
-            '"><span class="dashicons dashicons-admin-users"></span> ' . 
-            esc_html__('Login as', 'login-as-user') . ': <strong>' . 
-            $this->main->login_as_type($user) . 
-            '</strong></a></td>';
+        return '<td ' . $attributes . '>' . $this->loginAsUserButtonGenerator->generateButton($user->ID ?? null) . '</td>';
     }
 
     public function loginasuser_transactions_cell($column_name, $rec, $attributes) {

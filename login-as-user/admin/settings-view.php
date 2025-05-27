@@ -1,6 +1,6 @@
 <?php
 /* ======================================================
- # Login as User for WordPress - v1.6.0 (free version)
+ # Login as User for WordPress - v1.6.1 (free version)
  # -------------------------------------------------------
  # Author: Web357
  # Copyright © 2014-2024 Web357. All rights reserved.
@@ -8,7 +8,7 @@
  # Website: https://www.web357.com/login-as-user-wordpress-plugin
  # Demo: https://login-as-user-wordpress-demo.web357.com/wp-admin/
  # Support: https://www.web357.com/support
- # Last modified: Wednesday 02 April 2025, 11:37:26 PM
+ # Last modified: Tuesday 27 May 2025, 12:23:12 AM
  ========================================================= */
 // Settings page
 ?>
@@ -40,7 +40,7 @@
                         <th>Features</th>
                           <th>Free</th> 
                         <th>Pro</th>
-                    </th>
+                    </tr>
                     <tr>
                         <td class="lau-feature-info">
                             <div class="lau-feature-title">Display the Login as User in All Users Page in Admin</div>
@@ -140,15 +140,51 @@
                 <?php echo esc_html__( 'How it works?', 'login-as-user' ); ?>
             </h2>
             <?php echo wp_kses( __( '<p style="color:red">You have to navigate to the <a href="users.php"><strong>Users page</strong></a> and then you will see a button with the name "<strong>Login as: `username`</strong>", at the right side of each username. If you click on this button you will login at the front-end of the website as this User.</p>', 'login-as-user' ), array( 'strong' => array(), 'br' => array(), 'p' => array(), 'a' => array('href'=>array()) ) ); ?>
+            <div class="wrap">
 
-            <h2 style="margin-top: 40px;">
-                <?php echo esc_html__( 'Settings', 'login-as-user' ); ?>
-            </h2>
-            <form action="options.php" method="post">
-                <?php settings_fields( 'login-as-user' ); ?>
-                <?php do_settings_sections( 'login-as-user' ); ?>
-                <?php submit_button( esc_html__( 'Save Settings', 'login-as-user' ) ); ?>
-            </form>
+                <h2 class="nav-tab-wrapper">
+                    <a href="?page=login-as-user&tab=settings" class="nav-tab <?= $active_tab == 'settings' ? 'nav-tab-active' : ''; ?>">
+                        <?php esc_html_e('Settings', 'login-as-user'); ?>
+                    </a>
+                    <a href="?page=login-as-user&tab=appearance" class="nav-tab <?= $active_tab == 'appearance' ? 'nav-tab-active' : ''; ?>">
+                        <?php esc_html_e('Appearance', 'login-as-user'); ?>
+                    </a>
+                </h2>
+
+                <?php if ($active_tab == 'appearance'): ?>
+                    <div>
+                        <ul class="subsubsub">
+                            <li>
+                                <a href="?page=login-as-user&tab=appearance&subtab=login-button" class="subtab <?= $active_subtab == 'login-button' ? 'current' : ''; ?>">
+                                    <?php esc_html_e('Login Button', 'login-as-user'); ?>
+                                </a>
+                            </li>
+                            <li>|</li>
+                            <li>
+                                <a href="?page=login-as-user&tab=appearance&subtab=frontend-bar" class="subtab <?= $active_subtab == 'frontend-bar' ? 'current' : ''; ?>">
+                                    <?php esc_html_e('Message', 'login-as-user'); ?>
+                                </a>
+                            </li>
+                            
+                        </ul>
+                    </div>
+                    <br class="clear">
+                <?php endif; ?>
+
+                <form method="post" action="options.php">
+                    <?php
+                    settings_fields('login-as-user');
+
+                    if ($active_tab == 'settings') {
+                        do_settings_sections('login-as-user-settings');
+                    } else {
+                        do_settings_sections('login-as-user-appearance-'.$active_subtab);
+                    }
+
+                    submit_button(esc_html__('Save Settings', 'login-as-user'));
+                    ?>
+                </form>
+            </div>
         </div>
     </div>
 </div>

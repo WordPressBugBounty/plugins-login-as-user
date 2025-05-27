@@ -1,6 +1,6 @@
 <?php
 /* ======================================================
- # Login as User for WordPress - v1.6.0 (free version)
+ # Login as User for WordPress - v1.6.1 (free version)
  # -------------------------------------------------------
  # Author: Web357
  # Copyright © 2014-2024 Web357. All rights reserved.
@@ -8,19 +8,36 @@
  # Website: https://www.web357.com/login-as-user-wordpress-plugin
  # Demo: https://login-as-user-wordpress-demo.web357.com/wp-admin/
  # Support: https://www.web357.com/support
- # Last modified: Wednesday 02 April 2025, 11:37:26 PM
+ # Last modified: Tuesday 27 May 2025, 12:23:12 AM
  ========================================================= */
+require_once __DIR__ . '/helpers/class-plugin-settings.php';
+require_once __DIR__ . '/integrations/class-login-as-user-integration-abstract.php';
+require_once __DIR__ . '/integrations/class-wp-userlist.php';
+require_once __DIR__ . '/class-w357-login-btn.php';
+
 class w357LoginAsUser
 {
+    /** @var \LoginAsUser_Plugin_Settings */
+    public static $pluginSettings;
+    
 	private $memberpress;
 	private $woocommerce;
     private $woocommerce_subscriptions;
 
-	/**
+    /**
 	 * Sets up all the filters and actions.
 	 */
 	public function run()
 	{
+        if (!function_exists('is_plugin_active')) {
+            include_once(ABSPATH . 'wp-admin/includes/plugin.php');
+        }
+
+
+        if (!static::$pluginSettings) {
+            static::$pluginSettings = new LoginAsUser_Plugin_Settings();
+        }
+        
 		add_filter('user_has_cap', array($this, 'filter_user_has_cap'), 10, 4);
 		add_filter('map_meta_cap', array($this, 'filter_map_meta_cap'), 10, 4);
 		add_action('init', array($this, 'action_init'));
@@ -29,87 +46,72 @@ class w357LoginAsUser
 		add_filter('wp_head', array($this, 'filter_login_message'), 1);
 		add_action('admin_bar_menu', array($this, 'login_as_user_link_back_link_on_toolbar'), 999);
 		add_filter('removable_query_args', array($this, 'filter_removable_query_args'));
-		add_filter('manage_users_columns', array($this, 'loginasuser_col'), 1000);
-		add_filter('manage_users_custom_column', array($this, 'loginasuser_col_content'), 15, 3);
-		add_action('personal_options', array($this, 'w357_personal_options'));
-		add_action('admin_print_styles', array($this, 'loginasuser_col_style'));
+        add_action('personal_options', [$this, 'w357_personal_options']);
 		add_action('wp_enqueue_scripts', array($this, 'enqueue_styles'));
-        add_filter('login_redirect', array($this,'login_redirect'), 20, 3 );
 		add_filter('usin_user_db_data', array($this, 'usin_user_db_loginasuser'), 1000);
 		add_filter('usin_single_user_db_data', array($this, 'usin_user_db_loginasuser'), 1000);
 		add_filter('usin_fields', array($this, 'usin_fields_loginasuser'), 1000);
 		add_shortcode('login_as_user', array($this, 'loginasuserShortcode'));
+         
+        if (static::$pluginSettings->isPluginActive('login-as-user-pro')) {
+            add_action('admin_notices', [$this, 'disableFreeVersionNotice']);
+            remove_action('personal_options', [$this, 'w357_personal_options']);
+        } 
+         
 
+        (new LoginAsUser_WP_Userlist_Integration($this))->init();
+        
 		// WooCommerce integration
-		if ($this->isWooCommerceActive()) {
+        if (static::$pluginSettings->isPluginActive('woocommerce')) {
             require_once plugin_dir_path(dirname(__FILE__)) . 'includes/integrations/class-woocommerce.php';
             $this->woocommerce = new LoginAsUser_WooCommerce_Integration($this);
             $this->woocommerce->init();
         }
 
         // WooCommerce Subscriptions integration
-        if ($this->isWooCommerceSubscriptionsActive()) {
+        if (static::$pluginSettings->isPluginActive('woocommerce-subscriptions')) {
             require_once plugin_dir_path(dirname(__FILE__)) . 'includes/integrations/class-woocommerce-subscriptions.php';
             $this->woocommerce_subscriptions = new LoginAsUser_WooCommerce_Subscriptions_Integration($this);
             $this->woocommerce_subscriptions->init();
         }
 
 		// MemberPress integration
-        if ($this->isMemberPressActive()) {
+        if (static::$pluginSettings->isPluginActive('memberpress')) {
             require_once plugin_dir_path(dirname(__FILE__)) . 'includes/integrations/class-memberpress.php';
             $this->memberpress = new LoginAsUser_MemberPress_Integration($this);
             $this->memberpress->init();
         }
-	}
-
-	/**
-	 * Checks if WooCommerce is active.
-	 *
-	 * @return boolean
-	 */
-	public function isWooCommerceActive() {
-        if (!function_exists('is_plugin_active')) {
-            include_once(ABSPATH . 'wp-admin/includes/plugin.php');
+        
+		// SureCart integration
+        if (static::$pluginSettings->isPluginActive('surecart')) {
+            require_once plugin_dir_path(dirname(__FILE__)) . 'includes/integrations/class-surecart.php';
+            (new LoginAsUser_SureCart_Integration($this))->init();
         }
-        return is_plugin_active('woocommerce/woocommerce.php');
     }
 
-	/**
-	 * Checks if WooCommerce Subscriptions is active.
-	 *
-	 * @return boolean
-	 */
-    public function isWooCommerceSubscriptionsActive() {
-        if (!function_exists('is_plugin_active')) {
-            include_once(ABSPATH . 'wp-admin/includes/plugin.php');
+
+     
+    
+    /**
+     * Deactivate the FREE version after installing the PRO.
+     */
+    public function disableFreeVersionNotice()
+    {
+        if (static::$pluginSettings->isPluginActive('login-as-user-pro')) {
+            $deactivateUrl = current_user_can('deactivate_plugins') ? wp_nonce_url(
+                admin_url('plugins.php?action=deactivate&plugin=login-as-user/login-as-user.php'),
+                'deactivate-plugin_login-as-user/login-as-user.php'
+            ) : '';
+
+            printf('<div class="notice notice-warning is-dismissible"><p>%1$s</p></div>',
+                __('You need to deactivate and delete the old <b>Login as User (Free) version of plugin</b> on the plugins page.', 'login-as-user') .
+                ($deactivateUrl ? '&nbsp<a href="' . esc_url($deactivateUrl) . '">' . __('Click here to Deactivate it', 'login-as-user') . '</a>' : '')
+            );
         }
-        return is_plugin_active('woocommerce-subscriptions/woocommerce-subscriptions.php');
     }
 
-	/**
-	 * Checks if MemberPress is active.
-	 *
-	 * @return boolean
-	 */
-	function isMemberPressActive() {
-		if (!function_exists('is_plugin_active')) {
-			include_once(ABSPATH . 'wp-admin/includes/plugin.php');
-		}
-		return is_plugin_active('memberpress/memberpress.php');
-	}
+     
 
-	public function login_redirect($redirect_to, $requested, $user)
-	{
-		if (!isset($_REQUEST['action'])) 
-		{
-			return $redirect_to;
-		}
-		
-		if ($_REQUEST['action'] != 'login_as_user' && $_REQUEST['action'] != 'login_as_olduser') 
-		{
-			return $redirect_to;
-		}
-    }
 
 	/**
 	 * Returns whether or not the current logged in user is being remembered in the form of a persistent browser cookie
@@ -149,11 +151,13 @@ class w357LoginAsUser
 				} else {
 					$user_id = 0;
 				}
+                $target_wp_user = $user_id ? get_userdata($user_id) : '';
 
-				// Check authentication:
-				if (!current_user_can('login_as_user', $user_id)) {
-					wp_die(esc_html__('Could not login as user.', 'login-as-user'));
-				}
+                // Check authentication:
+                if (!current_user_can('login_as_user', $user_id)) {
+                    error_log(sprintf(__('Web357LoginAsUser: User "%s" (%d) is not allowed to login as user "%s" (%d).' . 'login-as-user'), $current_user ? $current_user->user_login : '', $current_user ? $current_user->ID : 0, $target_wp_user ? $target_wp_user->user_login : $target_wp_user, $target_wp_user ? $target_wp_user->ID : 0));
+                    wp_die(esc_html__('Could not login as user.', 'login-as-user'));
+                }
 
 				// Check intent:
 				check_admin_referer("login_as_user_{$user_id}");
@@ -200,7 +204,8 @@ class w357LoginAsUser
 					}
 					exit;
 				} else {
-					wp_die(esc_html__('Could not login as user.', 'login-as-user'));
+                    error_log(sprintf(__('Web357LoginAsUser: Could not login as user, target user "%s" (%d) not found' . 'login-as-user'), (string)($target_wp_user ? $target_wp_user->user_login : $target_wp_user), (int)($target_wp_user ? $target_wp_user->ID : 0)));
+                    wp_die(esc_html__('Could not login as user.', 'login-as-user'));
 				}
 				break;
 
@@ -209,12 +214,14 @@ class w357LoginAsUser
 				// Fetch the originating user data:
 				$old_user = $this->get_old_user();
 				if (!$old_user) {
-					wp_die(esc_html__('Could not login as user.', 'login-as-user'));
+                    error_log(__('Web357LoginAsUser: Old user not found' . 'login-as-user'));
+                    wp_die(esc_html__('Could not login as user.', 'login-as-user'));
 				}
 
 				// Check authentication:
 				if (!self::authenticate_old_user($old_user)) {
-					wp_die(esc_html__('Could not login as user.', 'login-as-user'));
+                    error_log(sprintf(__('Web357LoginAsUser: Authentication failed for old user "%s" (%d)' . 'login-as-user'), (string)($old_user->user_login), $old_user->ID));
+                    wp_die(esc_html__('Could not login as user.', 'login-as-user'));
 				}
 
 				// Check intent:
@@ -231,7 +238,6 @@ class w357LoginAsUser
 
 					$redirect_to = self::get_redirect($old_user, $current_user);
 					$args = [];
-
 					if ($redirect_to) {
 						wp_safe_redirect(add_query_arg($args, $redirect_to), 302, 'Login as User - WordPress Plugin');
 					} else {
@@ -240,7 +246,7 @@ class w357LoginAsUser
 						$back_url = (!empty($login_as_user_get_back_url_cookie)) ? urldecode($login_as_user_get_back_url_cookie) : admin_url('users.php');
 						wp_safe_redirect(add_query_arg($args, $back_url), 302, 'Login as User - WordPress Plugin');
 					}
-					exit;
+                    exit;
 				} else {
 					wp_die(esc_html__('Could not switch users.', 'login-as-user'));
 				}
@@ -266,11 +272,9 @@ class w357LoginAsUser
 		}
 
 		if (!$new_user) {
-			/** This filter is documented in wp-login.php */
-			$redirect_to = apply_filters('logout_redirect', $redirect_to, $requested_redirect_to, $old_user);
+			$redirect_to = apply_filters('web357_login_as_user_logout_redirect', $redirect_to, $requested_redirect_to, $old_user);
 		} else {
-			/** This filter is documented in wp-login.php */
-			$redirect_to = apply_filters('login_redirect', $redirect_to, $requested_redirect_to, $new_user);
+			$redirect_to = apply_filters('web357_login_as_user_login_redirect', $redirect_to, $requested_redirect_to, $new_user);
 		}
 
 		return $redirect_to;
@@ -537,6 +541,8 @@ CSS;
 			));
 			wp_register_style('login-as-user-inline-style', false);
 			wp_enqueue_style('login-as-user-inline-style');
+
+            
 		}
 	}
 
@@ -559,14 +565,14 @@ CSS;
 	 * @param  WP_User $user The user to be switched to.
 	 * @return string|false The required URL, or false if there's no old user or the user doesn't have the required capability.
 	 */
-	public function build_the_login_as_user_url(WP_User $user)
+	public function build_the_login_as_user_url(WP_User $user, array $params =[])
 	{
 		$old_user = $this->get_old_user();
 
 		if ($old_user && ($old_user->ID === $user->ID)) {
 			return self::back_url($old_user);
 		} elseif (current_user_can('login_as_user', $user->ID)) {
-			return self::loginasuser_url($user);
+            return self::loginasuser_url($user, $params);
 		} else {
 			return false;
 		}
@@ -578,23 +584,27 @@ CSS;
 	 * @param  WP_User $user The user to be switched to.
 	 * @return string The required URL.
 	 */
-	public static function loginasuser_url(WP_User $user)
+	public static function loginasuser_url(WP_User $user, array $params =[])
 	{
-		// Check if HTTPS or HTTP
-		$protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || $_SERVER['SERVER_PORT'] == 443 ? 'https://' : 'http://';
+        // Check if HTTPS or HTTP
+        $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || $_SERVER['SERVER_PORT'] == 443 ? 'https://' : 'http://';
 
-		// Build the current URL with the correct protocol
-		$current_url = urlencode($protocol . $_SERVER['HTTP_HOST'] . wp_unslash($_SERVER['REQUEST_URI']));
-
-		if (isset($_SERVER['REQUEST_URI']) && strpos($_SERVER['REQUEST_URI'], 'admin-ajax.php') !== false)
-		{
-			$current_url = urlencode(wp_unslash($_SERVER['HTTP_REFERER']));
-		}
-
+        // Build the current URL with the correct protocol
+        if (!empty($params['logout_redirect_url'])) {
+            $current_url = $params['logout_redirect_url'];
+        } elseif (static::$pluginSettings->logoutRedirectUrl) {
+            $current_url = static::$pluginSettings->logoutRedirectUrl;
+        } else {
+            $current_url = $protocol . $_SERVER['HTTP_HOST'] . wp_unslash($_SERVER['REQUEST_URI']);
+            if (isset($_SERVER['REQUEST_URI']) && strpos($_SERVER['REQUEST_URI'], 'admin-ajax.php') !== false) {
+                $current_url = wp_unslash($_SERVER['HTTP_REFERER']);
+            }
+        }
+        
 		return wp_nonce_url(add_query_arg(array(
 			'action'  => 'login_as_user',
 			'user_id' => $user->ID,
-			'back_url' => $current_url,
+			'back_url' => urlencode($current_url),
 		), wp_login_url()), "login_as_user_{$user->ID}");
 	}
 
@@ -690,49 +700,50 @@ CSS;
 	 * }
 	 * @param WP_User  $user          Concerned user object.
 	 * @return bool[] Concerned user's capabilities.
-	 */
-	public function filter_user_has_cap(array $user_caps, array $required_caps, array $args, WP_User $user) {
-		if (isset($args[2]) && 'login_as_user' === $args[0]) {
-			if ((bool)$args[2]) {
-				
-				
+	 */ 
+    public function filter_user_has_cap(array $user_caps, array $required_caps, array $args, WP_User $user)
+    {
+        if (isset($args[2]) && 'login_as_user' === $args[0] && (bool)$args[2]) {
+            
 
-				 
-				$user_caps['login_as_user'] = (user_can($user->ID, 'edit_user', $args[2]) && ($args[2] !== $user->ID));
-				 
-			}
-		}
+             
+            if (!static::$pluginSettings->isPluginActive('login-as-user-pro')) {
+                $user_caps['login_as_user'] = (user_can($user->ID, 'edit_user', $args[2]) && ($args[2] !== $user->ID));
+            }
+             
+        }
 
-		return $user_caps;
-	}
+        return $user_caps;
+    }
 
-	/**
-	 * Filters the required primitive capabilities for the given primitive or meta capability.
-	 *
-	 * This is used to:
-	 *  - Add the 'do_not_allow' capability to the list of required capabilities when a Super Admin is trying to switch
-	 *    to themselves.
-	 *
-	 * It affects nothing else as Super Admins can do everything by default.
-	 *
-	 * @param string[] $required_caps Required primitive capabilities for the requested capability.
-	 * @param string   $cap           Capability or meta capability being checked.
-	 * @param int      $user_id       Concerned user ID.
-	 * @param array    $args {
-	 *     Arguments that accompany the requested capability check.
-	 *
-	 *     @type mixed ...$0 Optional second and further parameters.
-	 * }
-	 * @return string[] Required capabilities for the requested action.
-	 */
-	public function filter_map_meta_cap(array $required_caps, $cap, $user_id, array $args)
-	{
-		if (('login_as_user' === $cap) && ($args[0] === $user_id)) 
-		{
-			$required_caps[] = 'do_not_allow';
-		}
-		return $required_caps;
-	}
+    /**
+     * Filters the required primitive capabilities for the given primitive or meta capability.
+     *
+     * This is used to:
+     *  - Add the 'do_not_allow' capability to the list of required capabilities when a Super Admin is trying to switch
+     *    to themselves.
+     *
+     * It affects nothing else as Super Admins can do everything by default.
+     *
+     * @param string[] $required_caps Required primitive capabilities for the requested capability.
+     * @param string $cap Capability or meta capability being checked.
+     * @param int $user_id Concerned user ID.
+     * @param array $args {
+     *     Arguments that accompany the requested capability check.
+     *
+     * @type mixed ...$0 Optional second and further parameters.
+     * }
+     * @return string[] Required capabilities for the requested action.
+     */
+    public function filter_map_meta_cap(array $required_caps, $cap, $user_id, array $args)
+    {
+        if (('login_as_user' === $cap) && ($args[0] === $user_id)) {
+            $required_caps[] = 'do_not_allow';
+        }
+        return $required_caps;
+    }
+
+    
 
 	// Get the string type for the Login as ... button.
 	public function login_as_type($user, $allow_trim_name = true)
@@ -784,15 +795,6 @@ CSS;
 		return $login_as_type;
 	}
 
-	public function login_as_user_metabox($post)
-	{
-		
-
-		 
-		echo $this->onlyInProTextLink();
-		 
-	}
-
 	public function w357_personal_options( WP_User $user ) 
 	{
 		$login_as_user_url = $this->build_the_login_as_user_url($user);
@@ -813,88 +815,12 @@ CSS;
 		}
 	}
 
-	public function loginasuser_col_content($val, $column_name, $user_id)
-	{
-		switch ($column_name) {
-			case 'loginasuser_col':
-				$user = new WP_User($user_id);
-
-				$login_as_user_url = $this->build_the_login_as_user_url($user);
-
-				if (get_current_user_id() == $user_id) {
-					return __('It\'s me.', 'login-as-user');
-				}
-
-				if (!current_user_can('login_as_user', $user_id)) {
-					return __('Could not login as this user.', 'login-as-user');
-				}
-				
-				if (!$login_as_user_url || empty($user->user_login)) 
-				{
-					return __('Already logged in.', 'login-as-user');
-				}
-
-				$options = (object) get_option( 'login_as_user_options' );
-				if (!empty($options->login_as_type) && $options->login_as_type == 'only_icon')
-				{
-					return '<a class="button w357-login-as-user-btn w357-login-as-user-col-btn" href="' . esc_url($login_as_user_url) . '" title="'.esc_html__('Login as', 'login-as-user').': ' . $this->login_as_type($user, false) . '"><span class="dashicons dashicons-admin-users"></span></a>';
-				}
-
-				return '<a class="button w357-login-as-user-btn w357-login-as-user-col-btn" href="' . esc_url($login_as_user_url) . '" title="'.esc_html__('Login as', 'login-as-user').': ' . $this->login_as_type($user, false) . '"><span class="dashicons dashicons-admin-users"></span> '.esc_html__('Login as', 'login-as-user').': <strong>' . $this->login_as_type($user) . '</strong></a>';		
-
-				break;
-			default:
-		}
-		return $val;
-	}
-
-
-
-
-
-	 
-	function onlyInProTextLink()
-	{
-		echo '<a title="'.__('The Login as User functionality for WooCommerce is only available in the PRO version.', 'login-as-user').'" href="https://www.web357.com/login-as-user-wordpress-plugin?utm_source=buyprolink-loginasuserwp&utm_medium=CLIENT-WP-Backend-BuyProLink-Web357-loginasuserwp&utm_campaign=buyprolink-loginasuserwp#pricing" target="_blank"><small>Only in PRO version</small></a>';
-	}
-	 
-
-	/**
-	 * Add extra column in users/woocommerce orders/subscriptions page.
-	 */
-	function loginasuser_col($columns)
-	{
-		$new_columns = array();
-
-		foreach ($columns as $column_name => $column_info) {
-
-			$new_columns[$column_name] = $column_info;
-
-			if ('username' === $column_name || 'order_number' === $column_name || 'order_title' === $column_name) {
-				$new_columns['loginasuser_col'] = __('Login as User', 'login-as-user');
-			}
-		}
-
-		return $new_columns;
-	}
-
-	/**
-	 * Adjusts the styles for the new column.
-	 */
-	function loginasuser_col_style()
-	{
-		$options = (object) get_option( 'login_as_user_options' );
-		if (!empty($options->login_as_type) && $options->login_as_type == 'only_icon')
-		{
-			$css = '.widefat .column-loginasuser_col { width: 7% !important; }';
-		}
-		else
-		{
-			$css = '.widefat .column-loginasuser_col { width: 20% !important; }';
-		}
-
-		wp_add_inline_style('woocommerce_admin_styles', $css);
-	}
+     
+    function onlyInProTextLink()
+    {
+        return static::$pluginSettings->isPluginActive('login-as-user-pro') ? '' : '<a title="' . __('The Login as User functionality for WooCommerce is only available in the PRO version.', 'login-as-user') . '" href="https://www.web357.com/login-as-user-wordpress-plugin?utm_source=buyprolink-loginasuserwp&utm_medium=CLIENT-WP-Backend-BuyProLink-Web357-loginasuserwp&utm_campaign=buyprolink-loginasuserwp#pricing" target="_blank"><small>Only in PRO version</small></a>';
+    }
+     
 
 	/**
 	 * Sets authorisation cookies containing the originating user information.
@@ -1129,7 +1055,7 @@ CSS;
 		}
 
 		// When switching, instruct WooCommerce to forget about the current user's session
-		if (function_exists('WC') && $this->isWooCommerceActive()) {
+        if (function_exists('WC') && static::$pluginSettings->isPluginActive('woocommerce')) {
 			LoginAsUser_WooCommerce_Integration::forget_woocommerce_session(WC());
 		}
 
@@ -1200,5 +1126,17 @@ CSS;
 	
 }
 
-$plugin = new w357LoginAsUser();
-$plugin->run();
+// Initialize the Login as User functionality on init hook to avoid early loading issues
+function initialize_w357_login_as_user() {
+    
+    if (!isset($w357_login_as_user_instance)) {
+        $w357_login_as_user_instance = new w357LoginAsUser();
+        $w357_login_as_user_instance->run();
+    }
+    
+    return $w357_login_as_user_instance;
+}
+
+// Hook the initialization to init
+add_action('init', 'initialize_w357_login_as_user', 5);
+

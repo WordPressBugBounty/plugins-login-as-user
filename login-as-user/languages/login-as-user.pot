@@ -151,7 +151,7 @@ msgid "Login as User settings"
 msgstr ""
 
 #: includes/class-w357-settings.php:91
-msgid "Option saved successfully!"
+msgid "Settings saved successfully!"
 msgstr ""
 
 #: includes/class-w357-settings.php:98
