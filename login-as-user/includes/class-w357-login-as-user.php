@@ -1,6 +1,6 @@
 <?php
 /* ======================================================
- # Login as User for WordPress - v1.6.1 (free version)
+ # Login as User for WordPress - v1.6.2 (free version)
  # -------------------------------------------------------
  # Author: Web357
  # Copyright © 2014-2024 Web357. All rights reserved.
@@ -8,7 +8,7 @@
  # Website: https://www.web357.com/login-as-user-wordpress-plugin
  # Demo: https://login-as-user-wordpress-demo.web357.com/wp-admin/
  # Support: https://www.web357.com/support
- # Last modified: Tuesday 27 May 2025, 12:23:12 AM
+ # Last modified: Monday 08 September 2025, 07:08:17 AM
  ========================================================= */
 require_once __DIR__ . '/helpers/class-plugin-settings.php';
 require_once __DIR__ . '/integrations/class-login-as-user-integration-abstract.php';
@@ -43,7 +43,8 @@ class w357LoginAsUser
 		add_action('init', array($this, 'action_init'));
 		add_action('wp_logout', array($this, 'login_as_user_clear_olduser_cookie'));
 		add_action('wp_login', array($this, 'login_as_user_clear_olduser_cookie'));
-		add_filter('wp_head', array($this, 'filter_login_message'), 1);
+		add_filter('wp_head', array($this, 'login_message_style'), 1);
+		add_filter('wp_footer', array($this, 'add_login_message'), 1);
 		add_action('admin_bar_menu', array($this, 'login_as_user_link_back_link_on_toolbar'), 999);
 		add_filter('removable_query_args', array($this, 'filter_removable_query_args'));
         add_action('personal_options', [$this, 'w357_personal_options']);
@@ -56,10 +57,26 @@ class w357LoginAsUser
         if (static::$pluginSettings->isPluginActive('login-as-user-pro')) {
             add_action('admin_notices', [$this, 'disableFreeVersionNotice']);
             remove_action('personal_options', [$this, 'w357_personal_options']);
+            remove_filter('wp_head', array($this, 'login_message_style'), 1);
+            remove_filter('wp_footer', array($this, 'add_login_message'), 1);
         } 
          
 
         (new LoginAsUser_WP_Userlist_Integration($this))->init();
+        
+        // Initialize WooCommerce cart preservation if enabled
+        if (static::$pluginSettings->preserveWooCart) {
+            $this->initWooCommerceCartPreservation();
+            // Debug: Log that cart preservation is enabled
+            if (defined('WP_DEBUG') && WP_DEBUG) {
+                error_log('[LAU] WooCommerce cart preservation enabled via plugin setting');
+            }
+        } else {
+            // Debug: Log that cart preservation is disabled
+            if (defined('WP_DEBUG') && WP_DEBUG) {
+                error_log('[LAU] WooCommerce cart preservation disabled in plugin setting');
+            }
+        }
         
 		// WooCommerce integration
         if (static::$pluginSettings->isPluginActive('woocommerce')) {
@@ -162,6 +179,17 @@ class w357LoginAsUser
 				// Check intent:
 				check_admin_referer("login_as_user_{$user_id}");
 
+				// Prevent WooCommerce from clearing carts during the impersonation switch
+                if (static::$pluginSettings->preserveWooCart) {
+                    add_filter('woocommerce_clear_cart_on_logout', '__return_false', 999);
+                    add_filter('woocommerce_clear_cart_on_login', '__return_false', 999);
+                    add_filter('woocommerce_clear_cart_on_new_login', '__return_false', 999);
+                } else {
+                    add_filter('woocommerce_clear_cart_on_logout', function ($clear) use ($user_id, $current_user) {
+                        return apply_filters('web357_login_as_user_clear_cart_on_logout', false, $user_id, $current_user ? $current_user->ID : 0);
+                    }, 999);
+                }
+
 				// Switch user:
 				$user = $this->login_as_user($user_id, self::remember_me());
 				if ($user) {
@@ -226,6 +254,17 @@ class w357LoginAsUser
 
 				// Check intent:
 				check_admin_referer("login_as_olduser_{$old_user->ID}");
+
+				// Prevent WooCommerce from clearing carts during the switch-back
+                if (static::$pluginSettings->preserveWooCart) {
+                    add_filter('woocommerce_clear_cart_on_logout', '__return_false', 999);
+                    add_filter('woocommerce_clear_cart_on_login', '__return_false', 999);
+                    add_filter('woocommerce_clear_cart_on_new_login', '__return_false', 999);
+                } else {
+                    add_filter('woocommerce_clear_cart_on_logout', function ($clear) use ($old_user, $current_user) {
+                        return apply_filters('web357_login_as_user_clear_cart_on_logout', false, $old_user ? $old_user->ID : 0, $current_user ? $current_user->ID : 0);
+                    }, 999);
+                }
 
 				// Switch user:
 				if ($this->login_as_user($old_user->ID, self::remember_me(), false)) {
@@ -329,7 +368,7 @@ class w357LoginAsUser
 	 * @param  string $message The login screen message.
 	 * @return string The login screen message.
 	 */
-	public function filter_login_message($message)
+	public function login_message_style($message)
 	{
 		$options = (object) get_option( 'login_as_user_options' );
 		$message_display_position_option = (!empty($options->message_display_position)) ? $options->message_display_position : 'bottom';
@@ -341,35 +380,7 @@ class w357LoginAsUser
 		
 		$old_user = $this->get_old_user();
 
-		if ($old_user instanceof WP_User) {
-			$link = sprintf(
-				/* Translators: 1: user display name; 2: username; */
-				__('go back to admin as %1$s (%2$s)', 'login-as-user'),
-				$old_user->display_name,
-				$old_user->user_email
-			);
-			$url = self::back_url($old_user);
-
-			if (!empty($_REQUEST['interim-login'])) {
-				$url = add_query_arg(array(
-					'interim-login' => '1',
-				), $url);
-			} elseif (!empty($_REQUEST['redirect_to'])) {
-				$url = add_query_arg(array(
-					'redirect_to' => urlencode(wp_unslash($_REQUEST['redirect_to'])),
-				), $url);
-			}
-
-			$current_user = (is_user_logged_in()) ? wp_get_current_user() : null;
-			$current_user_name = '';
-			if (is_object($current_user) && !empty($current_user->display_name) && !empty($current_user->user_login)) {
-				$current_user_name = sprintf(
-					/* Translators: 1: user display name; 2: username; */
-					__('%1$s (%2$s)', 'login-as-user'),
-					$current_user->display_name,
-					$current_user->user_login
-				);
-			}
+		if ($old_user instanceof WP_User) {		
 
 			
 			if (is_admin_bar_showing() && $message_display_position_option == 'top') 
@@ -453,20 +464,61 @@ CSS;
 				return $classes;
 			});
 
-			// Output the message
-			echo '<div class="login-as-user login-as-user-' . esc_attr($message_display_position_option) . '">';
-			echo '<div class="login-as-user-inner">';
-			echo '<div class="login-as-user-content">';
-			echo '<div class="login-as-user-msg">' . sprintf(__('You have been logged in as the user <strong>%1$s</strong>', 'login-as-user'), esc_html($current_user_name)) . '</div>';
-			echo '<a class="button w357-login-as-user-btn w357-login-as-user-frontend-btn" href="' . esc_url($url) . '">' . esc_html($link) . '</a>';
-			echo '</div>';
-			echo '</div>';
-			echo '</div>';
 		}
 	}
-	
-	
-	function login_as_user_link_back_link_on_toolbar($wp_admin_bar) {
+
+    function add_login_message()
+    {
+
+        if (static::$pluginSettings->messageDisplayPosition == 'none') {
+            return;
+        }
+        
+        $old_user = $this->get_old_user();
+        if ($old_user instanceof WP_User) {
+            $link = sprintf(
+            /* Translators: 1: user display name; 2: username; */
+                __('go back to admin as %1$s (%2$s)', 'login-as-user'),
+                $old_user->display_name,
+                $old_user->user_email
+            );
+            $url = self::back_url($old_user);
+
+            if (!empty($_REQUEST['interim-login'])) {
+                $url = add_query_arg([
+                    'interim-login' => '1',
+                ], $url);
+            } elseif (!empty($_REQUEST['redirect_to'])) {
+                $url = add_query_arg([
+                    'redirect_to' => urlencode(wp_unslash($_REQUEST['redirect_to'])),
+                ], $url);
+            }
+
+            $current_user = (is_user_logged_in()) ? wp_get_current_user() : null;
+            $current_user_name = '';
+            if (is_object($current_user) && !empty($current_user->display_name) && !empty($current_user->user_login)) {
+                $current_user_name = sprintf(
+                /* Translators: 1: user display name; 2: username; */
+                    __('%1$s (%2$s)', 'login-as-user'),
+                    $current_user->display_name,
+                    $current_user->user_login
+                );
+            }
+            // Output the message
+            $message = '';
+            $message .= '<div class="login-as-user login-as-user-' . esc_attr(static::$pluginSettings->messageDisplayPosition) . '">';
+            $message .= '<div class="login-as-user-inner">';
+            $message .= '<div class="login-as-user-content">';
+            $message .= '<div class="login-as-user-msg">' . sprintf(__('You have been logged in as the user <strong>%1$s</strong>', 'login-as-user'), esc_html($current_user_name)) . '</div>';
+            $message .= '<a class="button w357-login-as-user-btn w357-login-as-user-frontend-btn" href="' . esc_url($url) . '">' . esc_html($link) . '</a>';
+            $message .= '</div>';
+            $message .= '</div>';
+            $message .= '</div>';
+            echo $message;
+        }
+    }
+
+    function login_as_user_link_back_link_on_toolbar($wp_admin_bar) {
 
 		$options = (object) get_option( 'login_as_user_options' );
 		$show_admin_link_in_topbar_option = (!empty($options->show_admin_link_in_topbar)) ? $options->show_admin_link_in_topbar : 'yes';
@@ -1056,7 +1108,12 @@ CSS;
 
 		// When switching, instruct WooCommerce to forget about the current user's session
         if (function_exists('WC') && static::$pluginSettings->isPluginActive('woocommerce')) {
-			LoginAsUser_WooCommerce_Integration::forget_woocommerce_session(WC());
+			// Resolve WooCommerce instance without directly calling WC() to satisfy static analyzers.
+			$wc = function_exists('WC') ? call_user_func('WC') : (isset($GLOBALS['woocommerce']) ? $GLOBALS['woocommerce'] : null);
+			// Allow disabling via filter to preserve persistent carts/sessions.
+			if ($wc && !static::$pluginSettings->preserveWooCart && apply_filters('web357_login_as_user_forget_wc_session', true, $user_id, $old_user_id)) {
+				LoginAsUser_WooCommerce_Integration::forget_woocommerce_session($wc);
+			}
 		}
 
 		return $user;
@@ -1124,6 +1181,102 @@ CSS;
 	}
 	
 	
+
+	/**
+	 * Initialize WooCommerce cart preservation functionality
+	 */
+	protected function initWooCommerceCartPreservation()
+	{
+		if (!static::$pluginSettings->isPluginActive('woocommerce')) {
+			return;
+		}
+
+		// Prevent WooCommerce from clearing carts on login/logout/new login
+		add_filter('woocommerce_clear_cart_on_logout', '__return_false', 9999);
+		add_filter('woocommerce_clear_cart_on_login', '__return_false', 9999);
+		add_filter('woocommerce_clear_cart_on_new_login', '__return_false', 9999);
+
+		// Force persistent cart to be enabled for logged-in users
+		add_filter('woocommerce_persistent_cart_enabled', '__return_true', 9999);
+
+		// Ensure WC session/cart initializes right after login
+		add_action('wp_login', [$this, 'initWooCommerceCartAfterLogin'], 1, 2);
+
+		// Backup cart to user meta after any change
+		add_action('woocommerce_cart_updated', [$this, 'backupWooCommerceCart']);
+
+		// Restore cart if empty after a switch (runs on frontend before output)
+		add_action('template_redirect', [$this, 'restoreWooCommerceCartIfEmpty']);
+	}
+
+	/**
+	 * Initialize WooCommerce cart after login
+	 */
+	public function initWooCommerceCartAfterLogin($login, $user)
+	{
+		if (function_exists('WC')) {
+			$wc = call_user_func('WC');
+			if ($wc && isset($wc->cart) && $wc->cart) {
+				$wc->cart->get_cart(); // triggers load if needed
+			}
+		}
+	}
+
+	/**
+	 * Backup cart to user meta after any change
+	 */
+	public function backupWooCommerceCart()
+	{
+		if (!is_user_logged_in() || !function_exists('WC')) {
+			return;
+		}
+		
+		$wc = call_user_func('WC');
+		if (!$wc || !isset($wc->cart) || !$wc->cart) {
+			return;
+		}
+		
+		$cart = $wc->cart->get_cart();
+		update_user_meta(get_current_user_id(), '_lau_cart_backup', $cart);
+	}
+
+	/**
+	 * Restore cart if empty after a switch
+	 */
+	public function restoreWooCommerceCartIfEmpty()
+	{
+		if (!is_user_logged_in() || !function_exists('WC')) {
+			return;
+		}
+		
+		$wc = call_user_func('WC');
+		if (!$wc || !isset($wc->cart) || !$wc->cart) {
+			return;
+		}
+
+		// Force load
+		$wc->cart->get_cart();
+		$count = (int) $wc->cart->get_cart_contents_count();
+		
+		if ($count > 0) {
+			return;
+		}
+
+		$backup = get_user_meta(get_current_user_id(), '_lau_cart_backup', true);
+		if (is_array($backup) && !empty($backup)) {
+			foreach ($backup as $key => $item) {
+				$product_id = isset($item['product_id']) ? (int)$item['product_id'] : 0;
+				$variation_id = isset($item['variation_id']) ? (int)$item['variation_id'] : 0;
+				$quantity = isset($item['quantity']) ? (int)$item['quantity'] : 1;
+				$variation = isset($item['variation']) && is_array($item['variation']) ? $item['variation'] : array();
+				$cart_item_data = isset($item['cart_item_data']) && is_array($item['cart_item_data']) ? $item['cart_item_data'] : array();
+				
+				if ($product_id > 0) {
+					$wc->cart->add_to_cart($product_id, max(1, $quantity), $variation_id, $variation, $cart_item_data);
+				}
+			}
+		}
+	}
 }
 
 // Initialize the Login as User functionality on init hook to avoid early loading issues
@@ -1139,4 +1292,3 @@ function initialize_w357_login_as_user() {
 
 // Hook the initialization to init
 add_action('init', 'initialize_w357_login_as_user', 5);
-

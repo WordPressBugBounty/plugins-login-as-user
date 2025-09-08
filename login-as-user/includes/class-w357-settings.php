@@ -1,6 +1,6 @@
 <?php
 /* ======================================================
- # Login as User for WordPress - v1.6.1 (free version)
+ # Login as User for WordPress - v1.6.2 (free version)
  # -------------------------------------------------------
  # Author: Web357
  # Copyright © 2014-2024 Web357. All rights reserved.
@@ -8,7 +8,7 @@
  # Website: https://www.web357.com/login-as-user-wordpress-plugin
  # Demo: https://login-as-user-wordpress-demo.web357.com/wp-admin/
  # Support: https://www.web357.com/support
- # Last modified: Tuesday 27 May 2025, 12:23:12 AM
+ # Last modified: Monday 08 September 2025, 07:08:17 AM
  ========================================================= */
  
 /**
@@ -108,6 +108,15 @@ class LoginAsUser_settings {
         try {
             $valid_fields = [];
             $errors = [];
+            
+            // Handle checkbox fields that might not be present when unchecked
+            $checkbox_fields = ['preserve_wc_cart_on_switch'];
+            foreach ($checkbox_fields as $checkbox_field) {
+                if (!isset($fields[$checkbox_field])) {
+                    $fields[$checkbox_field] = [];
+                }
+            }
+            
             foreach ($fields as $fieldName => $fieldValue) {
                 try {
                     switch ($fieldName) {
@@ -144,6 +153,13 @@ class LoginAsUser_settings {
                             $value = trim($fields[$fieldName]);
                             $value = strip_tags(stripslashes($value));
                             $valid_fields[$fieldName] = $value;
+                            break;
+                        case 'preserve_wc_cart_on_switch':
+                            // Expect array with 'yes' when checked
+                            $val = isset($fields[$fieldName]) ? $fields[$fieldName] : [];
+                            if (!is_array($val)) { $val = []; }
+                            $val = array_values(array_intersect($val, ['yes']));
+                            $valid_fields[$fieldName] = $val;
                             break;
                         
                     }
@@ -272,6 +288,27 @@ class LoginAsUser_settings {
 		 
 
 		
+
+        // Preserve WooCommerce cart on switch
+        add_settings_field(
+            'preserve_wc_cart_on_switch',
+            esc_html__('Preserve WooCommerce cart on switch', 'login-as-user'),
+            [$this->fields, 'checkboxField'],
+            'login-as-user-settings',
+            'base_settings_section',
+            [
+                'id' => 'preserve_wc_cart_on_switch',
+                'default_value' => [],
+                'options' => [
+                    [
+                        'id' => 'preserve_wc_cart_on_switch_yes',
+                        'label' => esc_html__('Do not clear/forget carts during Login as User flows', 'login-as-user'),
+                        'value' => 'yes'
+                    ],
+                ],
+                'field_description' => ''
+            ]
+        );
 
         /**
          * SECTIONS - Appearance Tab
