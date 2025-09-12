@@ -1,6 +1,6 @@
 <?php
 /* ======================================================
- # Login as User for WordPress - v1.6.2 (free version)
+ # Login as User for WordPress - v1.6.3 (free version)
  # -------------------------------------------------------
  # Author: Web357
  # Copyright © 2014-2024 Web357. All rights reserved.
@@ -8,7 +8,7 @@
  # Website: https://www.web357.com/login-as-user-wordpress-plugin
  # Demo: https://login-as-user-wordpress-demo.web357.com/wp-admin/
  # Support: https://www.web357.com/support
- # Last modified: Monday 08 September 2025, 07:08:17 AM
+ # Last modified: Friday 12 September 2025, 07:35:53 AM
  ========================================================= */
 class LoginAsUser_Public {
 

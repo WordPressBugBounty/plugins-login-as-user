@@ -5,7 +5,7 @@ Donate link: https://www.paypal.me/web357
 Requires at least: 5.3
 Tested up to: 6.8
 Requires PHP: 7.3
-Stable tag: 1.6.2
+Stable tag: 1.6.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -71,6 +71,9 @@ Yes, "Login as User" is designed to be compatible with most third-party plugins 
 5. Settings.
 
 == Changelog ==
+= 12-Sep-2025 : v1.6.3 =
+* Remove debug logging for WooCommerce cart preservation.
+
 = 08-Sep-2025 : v1.6.2 =
 * Added WooCommerce Cart Preservation, ensuring customer carts remain intact when admins log in as users — preventing lost items and improving checkout support. More: https://docs.web357.com/article/161-woocommerce-cart-preservation-keep-customer-carts-intact
 * Fixed invalid HTML output by moving the filter_login_message hook from wp_head to wp_footer, preventing layout issues caused by injected markup inside the head element.

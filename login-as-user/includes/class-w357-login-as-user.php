@@ -1,6 +1,6 @@
 <?php
 /* ======================================================
- # Login as User for WordPress - v1.6.2 (free version)
+ # Login as User for WordPress - v1.6.3 (free version)
  # -------------------------------------------------------
  # Author: Web357
  # Copyright © 2014-2024 Web357. All rights reserved.
@@ -8,7 +8,7 @@
  # Website: https://www.web357.com/login-as-user-wordpress-plugin
  # Demo: https://login-as-user-wordpress-demo.web357.com/wp-admin/
  # Support: https://www.web357.com/support
- # Last modified: Monday 08 September 2025, 07:08:17 AM
+ # Last modified: Friday 12 September 2025, 07:35:53 AM
  ========================================================= */
 require_once __DIR__ . '/helpers/class-plugin-settings.php';
 require_once __DIR__ . '/integrations/class-login-as-user-integration-abstract.php';
@@ -67,17 +67,8 @@ class w357LoginAsUser
         // Initialize WooCommerce cart preservation if enabled
         if (static::$pluginSettings->preserveWooCart) {
             $this->initWooCommerceCartPreservation();
-            // Debug: Log that cart preservation is enabled
-            if (defined('WP_DEBUG') && WP_DEBUG) {
-                error_log('[LAU] WooCommerce cart preservation enabled via plugin setting');
-            }
-        } else {
-            // Debug: Log that cart preservation is disabled
-            if (defined('WP_DEBUG') && WP_DEBUG) {
-                error_log('[LAU] WooCommerce cart preservation disabled in plugin setting');
-            }
         }
-        
+		
 		// WooCommerce integration
         if (static::$pluginSettings->isPluginActive('woocommerce')) {
             require_once plugin_dir_path(dirname(__FILE__)) . 'includes/integrations/class-woocommerce.php';
