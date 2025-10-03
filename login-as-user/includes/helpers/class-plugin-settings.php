@@ -73,7 +73,7 @@ class LoginAsUser_Plugin_Settings
         $this->logoutRedirectUrl = !empty($options['logout_redirect_url']) ? home_url('/' . $options['logout_redirect_url']) : '';
         $this->loginButtonDisplayAs = $options['login_as_type'] ?? 'user_login';
         $this->loginAsTypeCharactersLimit = (int)($options['login_as_type_characters_limit'] ?? 0);
-        $this->messageDisplayPosition = $options['message_display_position'] ?? 'top';
+        $this->messageDisplayPosition = $options['message_display_position'] ?? 'bottom';
         $this->showAdminLinkInTopbar = !empty($options['show_admin_link_in_topbar']) && $options['show_admin_link_in_topbar'] === 'yes';
         $this->enableAttentionAnimation = !empty($options['enable_ping_animation']) && $options['enable_ping_animation'] === 'yes';
         $this->preserveWooCart = !empty($options['preserve_wc_cart_on_switch']) && in_array('yes', (array)$options['preserve_wc_cart_on_switch'], true);

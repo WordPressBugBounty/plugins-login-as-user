@@ -5,7 +5,7 @@ Donate link: https://www.paypal.me/web357
 Requires at least: 5.3
 Tested up to: 6.8
 Requires PHP: 7.3
-Stable tag: 1.6.3
+Stable tag: 1.6.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -71,6 +71,13 @@ Yes, "Login as User" is designed to be compatible with most third-party plugins 
 5. Settings.
 
 == Changelog ==
+= 03-Oct-2025 : v1.6.5 =
+* Bug Fixed: The "Go back to admin..." is not displayed after logging in as a user.  
+* Manually clear WordPress authentication cookies without triggering clear_auth_cookie action. This prevents conflicts with other plugins (e.g. WP Activity Log) that hook into the action.
+
+= 17-Sep-2025 : v1.6.4 =
+* By default, set the Message Display Position to the bottom instead of top, but you can always change it from the Settings > Login as User > Appearance > Message > Message Display Position > Top or Bottom.
+
 = 12-Sep-2025 : v1.6.3 =
 * Remove debug logging for WooCommerce cart preservation.
 

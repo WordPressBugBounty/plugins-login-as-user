@@ -1,6 +1,6 @@
 <?php
 /* ======================================================
- # Login as User for WordPress - v1.6.4 (free version)
+ # Login as User for WordPress - v1.6.5 (free version)
  # -------------------------------------------------------
  # Author: Web357
  # Copyright © 2014-2024 Web357. All rights reserved.
@@ -8,7 +8,7 @@
  # Website: https://www.web357.com/login-as-user-wordpress-plugin
  # Demo: https://login-as-user-wordpress-demo.web357.com/wp-admin/
  # Support: https://www.web357.com/support
- # Last modified: Wednesday 17 September 2025, 07:20:56 PM
+ # Last modified: Friday 03 October 2025, 04:10:21 PM
  ========================================================= */
 require_once __DIR__ . '/helpers/class-plugin-settings.php';
 require_once __DIR__ . '/integrations/class-login-as-user-integration-abstract.php';
@@ -97,6 +97,48 @@ class w357LoginAsUser
         }
     }
 
+	/**
+	 * Manually clear WordPress authentication cookies without triggering clear_auth_cookie action
+	 * This prevents conflicts with other plugins that hook into the action
+	 * 
+	 * @return void
+	 */
+	private function manual_clear_auth_cookies()
+	{
+		/** This filter is documented in wp-includes/pluggable.php */
+		if (!apply_filters('send_auth_cookies', true, 0, 0, 0, '', '')) {
+			return;
+		}
+		
+		$user_id = get_current_user_id();
+		
+		// Auth cookies.
+		setcookie(AUTH_COOKIE, ' ', time() - YEAR_IN_SECONDS, ADMIN_COOKIE_PATH, COOKIE_DOMAIN);
+		setcookie(SECURE_AUTH_COOKIE, ' ', time() - YEAR_IN_SECONDS, ADMIN_COOKIE_PATH, COOKIE_DOMAIN);
+		setcookie(AUTH_COOKIE, ' ', time() - YEAR_IN_SECONDS, PLUGINS_COOKIE_PATH, COOKIE_DOMAIN);
+		setcookie(SECURE_AUTH_COOKIE, ' ', time() - YEAR_IN_SECONDS, PLUGINS_COOKIE_PATH, COOKIE_DOMAIN);
+		setcookie(LOGGED_IN_COOKIE, ' ', time() - YEAR_IN_SECONDS, COOKIEPATH, COOKIE_DOMAIN);
+		setcookie(LOGGED_IN_COOKIE, ' ', time() - YEAR_IN_SECONDS, SITECOOKIEPATH, COOKIE_DOMAIN);
+		
+		// Settings cookies.
+		setcookie('wp-settings-' . $user_id, ' ', time() - YEAR_IN_SECONDS, SITECOOKIEPATH);
+		setcookie('wp-settings-time-' . $user_id, ' ', time() - YEAR_IN_SECONDS, SITECOOKIEPATH);
+		
+		// Old cookies.
+		setcookie(AUTH_COOKIE, ' ', time() - YEAR_IN_SECONDS, COOKIEPATH, COOKIE_DOMAIN);
+		setcookie(AUTH_COOKIE, ' ', time() - YEAR_IN_SECONDS, SITECOOKIEPATH, COOKIE_DOMAIN);
+		setcookie(SECURE_AUTH_COOKIE, ' ', time() - YEAR_IN_SECONDS, COOKIEPATH, COOKIE_DOMAIN);
+		setcookie(SECURE_AUTH_COOKIE, ' ', time() - YEAR_IN_SECONDS, SITECOOKIEPATH, COOKIE_DOMAIN);
+		
+		// Even older cookies.
+		setcookie(USER_COOKIE, ' ', time() - YEAR_IN_SECONDS, COOKIEPATH, COOKIE_DOMAIN);
+		setcookie(PASS_COOKIE, ' ', time() - YEAR_IN_SECONDS, COOKIEPATH, COOKIE_DOMAIN);
+		setcookie(USER_COOKIE, ' ', time() - YEAR_IN_SECONDS, SITECOOKIEPATH, COOKIE_DOMAIN);
+		setcookie(PASS_COOKIE, ' ', time() - YEAR_IN_SECONDS, SITECOOKIEPATH, COOKIE_DOMAIN);
+		
+		// Post password cookie.
+		setcookie('wp-postpass_' . COOKIEHASH, ' ', time() - YEAR_IN_SECONDS, COOKIEPATH, COOKIE_DOMAIN);
+	}
 
      
     
@@ -568,7 +610,7 @@ CSS;
 	public function enqueue_styles()
 	{
 		$options = get_option('login_as_user_options', array());
-		$message_display_position_option = (!empty($options['message_display_position'])) ? $options['message_display_position'] : 'top';
+		$message_display_position_option = (!empty($options['message_display_position'])) ? $options['message_display_position'] : 'bottom';
 		$show_admin_link_in_topbar_option = (!empty($options['show_admin_link_in_topbar'])) ? $options['show_admin_link_in_topbar'] : 'yes';
 		$enable_ping_animation = (!empty($options['enable_ping_animation'])) ? $options['enable_ping_animation'] : 'no';
 
@@ -1054,7 +1096,10 @@ CSS;
 
 		add_filter('attach_session_information', $session_filter, 99, 2);
 
-		wp_clear_auth_cookie();
+		// Manually clear WordPress auth cookies without triggering the action hook
+		// This prevents conflicts with other plugins that hook into clear_auth_cookie
+		$this->manual_clear_auth_cookies(); // wp_clear_auth_cookie(); 
+
 		wp_set_auth_cookie($user_id, $remember, '', $new_token);
 		wp_set_current_user($user_id);
 
