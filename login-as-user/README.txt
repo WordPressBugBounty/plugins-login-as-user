@@ -3,9 +3,9 @@ Contributors: yiannistaos, johnbillion
 Tags: user, login, admin, login as user, web357
 Donate link: https://www.paypal.me/web357
 Requires at least: 5.3
-Tested up to: 6.8
-Requires PHP: 7.3
-Stable tag: 1.6.5
+Tested up to: 6.9
+Requires PHP: 7.4
+Stable tag: 1.6.8
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -32,7 +32,7 @@ Login as User is a free WordPress plugin that helps admins switch user accounts 
 - Compatible with the "User Insights" WordPress plugin. You just have to add a custom field with the name "loginasuser".
 
 == PRO Features ==
-- **WooCommerce Integration**: Are you using the WooCommerce plugin? In the WooCommerce orders page, the Login as user button appears besides each customer to help you provide better customer support.
+- **WooCommerce Integration**: Are you using the WooCommerce plugin? In the orders page, the Login as user button appears besides each customer to help you provide better customer support.
 - **WooCommerce Subscriptions Integration**: Is one of your customers having trouble with their order? Do you want to check the details of a customer’s order? You can easily check the customer’s problem from his/her perspective by switching with the Login as User button in the WooCommerce order details page.
 - **[Role Management Permissions](https://docs.web357.com/article/118-role-management-permissions-in-login-as-user-plugin-pro-only?utm_source=wp_plugin_repo&utm_medium=wp_listing&utm_campaign=wp_repo_link&utm_content=wp_repo_link_to_plugin_page)**: The "Role Management Permissions" parameter in the "Login as User" plugin allows administrators to define which roles have the ability to manage (log in as) users of other roles. This feature enhances security and control by limiting the login-as-user capability to specific roles.
 - **[Shortcode](https://docs.web357.com/article/102-shortcode-login-as-user?utm_source=wp_plugin_repo&utm_medium=wp_listing&utm_campaign=wp_repo_link&utm_content=wp_repo_link_to_plugin_page)**: You can use the shortcode [login_as_user user_id="357"] to display the login as user button everywhere, event at the frontend. You just have to specify the user ID in the attribute.
@@ -71,6 +71,19 @@ Yes, "Login as User" is designed to be compatible with most third-party plugins 
 5. Settings.
 
 == Changelog ==
+= 27-Jan-2026 : v1.6.8 =
+* Changed the URL in the 'Only in PRO version' link to point directly to the pricing page and updated the link text to 'Unlock with PRO' for clarity.
+
+= 04-Dec-2025 : v1.6.7 =
+* Fix: Resolved issue causing thousands of audit log entries per second by checking role capabilities directly instead of creating temporary WP_User objects with set_role() calls
+* Fix: Deprecated PHP warnings. Updated method signatures to use nullable type hints (e.g., ?WP_User, ?Update) in login and update checker classes. This improves code clarity and compatibility with modern PHP standards.
+* Fix: preserve role capability settings across tab saves. Fix roleCapabilityCheckboxField to use saved database values instead of actual WordPress capabilities for checkbox state, and prevent roles_with_edit_users_capability from being reset when saving from Appearance tab. Resolves issue where SureCart roles would appear unchecked despite being saved in database.
+
+= 25-Oct-2025 : v1.6.6 =
+* New: Simple setting to control which roles can edit users. We also made role handling consistent so the plugin always uses the correct list of roles.
+* Improved: More reliable multi-select on the settings page when choosing roles. We cleaned up how these selections are saved to avoid issues.
+* Updated: New Web357 logo on the settings page.
+
 = 03-Oct-2025 : v1.6.5 =
 * Bug Fixed: The "Go back to admin..." is not displayed after logging in as a user.  
 * Manually clear WordPress authentication cookies without triggering clear_auth_cookie action. This prevents conflicts with other plugins (e.g. WP Activity Log) that hook into the action.

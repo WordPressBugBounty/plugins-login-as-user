@@ -1,6 +1,6 @@
 <?php
 /* ======================================================
- # Login as User for WordPress - v1.6.5 (free version)
+ # Login as User for WordPress - v1.6.8 (free version)
  # -------------------------------------------------------
  # Author: Web357
  # Copyright © 2014-2024 Web357. All rights reserved.
@@ -8,7 +8,7 @@
  # Website: https://www.web357.com/login-as-user-wordpress-plugin
  # Demo: https://login-as-user-wordpress-demo.web357.com/wp-admin/
  # Support: https://www.web357.com/support
- # Last modified: Friday 03 October 2025, 04:10:21 PM
+ # Last modified: Tuesday 03 February 2026, 10:23:18 AM
  ========================================================= */
 require_once __DIR__ . '/helpers/class-plugin-settings.php';
 require_once __DIR__ . '/integrations/class-login-as-user-integration-abstract.php';
@@ -333,7 +333,7 @@ class w357LoginAsUser
 	 * @param  WP_User $old_user Optional. The old user's WP_User object.
 	 * @return string The URL to redirect to.
 	 */
-	protected static function get_redirect(WP_User $new_user = null, WP_User $old_user = null)
+	protected static function get_redirect(?WP_User $new_user = null, ?WP_User $old_user = null)
 	{
 		if (!empty($_REQUEST['redirect_to'])) {
 			$redirect_to           = self::remove_query_args(wp_unslash($_REQUEST['redirect_to']));
@@ -903,7 +903,7 @@ CSS;
      
     function onlyInProTextLink()
     {
-        return static::$pluginSettings->isPluginActive('login-as-user-pro') ? '' : '<a title="' . __('The Login as User functionality for WooCommerce is only available in the PRO version.', 'login-as-user') . '" href="https://www.web357.com/login-as-user-wordpress-plugin?utm_source=buyprolink-loginasuserwp&utm_medium=CLIENT-WP-Backend-BuyProLink-Web357-loginasuserwp&utm_campaign=buyprolink-loginasuserwp#pricing" target="_blank"><small>Only in PRO version</small></a>';
+        return static::$pluginSettings->isPluginActive('login-as-user-pro') ? '' : '<a title="' . __('The Login as User functionality for WooCommerce is only available in the PRO version.', 'login-as-user') . '" href="https://www.web357.com/login-as-user-wordpress-plugin/pricing?utm_source=buyprolink-loginasuserwp&utm_medium=CLIENT-WP-Backend-BuyProLink-Web357-loginasuserwp&utm_campaign=buyprolink-loginasuserwp" target="_blank"><small>Unlock with PRO</small></a>';
     }
      
 

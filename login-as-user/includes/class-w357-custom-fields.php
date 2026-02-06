@@ -1,6 +1,6 @@
 <?php
 /* ======================================================
- # Login as User for WordPress - v1.6.5 (free version)
+ # Login as User for WordPress - v1.6.8 (free version)
  # -------------------------------------------------------
  # Author: Web357
  # Copyright © 2014-2024 Web357. All rights reserved.
@@ -8,7 +8,7 @@
  # Website: https://www.web357.com/login-as-user-wordpress-plugin
  # Demo: https://login-as-user-wordpress-demo.web357.com/wp-admin/
  # Support: https://www.web357.com/support
- # Last modified: Friday 03 October 2025, 04:10:21 PM
+ # Last modified: Tuesday 03 February 2026, 10:23:18 AM
  ========================================================= */
 /**
  * Define the internationalization functionality
@@ -250,6 +250,60 @@ class LoginAsUser_fields {
         <?php if (!empty($desc)): ?>
         <p class="description"><?php echo wp_kses($desc, ['strong' => [], 'br' => []]); ?></p>
     <?php endif; ?>
+        <?php
+    }
+
+    function roleCapabilityCheckboxField($args)
+    {
+        $name = $args['id'];
+        $options = get_option('login_as_user_options');
+        $desc = isset($args['desc']) ? $args['desc'] : '';
+        $capability = isset($args['capability']) ? $args['capability'] : 'edit_users';
+        
+        // Get all WordPress roles
+        global $wp_roles;
+        $all_roles = $wp_roles->roles;
+        $editable_roles = apply_filters('editable_roles', $all_roles);
+        
+        // Get current saved values (fallback)
+        $saved_roles = isset($options[$name]) ? $options[$name] : array();
+        
+        ?>
+        <div class="w357-role-capability-checkboxes">
+            <?php foreach ($editable_roles as $role_key => $role_data): ?>
+                <?php 
+                // Use saved values from database as the source of truth for checkbox state
+                $is_checked = in_array($role_key, $saved_roles);
+                
+                // Administrator is always enabled regardless of saved settings
+                if ($role_key === 'administrator') {
+                    $is_checked = true;
+                }
+                $checkbox_id = $name . '_' . $role_key;
+                ?>
+                <div class="role-checkbox-item" style="display: flex; align-items: center; margin-bottom: 10px;">
+                    <input 
+                        type="checkbox" 
+                        id="<?php echo esc_attr($checkbox_id); ?>" 
+                        name="login_as_user_options[<?php echo esc_attr($name); ?>][]" 
+                        value="<?php echo esc_attr($role_key); ?>"
+                        <?php checked($is_checked, true); ?>
+                        <?php if ($role_key === 'administrator'): ?>disabled<?php endif; ?>
+                        style="margin-right: 8px;"
+                    >
+                    <label for="<?php echo esc_attr($checkbox_id); ?>" style="margin: 0; font-weight: normal; <?php if ($role_key === 'administrator'): ?>color: #666;<?php endif; ?>">
+                        <?php echo esc_html($role_data['name']); ?>
+                        <?php if ($role_key === 'administrator'): ?>
+                            <em>(<?php echo esc_html__('always enabled', 'login-as-user'); ?>)</em>
+                        <?php endif; ?>
+                    </label>
+                </div>
+            <?php endforeach; ?>
+        </div>
+        
+        <?php if (!empty($desc)): ?>
+            <p class="description"><?php echo wp_kses($desc, ['strong' => [], 'br' => [], 'code' => [], 'em' => []]); ?></p>
+        <?php endif; ?>
         <?php
     }
 }

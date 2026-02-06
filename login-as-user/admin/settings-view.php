@@ -1,6 +1,6 @@
 <?php
 /* ======================================================
- # Login as User for WordPress - v1.6.5 (free version)
+ # Login as User for WordPress - v1.6.8 (free version)
  # -------------------------------------------------------
  # Author: Web357
  # Copyright © 2014-2024 Web357. All rights reserved.
@@ -8,7 +8,7 @@
  # Website: https://www.web357.com/login-as-user-wordpress-plugin
  # Demo: https://login-as-user-wordpress-demo.web357.com/wp-admin/
  # Support: https://www.web357.com/support
- # Last modified: Friday 03 October 2025, 04:10:21 PM
+ # Last modified: Tuesday 03 February 2026, 10:23:18 AM
  ========================================================= */
 // Settings page
 ?>
@@ -20,12 +20,14 @@
                 <?php echo esc_html__( 'About', 'login-as-user' ); ?> Login as User   (Free Version)    
             </h2>
 
-            <div style="margin-top: 20px; overflow:hidden;">
+            <div style="margin-bottom: 20px; display: flex; justify-content: center; text-align: center;">
                 <a href="https://www.web357.com/login-as-user-wordpress-plugin?utm_source=SettingsPage&utm_medium=ReadMoreLink&utm_content=loginasuserwp&utm_campaign=read-more" target="_blank">
-                    <img class="lau-product-img" src="<?php echo esc_url( plugins_url( 'img', (__FILE__) ) ); ?>/login-as-user-wordpress-plugin-120x200.png" alt="Login as User WordPress plugin by Web357" />
+                <img src="<?php echo esc_url( plugins_url( 'img', (__FILE__) ) ); ?>/login-as-user-wordpress-plugin-settings-page.png" alt="Login as User WordPress plugin by Web357" />
                 </a>
-                <p>The Login as a User WordPress plugin allows admins to have easy access to the frontend as a specific user and thus solve problems or provide better and faster customer support. With one click, the admin logs in as the external user or customer and handles any situation without wasting any time at all. If you want a WordPress plugin to switch accounts in an instant, Login as User is for you. <a href="https://www.web357.com/login-as-user-wordpress-plugin?utm_source=SettingsPage&utm_medium=ReadMoreLink&utm_content=loginasuserwp&utm_campaign=read-more" target="_blank">Read more &raquo;</a></p>
-                
+            </div>
+
+            <div style="margin-bottom: 20px;">
+            <p><?php echo esc_html__( 'Login as a User is a powerful WordPress plugin that lets you instantly access any user’s account with just one click — no password needed. Perfect for support, QA, and admin teams, it allows you to see exactly what your users see, making issue resolution faster and easier. Seamlessly integrated with WooCommerce and supporting role-based restrictions, it ensures both flexibility and security. Say goodbye to guesswork and endless email threads, support users in real time, from their exact perspective.', 'login-as-user' ); ?> <a href="https://www.web357.com/login-as-user-wordpress-plugin?utm_source=SettingsPage&utm_medium=ReadMoreLink&utm_content=loginasuserwp&utm_campaign=read-more" target="_blank"><?php echo esc_html__( 'Read more &raquo;', 'login-as-user' ); ?></a></p>
             </div>
 
             <div class="lau-free-vs-pro" style="margin-top: 20px;">
@@ -120,8 +122,8 @@
                 <h4><?php echo esc_html__( 'Need support?', 'login-as-user'); ?></h4>
                 <?php
                 echo sprintf(
-                    __( '<p>If you are having problems with this plugin, please <a href="%1$s">contact us</a> and we will reply as soon as possible.</p>', 'login-as-user' ),
-                    esc_url( 'https://www.web357.com/support' )
+                    __( '<p>If you are having problems with this plugin, please <a href="%1$s" target="_blank">contact us</a> and we will reply as soon as possible.</p>', 'login-as-user' ),
+                    esc_url( 'https://www.web357.com/support/?utm_source=SettingsPage&utm_medium=SupportLink&utm_content=loginasuserwp&utm_campaign=support-link' )
                 );
                 ?>
             </div>
@@ -129,7 +131,7 @@
             <div style="margin-top: 20px;" class="lac-developed-by">
             <hr> 
                 <span><?php echo __('Developed by', 'login-as-user'); ?></span>
-                <a href="<?php echo esc_url('https://www.web357.com/'); ?>" target="_blank">
+                <a href="<?php echo esc_url('https://www.web357.com/?utm_source=SettingsPage&utm_medium=LogoLink&utm_content=loginasuserwp&utm_campaign=logo-link'); ?>" target="_blank">
                     <img src="<?php echo esc_url( plugins_url( 'img', (__FILE__) ) ); ?>/web357-logo.png" alt="Web357 logo" />
                 </a>
             </div>

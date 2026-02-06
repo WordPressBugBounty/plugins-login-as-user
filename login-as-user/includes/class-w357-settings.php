@@ -1,6 +1,6 @@
 <?php
 /* ======================================================
- # Login as User for WordPress - v1.6.5 (free version)
+ # Login as User for WordPress - v1.6.8 (free version)
  # -------------------------------------------------------
  # Author: Web357
  # Copyright © 2014-2024 Web357. All rights reserved.
@@ -8,7 +8,7 @@
  # Website: https://www.web357.com/login-as-user-wordpress-plugin
  # Demo: https://login-as-user-wordpress-demo.web357.com/wp-admin/
  # Support: https://www.web357.com/support
- # Last modified: Friday 03 October 2025, 04:10:21 PM
+ # Last modified: Tuesday 03 February 2026, 10:23:18 AM
  ========================================================= */
  
 /**
@@ -110,10 +110,29 @@ class LoginAsUser_settings {
             $errors = [];
             
             // Handle checkbox fields that might not be present when unchecked
-            $checkbox_fields = ['preserve_wc_cart_on_switch'];
+            // Only process checkbox fields if they are expected to be in the current form submission
+            $checkbox_fields = ['preserve_wc_cart_on_switch', 'roles_with_edit_users_capability'];
             foreach ($checkbox_fields as $checkbox_field) {
-                if (!isset($fields[$checkbox_field])) {
-                    $fields[$checkbox_field] = [];
+                // Only set to empty array if the field is expected in this form context
+                // For roles_with_edit_users_capability, only process if we have other settings tab fields
+                if ($checkbox_field === 'roles_with_edit_users_capability') {
+                    // Only process this field if we're on settings tab (indicated by presence of settings tab fields)
+                    $settings_tab_fields = ['redirect_to', 'logout_redirect_url', 'license_key', 'role_management_assignments'];
+                    $has_settings_fields = false;
+                    foreach ($settings_tab_fields as $settings_field) {
+                        if (isset($fields[$settings_field])) {
+                            $has_settings_fields = true;
+                            break;
+                        }
+                    }
+                    if ($has_settings_fields && !isset($fields[$checkbox_field])) {
+                        $fields[$checkbox_field] = [];
+                    }
+                } else {
+                    // For other checkbox fields, handle normally
+                    if (!isset($fields[$checkbox_field])) {
+                        $fields[$checkbox_field] = [];
+                    }
                 }
             }
             
@@ -173,6 +192,12 @@ class LoginAsUser_settings {
             if ($errors) {
                 throw new \Exception(implode('<br />', $errors));
             }
+            
+            // Preserve roles_with_edit_users_capability if it wasn't processed (e.g., when saving from appearance tab)
+            if (!array_key_exists('roles_with_edit_users_capability', $valid_fields) && isset($default_settings['roles_with_edit_users_capability'])) {
+                $valid_fields['roles_with_edit_users_capability'] = $default_settings['roles_with_edit_users_capability'];
+            }
+            
             add_settings_error('my_option_notice', 'my_option_notice', __('Settings saved successfully!', 'login-as-user'), 'success');
             $valid_fields = array_merge($default_settings, $valid_fields);
         } catch (\Exception $e) {
