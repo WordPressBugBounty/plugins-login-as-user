@@ -97,7 +97,7 @@ class LoginAsUser_WooCommerce_Integration extends LoginAsUser_Integration_Abstra
             return false;
         }
 
-        if (!method_exists($wc->session, 'forget_session')) {
+        if (!isset($wc->session) || !method_exists($wc->session, 'forget_session')) {
             return false;
         }
 

@@ -1,6 +1,6 @@
 <?php
 /* ======================================================
- # Login as User for WordPress - v1.6.8 (free version)
+ # Login as User for WordPress - v1.6.9 (free version)
  # -------------------------------------------------------
  # Author: Web357
  # Copyright © 2014-2024 Web357. All rights reserved.
@@ -8,7 +8,7 @@
  # Website: https://www.web357.com/login-as-user-wordpress-plugin
  # Demo: https://login-as-user-wordpress-demo.web357.com/wp-admin/
  # Support: https://www.web357.com/support
- # Last modified: Tuesday 03 February 2026, 10:23:18 AM
+ # Last modified: Tuesday 14 April 2026, 11:27:57 AM
  ========================================================= */
 require_once __DIR__ . '/helpers/class-plugin-settings.php';
 require_once __DIR__ . '/integrations/class-login-as-user-integration-abstract.php';
@@ -618,6 +618,9 @@ CSS;
 		$old_user = $this->get_old_user();
 		if ($old_user instanceof WP_User && ($message_display_position_option !== 'none' || $show_admin_link_in_topbar_option === 'yes')) {
 
+            // Prevent LiteSpeed Cache (ESI) from caching the frontend bar for other users
+            do_action('litespeed_control_set_private', 'login-as-user');
+            
 			wp_enqueue_style('login-as-user', plugin_dir_url(dirname(__FILE__)) . 'public/css/public.min.css', array(), LOGINASUSER_VERSION, 'all');
 			wp_enqueue_script('login-as-user', plugin_dir_url(dirname(__FILE__)) . 'public/js/public.min.js', array('jquery'), LOGINASUSER_VERSION, false);
 			// Add localization for the ping animation setting
@@ -704,7 +707,7 @@ CSS;
 		return wp_nonce_url(add_query_arg(array(
 			'action' => 'login_as_olduser',
 
-		), wp_login_url()), "login_as_olduser_{$user->ID}");
+		), admin_url('admin-post.php')), "login_as_olduser_{$user->ID}");
 	}
 
 	/**

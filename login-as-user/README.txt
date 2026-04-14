@@ -5,7 +5,7 @@ Donate link: https://www.paypal.me/web357
 Requires at least: 5.3
 Tested up to: 6.9
 Requires PHP: 7.4
-Stable tag: 1.6.8
+Stable tag: 1.6.9
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -71,6 +71,10 @@ Yes, "Login as User" is designed to be compatible with most third-party plugins 
 5. Settings.
 
 == Changelog ==
+= 14-Apr-2026 : v1.6.9 =
+* fix: LiteSpeed Cache Plugin: Logged-in User Sees login as user bottomBar From Another Session.
+* fix: "Go back to admin" button redirects to login screen (Memberium + LearnDash compatibility).
+
 = 27-Jan-2026 : v1.6.8 =
 * Changed the URL in the 'Only in PRO version' link to point directly to the pricing page and updated the link text to 'Unlock with PRO' for clarity.
 
