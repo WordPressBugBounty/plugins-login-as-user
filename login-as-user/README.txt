@@ -5,7 +5,7 @@ Donate link: https://www.paypal.me/web357
 Requires at least: 5.3
 Tested up to: 6.9
 Requires PHP: 7.4
-Stable tag: 1.6.9
+Stable tag: 1.7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -71,6 +71,9 @@ Yes, "Login as User" is designed to be compatible with most third-party plugins 
 5. Settings.
 
 == Changelog ==
+= 02-May-2026 : v1.7.0 =
+* Fix: "Go back to admin" from the frontend was not restoring the original admin session (regression introduced in v1.6.9). Rolling back or logging out manually is no longer needed — the switch-back link now works correctly again.
+
 = 14-Apr-2026 : v1.6.9 =
 * fix: LiteSpeed Cache Plugin: Logged-in User Sees login as user bottomBar From Another Session.
 * fix: "Go back to admin" button redirects to login screen (Memberium + LearnDash compatibility).
