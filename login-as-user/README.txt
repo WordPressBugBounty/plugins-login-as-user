@@ -5,7 +5,7 @@ Donate link: https://www.paypal.me/web357
 Requires at least: 5.3
 Tested up to: 6.9
 Requires PHP: 7.4
-Stable tag: 1.7.0
+Stable tag: 1.7.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -71,6 +71,10 @@ Yes, "Login as User" is designed to be compatible with most third-party plugins 
 5. Settings.
 
 == Changelog ==
+= 12-May-2026 : v1.7.1 =
+* Added new admin settings to show or hide “Login as User” columns in Orders, Subscriptions, and Users views for a cleaner dashboard experience.
+* Fixed an issue on WordPress Bedrock installs where “switch back” login links could fail due to incorrect WordPress URL routing (Replace home_url() with site_url() in back_url() method).
+
 = 02-May-2026 : v1.7.0 =
 * Fix: "Go back to admin" from the frontend was not restoring the original admin session (regression introduced in v1.6.9). Rolling back or logging out manually is no longer needed — the switch-back link now works correctly again.
 

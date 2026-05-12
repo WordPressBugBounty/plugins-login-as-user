@@ -1,6 +1,6 @@
 <?php
 /* ======================================================
- # Login as User for WordPress - v1.7.0 (free version)
+ # Login as User for WordPress - vv1.7.1 (free version)
  # -------------------------------------------------------
  # Author: Web357
  # Copyright © 2014-2024 Web357. All rights reserved.
@@ -8,7 +8,7 @@
  # Website: https://www.web357.com/login-as-user-wordpress-plugin
  # Demo: https://login-as-user-wordpress-demo.web357.com/wp-admin/
  # Support: https://www.web357.com/support
- # Last modified: Friday 01 May 2026, 10:00:49 PM
+ # Last modified: Tuesday 12 May 2026, 05:19:09 PM
  ========================================================= */
 require_once __DIR__ . '/helpers/class-plugin-settings.php';
 require_once __DIR__ . '/integrations/class-login-as-user-integration-abstract.php';
@@ -693,7 +693,7 @@ CSS;
 			'action'  => 'login_as_user',
 			'user_id' => $user->ID,
 			'back_url' => urlencode($current_url),
-		), home_url('/')), "login_as_user_{$user->ID}");
+		), site_url('/')), "login_as_user_{$user->ID}");
 	}
 
 	/**
@@ -707,7 +707,7 @@ CSS;
 		return wp_nonce_url(add_query_arg(array(
 			'action' => 'login_as_olduser',
 
-		),  home_url('/')), "login_as_olduser_{$user->ID}");
+		), site_url('/')), "login_as_olduser_{$user->ID}");
 	}
 
 	/**

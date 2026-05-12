@@ -24,6 +24,10 @@ class LoginAsUser_WooCommerce_Subscriptions_Integration extends LoginAsUser_Inte
 
     public function loginasuser_col($columns)
     {
+        if (!w357LoginAsUser::$pluginSettings->listConfiguration['woocommerce-subscriptions']['buttonDisplay']) {
+            return $columns;
+        }
+
         $new_columns = [];
         if (w357LoginAsUser::$pluginSettings->listConfiguration['woocommerce-subscriptions']['buttonPosition'] === 'last') {
             $new_columns = $columns;

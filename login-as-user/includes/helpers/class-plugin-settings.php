@@ -37,18 +37,30 @@ class LoginAsUser_Plugin_Settings
     public $listConfiguration = [
         'w357-users-list' => [
             'label' => 'Users List',
+            'buttonDisplay' => true,
             'buttonPosition' => '',
-            'buttonSize' => ''
+            'buttonSize' => '',
+            'supportsPosition' => true,
         ],
         'woocommerce' => [
             'label' => 'WooCommerce',
+            'buttonDisplay' => true,
             'buttonPosition' => '',
-            'buttonSize' => ''
+            'buttonSize' => '',
+            'supportsPosition' => true,
         ],
         'woocommerce-subscriptions' => [
             'label' => 'WooCommerce Subscriptions',
+            'buttonDisplay' => true,
             'buttonPosition' => '',
-            'buttonSize' => ''
+            'buttonSize' => '',
+            'supportsPosition' => true,
+        ],
+        'surecart' => [
+            'label' => 'SureCart',
+            'buttonDisplay' => true,
+            'buttonSize' => '',
+            'supportsPosition' => false,
         ],
     ];
 

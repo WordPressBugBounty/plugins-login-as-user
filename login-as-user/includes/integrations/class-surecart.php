@@ -24,6 +24,10 @@ class LoginAsUser_SureCart_Integration extends LoginAsUser_Integration_Abstract
      */
     public function loginasuser_col($columns)
     {
+        if (!w357LoginAsUser::$pluginSettings->listConfiguration['surecart']['buttonDisplay']) {
+            return $columns;
+        }
+
         $columns['loginasuser_col'] = __('Login as User', 'login-as-user');
         return $columns;
     }

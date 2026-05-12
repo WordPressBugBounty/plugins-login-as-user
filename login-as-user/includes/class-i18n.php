@@ -1,6 +1,6 @@
 <?php
 /* ======================================================
- # Login as User for WordPress - v1.7.0 (free version)
+ # Login as User for WordPress - vv1.7.1 (free version)
  # -------------------------------------------------------
  # Author: Web357
  # Copyright © 2014-2024 Web357. All rights reserved.
@@ -8,7 +8,7 @@
  # Website: https://www.web357.com/login-as-user-wordpress-plugin
  # Demo: https://login-as-user-wordpress-demo.web357.com/wp-admin/
  # Support: https://www.web357.com/support
- # Last modified: Friday 01 May 2026, 10:00:49 PM
+ # Last modified: Tuesday 12 May 2026, 05:19:09 PM
  ========================================================= */
 /**
  * Define the internationalization functionality

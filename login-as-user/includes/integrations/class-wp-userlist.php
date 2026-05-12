@@ -16,6 +16,10 @@ class LoginAsUser_WP_Userlist_Integration extends LoginAsUser_Integration_Abstra
 
     public function loginasuser_col($columns)
     {
+        if (!w357LoginAsUser::$pluginSettings->listConfiguration['w357-users-list']['buttonDisplay']) {
+            return $columns;
+        }
+
         $new_columns = [];
         if (w357LoginAsUser::$pluginSettings->listConfiguration['w357-users-list']['buttonPosition'] === 'last') {
             $new_columns = $columns;

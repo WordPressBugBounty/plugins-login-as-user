@@ -24,6 +24,10 @@ class LoginAsUser_WooCommerce_Integration extends LoginAsUser_Integration_Abstra
 
     public function loginasuser_col($columns)
     {
+        if (!w357LoginAsUser::$pluginSettings->listConfiguration['woocommerce']['buttonDisplay']) {
+            return $columns;
+        }
+
         $new_columns = [];
         if (w357LoginAsUser::$pluginSettings->listConfiguration['woocommerce']['buttonPosition'] === 'last') {
             $new_columns = $columns;
