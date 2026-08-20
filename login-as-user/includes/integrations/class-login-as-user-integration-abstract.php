@@ -18,4 +18,15 @@ abstract class LoginAsUser_Integration_Abstract
         $this->loginAsUserButtonGenerator = new LoginAsUserButton_Generator($main);
     }
 
+    /**
+     * Prints already-generated plugin markup through the shared kses allowlist.
+     *
+     * @param string $html The markup to print.
+     * @return void
+     */
+    protected function echoHtml($html)
+    {
+        echo wp_kses((string) $html, LoginAsUserButton_Generator::allowedHtml());
+    }
+
 }

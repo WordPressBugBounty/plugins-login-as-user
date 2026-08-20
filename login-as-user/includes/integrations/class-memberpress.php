@@ -52,40 +52,30 @@ class LoginAsUser_MemberPress_Integration extends LoginAsUser_Integration_Abstra
 
     public function loginasuser_transactions_cell($column_name, $rec, $attributes) {
         if ($column_name === 'col_login_as_user') {
-            echo $this->render_login_cell($rec, $attributes, 'id');
+            $this->echoHtml($this->render_login_cell($rec, $attributes, 'id'));
         }
     }
 
     public function loginasuser_subscriptions_cell($column_name, $rec, $table, $attributes) {
         if ($column_name === 'col_login_as_user') {
-            echo $this->render_login_cell($rec, $attributes, 'id');
+            $this->echoHtml($this->render_login_cell($rec, $attributes, 'id'));
         }
     }
 
     public function loginasuser_members_cell($attributes, $rec, $column_name, $column_display_name) {
         if ($column_name === 'col_login_as_user') {
-            echo $this->render_login_cell($rec, $attributes, 'login');
+            $this->echoHtml($this->render_login_cell($rec, $attributes, 'login'));
         }
     }
 
     public function loginasuser_col_style() {
         $options = (object) get_option('login_as_user_options');
         if (!empty($options->login_as_type) && $options->login_as_type == 'only_icon') {
-            $css = <<<CSS
-            th#col_login_as_user {
-                width: 8% !important;
-            }
-            CSS;
+            $css = 'th#col_login_as_user { width: 8% !important; }';
         } else {
-            $css = <<<CSS
-            th#col_login_as_user {
-                width: 20% !important; 
-            }
-            CSS;
+            $css = 'th#col_login_as_user { width: 20% !important; }';
         }
 
-        echo "<style>{$css}</style>";
-        
         wp_add_inline_style('woocommerce_admin_styles', $css);
     }
 }

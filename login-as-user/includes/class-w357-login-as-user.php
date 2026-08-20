@@ -1,6 +1,6 @@
 <?php
 /* ======================================================
- # Login as User for WordPress - v1.7.2 (free version)
+ # Login as User for WordPress - v1.7.3 (free version)
  # -------------------------------------------------------
  # Author: Web357
  # Copyright © 2014-2024 Web357. All rights reserved.
@@ -8,8 +8,14 @@
  # Website: https://www.web357.com/login-as-user-wordpress-plugin
  # Demo: https://login-as-user-wordpress-demo.web357.com/wp-admin/
  # Support: https://www.web357.com/support
- # Last modified: Monday 25 May 2026, 10:38:10 AM
+ # Last modified: Wednesday 19 August 2026, 11:46:40 PM
  ========================================================= */
+
+// If this file is called directly, abort.
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 require_once __DIR__ . '/helpers/class-plugin-settings.php';
 require_once __DIR__ . '/integrations/class-login-as-user-integration-abstract.php';
 require_once __DIR__ . '/integrations/class-wp-userlist.php';
@@ -106,7 +112,7 @@ class w357LoginAsUser
 	private function manual_clear_auth_cookies()
 	{
 		/** This filter is documented in wp-includes/pluggable.php */
-		if (!apply_filters('send_auth_cookies', true, 0, 0, 0, '', '')) {
+		if (!apply_filters('send_auth_cookies', true, 0, 0, 0, '', '')) { // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Core filter, documented in wp-includes/pluggable.php.
 			return;
 		}
 		
@@ -140,6 +146,20 @@ class w357LoginAsUser
 		setcookie('wp-postpass_' . COOKIEHASH, ' ', time() - YEAR_IN_SECONDS, COOKIEPATH, COOKIE_DOMAIN);
 	}
 
+	/**
+	 * Writes a debug message to the PHP error log, but only while WP_DEBUG is enabled.
+	 *
+	 * @param string $message The message to log.
+	 * @return void
+	 */
+	protected static function log($message)
+	{
+		if (defined('WP_DEBUG') && WP_DEBUG) {
+			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log -- Debug output, only emitted while WP_DEBUG is enabled.
+			error_log($message);
+		}
+	}
+
      
     
     /**
@@ -153,10 +173,16 @@ class w357LoginAsUser
                 'deactivate-plugin_login-as-user/login-as-user.php'
             ) : '';
 
-            printf('<div class="notice notice-warning is-dismissible"><p>%1$s</p></div>',
-                __('You need to deactivate and delete the old <b>Login as User (Free) version of plugin</b> on the plugins page.', 'login-as-user') .
-                ($deactivateUrl ? '&nbsp<a href="' . esc_url($deactivateUrl) . '">' . __('Click here to Deactivate it', 'login-as-user') . '</a>' : '')
+            $notice = wp_kses(
+                __('You need to deactivate and delete the old <b>Login as User (Free) version of plugin</b> on the plugins page.', 'login-as-user'),
+                array('b' => array(), 'strong' => array())
             );
+
+            if ($deactivateUrl) {
+                $notice .= '&nbsp;<a href="' . esc_url($deactivateUrl) . '">' . esc_html__('Click here to Deactivate it', 'login-as-user') . '</a>';
+            }
+
+            echo wp_kses_post('<div class="notice notice-warning is-dismissible"><p>' . $notice . '</p></div>');
         }
     }
 
@@ -173,7 +199,7 @@ class w357LoginAsUser
 	public static function remember_me()
 	{
 		/** This filter is documented in wp-includes/pluggable.php */
-		$cookie_life = apply_filters('auth_cookie_expiration', 259200, get_current_user_id(), false);
+		$cookie_life = apply_filters('auth_cookie_expiration', 259200, get_current_user_id(), false); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Core filter, documented in wp-includes/pluggable.php.
 		$current     = wp_parse_auth_cookie('', 'logged_in');
 
 		// Here we calculate the expiration length of the current auth cookie and compare it to the default expiration.
@@ -186,13 +212,16 @@ class w357LoginAsUser
 	 */
 	public function action_init()
 	{
-		if (!isset($_REQUEST['action'])) {
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Each action below verifies its own nonce via check_admin_referer().
+		$requestedAction = isset($_REQUEST['action']) ? sanitize_key(wp_unslash($_REQUEST['action'])) : '';
+
+		if ('' === $requestedAction) {
 			return;
 		}
 
 		$current_user = (is_user_logged_in()) ? wp_get_current_user() : null;
 
-		switch ($_REQUEST['action']) {
+		switch ($requestedAction) {
 
 				// We're attempting to switch to another user:
 			case 'login_as_user':
@@ -205,7 +234,7 @@ class w357LoginAsUser
 
                 // Check authentication:
                 if (!current_user_can('login_as_user', $user_id)) {
-                    error_log(sprintf(__('Web357LoginAsUser: User "%s" (%d) is not allowed to login as user "%s" (%d).' . 'login-as-user'), $current_user ? $current_user->user_login : '', $current_user ? $current_user->ID : 0, $target_wp_user ? $target_wp_user->user_login : $target_wp_user, $target_wp_user ? $target_wp_user->ID : 0));
+                    self::log(sprintf('Web357LoginAsUser: User "%s" (%d) is not allowed to login as user "%s" (%d).', $current_user ? $current_user->user_login : '', $current_user ? $current_user->ID : 0, $target_wp_user ? $target_wp_user->user_login : $target_wp_user, $target_wp_user ? $target_wp_user->ID : 0));
                     wp_die(esc_html__('Could not login as user.', 'login-as-user'));
                 }
 
@@ -219,7 +248,7 @@ class w357LoginAsUser
                     add_filter('woocommerce_clear_cart_on_new_login', '__return_false', 999);
                 } else {
                     add_filter('woocommerce_clear_cart_on_logout', function ($clear) use ($user_id, $current_user) {
-                        return apply_filters('web357_login_as_user_clear_cart_on_logout', false, $user_id, $current_user ? $current_user->ID : 0);
+                        return apply_filters('web357_login_as_user_clear_cart_on_logout', false, $user_id, $current_user ? $current_user->ID : 0); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Public hook kept for backwards compatibility.
                     }, 999);
                 }
 
@@ -250,7 +279,8 @@ class w357LoginAsUser
 					else 
 					{
 						// Modify the redirect logic to check for the redirect_to value from the shortcode
-						$shortcode_redirect = isset($_GET['redirect_to']) ? $_GET['redirect_to'] : '';
+						// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- The nonce for this action is verified above via check_admin_referer().
+						$shortcode_redirect = isset($_GET['redirect_to']) ? wp_sanitize_redirect(wp_unslash($_GET['redirect_to'])) : '';
 						
 						// When determining the redirect_to URL, prioritize the shortcode redirect if available
 						if (!empty($shortcode_redirect)) {
@@ -265,7 +295,7 @@ class w357LoginAsUser
 					}
 					exit;
 				} else {
-                    error_log(sprintf(__('Web357LoginAsUser: Could not login as user, target user "%s" (%d) not found' . 'login-as-user'), (string)($target_wp_user ? $target_wp_user->user_login : $target_wp_user), (int)($target_wp_user ? $target_wp_user->ID : 0)));
+                    self::log(sprintf('Web357LoginAsUser: Could not login as user, target user "%s" (%d) not found', (string)($target_wp_user ? $target_wp_user->user_login : $target_wp_user), (int)($target_wp_user ? $target_wp_user->ID : 0)));
                     wp_die(esc_html__('Could not login as user.', 'login-as-user'));
 				}
 				break;
@@ -275,13 +305,13 @@ class w357LoginAsUser
 				// Fetch the originating user data:
 				$old_user = $this->get_old_user();
 				if (!$old_user) {
-                    error_log(__('Web357LoginAsUser: Old user not found' . 'login-as-user'));
+                    self::log('Web357LoginAsUser: Old user not found');
                     wp_die(esc_html__('Could not login as user.', 'login-as-user'));
 				}
 
 				// Check authentication:
 				if (!self::authenticate_old_user($old_user)) {
-                    error_log(sprintf(__('Web357LoginAsUser: Authentication failed for old user "%s" (%d)' . 'login-as-user'), (string)($old_user->user_login), $old_user->ID));
+                    self::log(sprintf('Web357LoginAsUser: Authentication failed for old user "%s" (%d)', (string)($old_user->user_login), $old_user->ID));
                     wp_die(esc_html__('Could not login as user.', 'login-as-user'));
 				}
 
@@ -295,7 +325,7 @@ class w357LoginAsUser
                     add_filter('woocommerce_clear_cart_on_new_login', '__return_false', 999);
                 } else {
                     add_filter('woocommerce_clear_cart_on_logout', function ($clear) use ($old_user, $current_user) {
-                        return apply_filters('web357_login_as_user_clear_cart_on_logout', false, $old_user ? $old_user->ID : 0, $current_user ? $current_user->ID : 0);
+                        return apply_filters('web357_login_as_user_clear_cart_on_logout', false, $old_user ? $old_user->ID : 0, $current_user ? $current_user->ID : 0); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Public hook kept for backwards compatibility.
                     }, 999);
                 }
 
@@ -335,18 +365,14 @@ class w357LoginAsUser
 	 */
 	protected static function get_redirect(?WP_User $new_user = null, ?WP_User $old_user = null)
 	{
-		if (!empty($_REQUEST['redirect_to'])) {
-			$redirect_to           = self::remove_query_args(wp_unslash($_REQUEST['redirect_to']));
-			$requested_redirect_to = wp_unslash($_REQUEST['redirect_to']);
-		} else {
-			$redirect_to           = '';
-			$requested_redirect_to = '';
-		}
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- The calling action verifies its own nonce before this runs.
+        $requested_redirect_to = isset($_REQUEST['redirect_to']) ? wp_sanitize_redirect(wp_unslash($_REQUEST['redirect_to'])) : '';
+        $redirect_to           = ('' !== $requested_redirect_to) ? self::remove_query_args($requested_redirect_to) : '';
 
 		if (!$new_user) {
-			$redirect_to = apply_filters('web357_login_as_user_logout_redirect', $redirect_to, $requested_redirect_to, $old_user);
+			$redirect_to = apply_filters('web357_login_as_user_logout_redirect', $redirect_to, $requested_redirect_to, $old_user); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Public hook kept for backwards compatibility.
 		} else {
-			$redirect_to = apply_filters('web357_login_as_user_login_redirect', $redirect_to, $requested_redirect_to, $new_user);
+			$redirect_to = apply_filters('web357_login_as_user_login_redirect', $redirect_to, $requested_redirect_to, $new_user); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Public hook kept for backwards compatibility.
 		}
 
 		return $redirect_to;
@@ -418,74 +444,23 @@ class w357LoginAsUser
 			
 			if (is_admin_bar_showing() && $message_display_position_option == 'top') 
 			{
-				$css = <<<CSS
-				body { 
-					margin-top: 60px !important; 
-					padding-top: 70px !important; 
-				}
-				.login-as-user-top { 
-					top: 32px!important; 
-				}
-				@media only screen and (max-width: 782px) {
-					.login-as-user-top { 
-						top: 46px!important; 
-					}
-				}
-CSS;
+				$css = 'body { margin-top: 60px !important; padding-top: 70px !important; } .login-as-user-top { top: 32px!important; } @media only screen and (max-width: 782px) { .login-as-user-top { top: 46px!important; } }';
 			}
 			elseif (is_admin_bar_showing() && $message_display_position_option == 'bottom') 
 			{
-				$css = <<<CSS
-				body { 
-					margin-bottom: 60px !important; 
-					padding-bottom: 70px !important; 
-				}
-				.login-as-user-bottom { 
-					bottom: 0; 
-				}
-CSS;
+				$css = 'body { margin-bottom: 60px !important; padding-bottom: 70px !important; } .login-as-user-bottom { bottom: 0; }';
 			} 
 			elseif ( $message_display_position_option == 'top') 
 			{
-				$css = <<<CSS
-				body { 
-					margin-top: 60px !important; 
-					padding-top: 70px !important; 
-				}
-				.login-as-user-top { 
-					top: 32px!important; 
-				}
-				@media only screen and (max-width: 782px) {
-					.login-as-user-top { 
-						top: 46px!important; 
-					}
-				}
-CSS;
+				$css = 'body { margin-top: 60px !important; padding-top: 70px !important; } .login-as-user-top { top: 32px!important; } @media only screen and (max-width: 782px) { .login-as-user-top { top: 46px!important; } }';
 			}
 			elseif ($message_display_position_option == 'bottom') 
 			{
-				$css = <<<CSS
-				body { 
-					margin-bottom: 60px !important; 
-					padding-bottom: 70px !important; 
-				}
-				.login-as-user-bottom { 
-					bottom: 0; 
-				}
-CSS;
+				$css = 'body { margin-bottom: 60px !important; padding-bottom: 70px !important; } .login-as-user-bottom { bottom: 0; }';
 			} 
 			else 
 			{
-				$css = <<<CSS
-				body { 
-					padding-top: 70px !important; 
-				}
-				@media only screen and (max-width: 420px) {
-					body { 
-						padding-top: 120px !important; 
-					}
-				}
-CSS;
+				$css = 'body { padding-top: 70px !important; } @media only screen and (max-width: 420px) { body { padding-top: 120px !important; } }';
 			}
 
 			// Inline CSS
@@ -517,13 +492,18 @@ CSS;
             );
             $url = self::back_url($old_user);
 
-            if (!empty($_REQUEST['interim-login'])) {
+            // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only display logic; no state is changed here.
+            $interimLogin = !empty($_REQUEST['interim-login']);
+            // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only display logic; no state is changed here.
+            $requestedRedirectTo = isset($_REQUEST['redirect_to']) ? wp_sanitize_redirect(wp_unslash($_REQUEST['redirect_to'])) : '';
+
+            if ($interimLogin) {
                 $url = add_query_arg([
                     'interim-login' => '1',
                 ], $url);
-            } elseif (!empty($_REQUEST['redirect_to'])) {
+            } elseif ('' !== $requestedRedirectTo) {
                 $url = add_query_arg([
-                    'redirect_to' => urlencode(wp_unslash($_REQUEST['redirect_to'])),
+                    'redirect_to' => urlencode($requestedRedirectTo),
                 ], $url);
             }
 
@@ -542,12 +522,13 @@ CSS;
             $message .= '<div class="login-as-user login-as-user-' . esc_attr(static::$pluginSettings->messageDisplayPosition) . '">';
             $message .= '<div class="login-as-user-inner">';
             $message .= '<div class="login-as-user-content">';
+            /* translators: %1$s: The display name and username of the user you are currently logged in as. */
             $message .= '<div class="login-as-user-msg">' . sprintf(__('You have been logged in as the user <strong>%1$s</strong>', 'login-as-user'), esc_html($current_user_name)) . '</div>';
             $message .= '<a class="button w357-login-as-user-btn w357-login-as-user-frontend-btn" href="' . esc_url($url) . '">' . esc_html($link) . '</a>';
             $message .= '</div>';
             $message .= '</div>';
             $message .= '</div>';
-            echo $message;
+            echo wp_kses_post($message);
         }
     }
 
@@ -563,13 +544,18 @@ CSS;
 			if ($old_user instanceof WP_User) {
 				$url = self::back_url($old_user);
 
-				if (!empty($_REQUEST['interim-login'])) {
+				// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only display logic; no state is changed here.
+				$interimLogin = !empty($_REQUEST['interim-login']);
+				// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only display logic; no state is changed here.
+				$requestedRedirectTo = isset($_REQUEST['redirect_to']) ? wp_sanitize_redirect(wp_unslash($_REQUEST['redirect_to'])) : '';
+
+				if ($interimLogin) {
 					$url = add_query_arg(array(
 						'interim-login' => '1',
 					), $url);
-				} elseif (!empty($_REQUEST['redirect_to'])) {
+				} elseif ('' !== $requestedRedirectTo) {
 					$url = add_query_arg(array(
-						'redirect_to' => urlencode(wp_unslash($_REQUEST['redirect_to'])),
+						'redirect_to' => urlencode($requestedRedirectTo),
 					), $url);
 				}
 
@@ -587,12 +573,15 @@ CSS;
 				// Add a new top-level item with a back arrow icon
 				$args = array(
 					'id'    => 'lau-back-to-admin-dashboard',
-					'title' => sprintf(__('Go back as %1$s', 'login-as-user'), $old_user->display_name),
+					/* translators: %1$s: The original user's display name. */
+					'title' => sprintf(__('Go back as %1$s', 'login-as-user'), esc_html($old_user->display_name)),
 					'href'  => esc_url($url),
 					'meta'  => array(
 						'class' => 'logged-in-successfully',
-						'title' => sprintf(__('You have been logged in as the user "%1$s".', 'login-as-user'), esc_html__($current_user_name)) . ' ' . sprintf(
-									__('Click here to go back to admin dashboard as %1$s (%2$s).', 'login-as-user'), $old_user->display_name, $old_user->user_email
+						/* translators: %1$s: The display name and username of the user you are currently logged in as. */
+						'title' => sprintf(__('You have been logged in as the user "%1$s".', 'login-as-user'), $current_user_name) . ' ' . sprintf(
+							/* translators: 1: The original user's display name. 2: The original user's email address. */
+							__('Click here to go back to admin dashboard as %1$s (%2$s).', 'login-as-user'), $old_user->display_name, $old_user->user_email
 						),
 					)
 				);
@@ -619,7 +608,7 @@ CSS;
 		if ($old_user instanceof WP_User && ($message_display_position_option !== 'none' || $show_admin_link_in_topbar_option === 'yes')) {
 
             // Prevent LiteSpeed Cache (ESI) from caching the frontend bar for other users
-            do_action('litespeed_control_set_private', 'login-as-user');
+            do_action('litespeed_control_set_private', 'login-as-user'); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Third-party hook, not owned by this plugin.
             
 			wp_enqueue_style('login-as-user', plugin_dir_url(dirname(__FILE__)) . 'public/css/public.min.css', array(), LOGINASUSER_VERSION, 'all');
 			wp_enqueue_script('login-as-user', plugin_dir_url(dirname(__FILE__)) . 'public/js/public.min.js', array('jquery'), LOGINASUSER_VERSION, false);
@@ -627,7 +616,7 @@ CSS;
 			wp_localize_script('login-as-user', 'w357LoginAsUser', array(
 				'enablePing' => $enable_ping_animation === 'yes' ? '1' : '0'
 			));
-			wp_register_style('login-as-user-inline-style', false);
+			wp_register_style('login-as-user-inline-style', false, array(), LOGINASUSER_VERSION);
 			wp_enqueue_style('login-as-user-inline-style');
 
             
@@ -674,8 +663,8 @@ CSS;
 	 */
 	public static function loginasuser_url(WP_User $user, array $params =[])
 	{
-        // Check if HTTPS or HTTP
-        $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || $_SERVER['SERVER_PORT'] == 443 ? 'https://' : 'http://';
+        // Check if HTTPS or HTTP (is_ssl() covers both the HTTPS and the SERVER_PORT checks).
+        $protocol = is_ssl() ? 'https://' : 'http://';
 
         // Build the current URL with the correct protocol
         if (!empty($params['logout_redirect_url'])) {
@@ -683,9 +672,13 @@ CSS;
         } elseif (static::$pluginSettings->logoutRedirectUrl) {
             $current_url = static::$pluginSettings->logoutRedirectUrl;
         } else {
-            $current_url = $protocol . $_SERVER['HTTP_HOST'] . wp_unslash($_SERVER['REQUEST_URI']);
-            if (isset($_SERVER['REQUEST_URI']) && strpos($_SERVER['REQUEST_URI'], 'admin-ajax.php') !== false) {
-                $current_url = wp_unslash($_SERVER['HTTP_REFERER']);
+            $requestHost = isset($_SERVER['HTTP_HOST']) ? sanitize_text_field(wp_unslash($_SERVER['HTTP_HOST'])) : '';
+            $requestUri  = isset($_SERVER['REQUEST_URI']) ? esc_url_raw(wp_unslash($_SERVER['REQUEST_URI'])) : '';
+            $current_url = $protocol . $requestHost . $requestUri;
+
+            if (false !== strpos($requestUri, 'admin-ajax.php')) {
+                $referer     = wp_get_referer();
+                $current_url = $referer ? $referer : $current_url;
             }
         }
         
@@ -717,7 +710,10 @@ CSS;
 	 */
 	public static function current_url()
 	{
-		return (is_ssl() ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']; // @codingStandardsIgnoreLine
+		$requestHost = isset($_SERVER['HTTP_HOST']) ? sanitize_text_field(wp_unslash($_SERVER['HTTP_HOST'])) : '';
+		$requestUri  = isset($_SERVER['REQUEST_URI']) ? esc_url_raw(wp_unslash($_SERVER['REQUEST_URI'])) : '';
+
+		return (is_ssl() ? 'https://' : 'http://') . $requestHost . $requestUri;
 	}
 
 	/**
@@ -746,12 +742,12 @@ CSS;
 	 */
 	public static function secure_olduser_cookie()
 	{
-		return (is_ssl() && ('https' === parse_url(home_url(), PHP_URL_SCHEME)));
+		return (is_ssl() && ('https' === wp_parse_url(home_url(), PHP_URL_SCHEME)));
 	}
 
 	public static function secure_back_url_cookie()
 	{
-		return (is_ssl() && ('https' === parse_url(home_url(), PHP_URL_SCHEME)));
+		return (is_ssl() && ('https' === wp_parse_url(home_url(), PHP_URL_SCHEME)));
 	}
 
 	/**
@@ -763,7 +759,7 @@ CSS;
 	 */
 	public static function secure_auth_cookie()
 	{
-		return (is_ssl() && ('https' === parse_url(wp_login_url(), PHP_URL_SCHEME)));
+		return (is_ssl() && ('https' === wp_parse_url(wp_login_url(), PHP_URL_SCHEME)));
 	}
 
 	/**
@@ -837,68 +833,61 @@ CSS;
 	public function login_as_type($user, $allow_trim_name = true)
 	{
 		$options = (object) get_option( 'login_as_user_options' );
+		$loginAsType = $user->user_login;
+
 		if (!empty($options->login_as_type))
 		{
-			switch ($options->login_as_type) 
+			switch ($options->login_as_type)
 			{
-				case 'user_login':
-					$login_as_type = esc_html__($user->user_login, 'login-as-user');
-					break;
-					
 				case 'user_firstname':
-					$login_as_type = (!empty($user->user_firstname)) ? esc_html__($user->user_firstname, 'login-as-user') : esc_html__($user->user_login, 'login-as-user');
+					$loginAsType = (!empty($user->user_firstname)) ? $user->user_firstname : $user->user_login;
 					break;
 
 				case 'user_lastname':
-					$login_as_type = (!empty($user->user_lastname)) ? esc_html__($user->user_lastname, 'login-as-user') : esc_html__($user->user_login, 'login-as-user');
+					$loginAsType = (!empty($user->user_lastname)) ? $user->user_lastname : $user->user_login;
 					break;
 
 				case 'user_fullname':
-					$login_as_type = (!empty($user->user_firstname) || !empty($user->user_lastname)) ? esc_html__($user->user_firstname . ' ' . $user->user_lastname, 'login-as-user') : esc_html__($user->user_login, 'login-as-user');
+					$loginAsType = (!empty($user->user_firstname) || !empty($user->user_lastname)) ? trim($user->user_firstname . ' ' . $user->user_lastname) : $user->user_login;
 					break;
-				
+
+				case 'user_login':
 				case 'only_icon':
-					$login_as_type = esc_html__($user->user_login, 'login-as-user');
-					break;
-			
 				default:
-					$login_as_type = esc_html__($user->user_login, 'login-as-user');
+					$loginAsType = $user->user_login;
 					break;
 			}
-		}
-		else
-		{
-			$login_as_type = esc_html__($user->user_login, 'login-as-user');
 		}
 
 		$login_as_type_characters_limit = (isset($options->login_as_type_characters_limit)) ? $options->login_as_type_characters_limit : 0;
 		if (is_numeric($login_as_type_characters_limit) && $login_as_type_characters_limit > 0 && $allow_trim_name === TRUE)
 		{
-			if(strlen($login_as_type) > $login_as_type_characters_limit)
+			if (strlen($loginAsType) > $login_as_type_characters_limit)
 			{
-				$login_as_type = trim(substr($login_as_type, 0, $login_as_type_characters_limit)) . '&hellip;';
+				return esc_html(trim(substr($loginAsType, 0, $login_as_type_characters_limit))) . '&hellip;';
 			}
 		}
 
-		return $login_as_type;
+		return esc_html($loginAsType);
 	}
 
-	public function w357_personal_options( WP_User $user ) 
+	public function w357_personal_options( WP_User $user )
 	{
 		$login_as_user_url = $this->build_the_login_as_user_url($user);
 
 		if (get_current_user_id() != $user->ID && !empty($user->user_login))
 		{
-			echo '<a class="button w357-login-as-user-btn w357-login-as-user-personal-options-btn" href="' . esc_url($login_as_user_url) . '" title="'.esc_html__('Login as', 'login-as-user').': ' . $this->login_as_type($user, false) . '"><span class="dashicons dashicons-admin-users"></span> '.esc_html__('Login as', 'login-as-user').': <strong>' . $this->login_as_type($user) . '</strong></a>';
+			$buttonHtml = '<a class="button w357-login-as-user-btn w357-login-as-user-personal-options-btn" href="' . esc_url($login_as_user_url) . '" title="' . esc_attr__('Login as', 'login-as-user') . ': ' . $this->login_as_type($user, false) . '"><span class="dashicons dashicons-admin-users"></span> ' . esc_html__('Login as', 'login-as-user') . ': <strong>' . $this->login_as_type($user) . '</strong></a>';
+			echo wp_kses_post($buttonHtml);
 		}
 		else
 		{
 			if (!current_user_can('login_as_user', $user->ID)) {
-				echo __('Could not login as this user.', 'login-as-user');
+				esc_html_e('Could not login as this user.', 'login-as-user');
 			}
 			else
 			{
-				echo __('You are already logged in.', 'login-as-user');
+				esc_html_e('You are already logged in.', 'login-as-user');
 			}
 		}
 	}
@@ -945,13 +934,14 @@ CSS;
 		$auth_cookie = json_encode($auth_cookie);
 
 		/** This filter is documented in wp-includes/pluggable.php */
-		if (!apply_filters('send_auth_cookies', true)) {
+		if (!apply_filters('send_auth_cookies', true)) { // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Core filter, documented in wp-includes/pluggable.php.
 			return;
 		}
 
 		setcookie($auth_cookie_name, $auth_cookie, $expiration, SITECOOKIEPATH, COOKIE_DOMAIN, $secure_auth_cookie, true);
 		setcookie('wp_loginasuser_olduser_'.COOKIEHASH, $olduser_cookie, $expiration, COOKIEPATH, COOKIE_DOMAIN, $secure_olduser_cookie, true);
-		$get_back_url = isset( $_GET['back_url'] ) ? esc_url_raw( $_GET['back_url'] ) : '';
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- The switch action verifies its own nonce before this runs.
+		$get_back_url = isset( $_GET['back_url'] ) ? esc_url_raw( wp_unslash( $_GET['back_url'] ) ) : '';
 
 		setcookie('wp_loginasuser_backurl_'.COOKIEHASH, $get_back_url, $expiration, COOKIEPATH, COOKIE_DOMAIN, $secure_back_url_cookie, true);
 	}
@@ -976,7 +966,7 @@ CSS;
 			//do_action('clear_olduser_cookie');
 
 			/** This filter is documented in wp-includes/pluggable.php */
-			if (!apply_filters('send_auth_cookies', true)) {
+			if (!apply_filters('send_auth_cookies', true)) { // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Core filter, documented in wp-includes/pluggable.php.
 				return;
 			}
 
@@ -1010,6 +1000,7 @@ CSS;
 	public function login_as_user_get_olduser_cookie()
 	{
 		if (isset($_COOKIE['wp_loginasuser_olduser_'.COOKIEHASH])) {
+			// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Raw value is required; it is validated by wp_validate_auth_cookie().
 			return wp_unslash($_COOKIE['wp_loginasuser_olduser_'.COOKIEHASH]);
 		} else {
 			return false;
@@ -1024,7 +1015,7 @@ CSS;
 	public function login_as_user_get_back_url_cookie()
 	{
 		if (isset($_COOKIE['wp_loginasuser_backurl_'.COOKIEHASH])) {
-			return wp_unslash($_COOKIE['wp_loginasuser_backurl_'.COOKIEHASH]);
+			return esc_url_raw(wp_unslash($_COOKIE['wp_loginasuser_backurl_'.COOKIEHASH]));
 		} else {
 			return false;
 		}
@@ -1044,6 +1035,7 @@ CSS;
 		}
 
 		if (isset($_COOKIE[$auth_cookie_name]) && is_string($_COOKIE[$auth_cookie_name])) {
+			// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Raw value is required; each entry is validated by wp_validate_auth_cookie().
 			$cookie = json_decode(wp_unslash($_COOKIE[$auth_cookie_name]));
 		}
 		if (!isset($cookie) || !is_array($cookie)) {
@@ -1150,7 +1142,7 @@ CSS;
 			// Resolve WooCommerce instance without directly calling WC() to satisfy static analyzers.
 			$wc = function_exists('WC') ? call_user_func('WC') : (isset($GLOBALS['woocommerce']) ? $GLOBALS['woocommerce'] : null);
 			// Allow disabling via filter to preserve persistent carts/sessions.
-			if ($wc && !static::$pluginSettings->preserveWooCart && apply_filters('web357_login_as_user_forget_wc_session', true, $user_id, $old_user_id)) {
+			if ($wc && !static::$pluginSettings->preserveWooCart && apply_filters('web357_login_as_user_forget_wc_session', true, $user_id, $old_user_id)) { // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Public hook kept for backwards compatibility.
 				LoginAsUser_WooCommerce_Integration::forget_woocommerce_session($wc);
 			}
 		}
@@ -1214,7 +1206,7 @@ CSS;
 
 		 
 		ob_start(); 
-		echo "<div>".$this->onlyInProTextLink()."</div>";
+		echo '<div>' . wp_kses_post($this->onlyInProTextLink()) . '</div>';
 		return ob_get_clean();
 		 
 	}
@@ -1319,7 +1311,7 @@ CSS;
 }
 
 // Initialize the Login as User functionality on init hook to avoid early loading issues
-function initialize_w357_login_as_user() {
+function login_as_user_initialize() {
     
     if (!isset($w357_login_as_user_instance)) {
         $w357_login_as_user_instance = new w357LoginAsUser();
@@ -1330,4 +1322,4 @@ function initialize_w357_login_as_user() {
 }
 
 // Hook the initialization to init
-add_action('init', 'initialize_w357_login_as_user', 5);
+add_action('init', 'login_as_user_initialize', 5);

@@ -61,14 +61,14 @@ class LoginAsUser_WooCommerce_Subscriptions_Integration extends LoginAsUser_Inte
             
 
              
-            echo $this->main->onlyInProTextLink();
+            $this->echoHtml($this->main->onlyInProTextLink());
              
         }
     }
 
     public function add_login_as_user_metabox()
     {
-        add_meta_box('login_as_user_metabox', __('Login as User'), [$this, 'login_as_user_metabox'], 'woocommerce_page_wc-orders--shop_subscription', 'side', 'core');
+        add_meta_box('login_as_user_metabox', __('Login as User', 'login-as-user'), [$this, 'login_as_user_metabox'], 'woocommerce_page_wc-orders--shop_subscription', 'side', 'core');
     }
 
     public function login_as_user_metabox($post)
@@ -76,7 +76,7 @@ class LoginAsUser_WooCommerce_Subscriptions_Integration extends LoginAsUser_Inte
         
 
          
-        echo $this->main->onlyInProTextLink();
+        $this->echoHtml($this->main->onlyInProTextLink());
          
     }
 }

@@ -1,6 +1,6 @@
 <?php
 /* ======================================================
- # Login as User for WordPress - v1.7.2 (free version)
+ # Login as User for WordPress - v1.7.3 (free version)
  # -------------------------------------------------------
  # Author: Web357
  # Copyright © 2014-2024 Web357. All rights reserved.
@@ -8,8 +8,14 @@
  # Website: https://www.web357.com/login-as-user-wordpress-plugin
  # Demo: https://login-as-user-wordpress-demo.web357.com/wp-admin/
  # Support: https://www.web357.com/support
- # Last modified: Monday 25 May 2026, 10:38:10 AM
+ # Last modified: Wednesday 19 August 2026, 11:46:40 PM
  ========================================================= */
+
+// If this file is called directly, abort.
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 /**
  * Define the internationalization functionality
  */
@@ -26,13 +32,13 @@ class LoginAsUser_fields {
 		$desc = (isset($args['desc'])) ? $args['desc'] : '';
 		$prefix = (isset($args['prefix'])) ? $args['prefix'] : '';
 		?>
-		<fieldset><?php echo (!empty($prefix) ? $prefix : ''); ?>
+		<fieldset><?php echo wp_kses_post($prefix); ?>
 		<input 
 			type='text' 
 			name='login_as_user_options[<?php echo esc_attr($args['name']); ?>]' 
 			id='<?php echo esc_attr($args['label-for']); ?>' 
 			class='<?php echo esc_attr($class); ?>' 
-			placeholder='<?php echo esc_html__($placeholder); ?>'
+			placeholder='<?php echo esc_attr($placeholder); ?>'
 			value='<?php echo esc_attr(isset($options[$args['name']]) ? $options[$args['name']] : $default_value); ?>'
 			size='<?php echo absint($size); ?>'
 			maxlength='<?php echo absint($maxlength); ?>'
@@ -40,7 +46,7 @@ class LoginAsUser_fields {
 		</fieldset>
 		<?php if (!empty($desc)): ?>
         <p class="description">
-			<?php echo wp_kses( __( $desc, 'login-as-user' ), array( 'strong' => array(), 'br' => array() ) ); ?>
+			<?php echo wp_kses( $desc, array( 'strong' => array(), 'br' => array() ) ); ?>
 		</p>
 		<?php endif; ?>
 		<?php
@@ -76,7 +82,7 @@ class LoginAsUser_fields {
 			<?php endif; ?>
 
 			<div>
-				<input type="hidden" name="login_as_user_options[<?php echo $name; ?>]" id="login_as_user_options[<?php echo $name; ?>]" value="<?php echo esc_attr($value); ?>" />
+				<input type="hidden" name="login_as_user_options[<?php echo esc_attr($name); ?>]" id="login_as_user_options[<?php echo esc_attr($name); ?>]" value="<?php echo esc_attr($value); ?>" />
 				<button type="submit" class="upload_image_button button">Upload image</button>
 
 				<?php if (!empty($src)): ?>
@@ -128,7 +134,7 @@ class LoginAsUser_fields {
 			rows="<?php echo absint($args['rows']); ?>" 
 			cols="<?php echo absint($args['cols']); ?>" 
 			class="<?php echo esc_attr($class); ?>"
-			placeholder="<?php echo esc_html__($args['placeholder']); ?>"><?php echo esc_textarea(isset($options[$args['name']]) && !empty($options[$args['name']]) ? $options[$args['name']] : $default_value); ?></textarea>
+			placeholder="<?php echo esc_attr(isset($args['placeholder']) ? $args['placeholder'] : ''); ?>"><?php echo esc_textarea(isset($options[$args['name']]) && !empty($options[$args['name']]) ? $options[$args['name']] : $default_value); ?></textarea>
 
 		<?php if (!empty($args['desc'])): ?>
 			<p class="description"><?php echo wp_kses($args['desc'], array('strong' => array(), 'br' => array(), 'code' => array())); ?></p>
@@ -145,17 +151,17 @@ class LoginAsUser_fields {
 		$options = get_option('login_as_user_options');
 		$desc = (isset($args['desc'])) ? $args['desc'] : '';
 		?>
-		<select name="login_as_user_options[<?php echo $name; ?>]">
+		<select name="login_as_user_options[<?php echo esc_attr($name); ?>]">
 
 		<?php for ($i=0;$i<count($select_options);$i++): ?>
 
-			<option value="<?php echo esc_attr($select_options[$i]['value']); ?>" <?php echo (($select_options[$i]['value'] == (isset($options[$name]) ? $options[$name] : $default_value) ) ? 'selected' : ''); ?>><?php echo $select_options[$i]['label']; ?></option>
+			<option value="<?php echo esc_attr($select_options[$i]['value']); ?>" <?php echo (($select_options[$i]['value'] == (isset($options[$name]) ? $options[$name] : $default_value) ) ? 'selected' : ''); ?>><?php echo esc_html($select_options[$i]['label']); ?></option>
 
 		<?php endfor; ?>
 		</select>
 		<?php if (!empty($desc)): ?>
         <p class="description">
-			<?php echo wp_kses( __( $desc, 'login-as-user' ), array( 'strong' => array(), 'br' => array() ) ); ?>
+			<?php echo wp_kses( $desc, array( 'strong' => array(), 'br' => array() ) ); ?>
 		</p>
 		<?php endif; ?>
 		<?php
@@ -173,17 +179,17 @@ class LoginAsUser_fields {
 
 			<input 
 				type='radio' 
-				id='<?php echo $radio_options[$i]['id']; ?>' 
-				name='login_as_user_options[<?php echo $name; ?>]' 
+				id='<?php echo esc_attr($radio_options[$i]['id']); ?>' 
+				name='login_as_user_options[<?php echo esc_attr($name); ?>]' 
 				value='<?php echo esc_attr($radio_options[$i]['value']); ?>'
 				<?php if ( $radio_options[$i]['value'] == (isset($options[$name]) ? $options[$name] : $default_value) ) echo 'checked="checked"'; ?>
 			>
-			<label for="<?php echo $radio_options[$i]['id']; ?>" style="margin-right: 10px;"><?php echo $radio_options[$i]['label']; ?></label>
+			<label for="<?php echo esc_attr($radio_options[$i]['id']); ?>" style="margin-right: 10px;"><?php echo esc_html($radio_options[$i]['label']); ?></label>
 
 		<?php endfor; ?>
 
 		<?php if (!empty($field_description)): ?>
-			<div class="w357_settings_field_description"><?php echo $field_description; ?></div>
+			<div class="w357_settings_field_description"><?php echo wp_kses_post($field_description); ?></div>
 		<?php endif; ?>
 		<?php
 	}
@@ -201,17 +207,17 @@ class LoginAsUser_fields {
 
 			<input 
 				type='checkbox' 
-				id='<?php echo $ckeckbox_options[$i]['id']; ?>' 
-				name='login_as_user_options[<?php echo $name; ?>][]' 
+				id='<?php echo esc_attr($ckeckbox_options[$i]['id']); ?>' 
+				name='login_as_user_options[<?php echo esc_attr($name); ?>][]' 
 				value='<?php echo esc_attr($ckeckbox_options[$i]['value']); ?>'
 				<?php if (in_array($ckeckbox_options[$i]['value'], (isset($options[$name]) ? $options[$name] : $default_value))) echo 'checked="checked"'; ?>
 			>
-			<label for="<?php echo $ckeckbox_options[$i]['id']; ?>" style="margin-right: 10px;"><?php echo $ckeckbox_options[$i]['label']; ?></label>
+			<label for="<?php echo esc_attr($ckeckbox_options[$i]['id']); ?>" style="margin-right: 10px;"><?php echo esc_html($ckeckbox_options[$i]['label']); ?></label>
 
 		<?php endfor; ?>
 
 		<?php if (!empty($field_description)): ?>
-			<div class="w357_settings_field_description"><?php echo $field_description; ?></div>
+			<div class="w357_settings_field_description"><?php echo wp_kses_post($field_description); ?></div>
 		<?php endif; ?>
 		<?php
 	}
@@ -227,9 +233,9 @@ class LoginAsUser_fields {
         <div class="w357-number-field-container">
             <input
                     type="number"
-                    name="login_as_user_options[<?= esc_attr($name); ?>]"
-                    id="<?= esc_attr($name); ?>"
-                    value="<?= $last_column ? '' : esc_attr($current_value); ?>"
+                    name="login_as_user_options[<?php echo esc_attr($name); ?>]"
+                    id="<?php echo esc_attr($name); ?>"
+                    value="<?php echo $last_column ? '' : esc_attr($current_value); ?>"
                     min="1"
                     step="1"
                     class="small-text"
@@ -263,7 +269,7 @@ class LoginAsUser_fields {
         // Get all WordPress roles
         global $wp_roles;
         $all_roles = $wp_roles->roles;
-        $editable_roles = apply_filters('editable_roles', $all_roles);
+        $editable_roles = apply_filters('editable_roles', $all_roles); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Core filter, documented in wp-includes/user.php.
         
         // Get current saved values (fallback)
         $saved_roles = isset($options[$name]) ? $options[$name] : array();

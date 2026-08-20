@@ -54,7 +54,7 @@ class LoginAsUser_SureCart_Integration extends LoginAsUser_Integration_Abstract
             
 
              
-            echo $this->main->onlyInProTextLink();
+            $this->echoHtml($this->main->onlyInProTextLink());
              
         }
     }

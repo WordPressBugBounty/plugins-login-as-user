@@ -1,6 +1,6 @@
 <?php
 /* ======================================================
- # Login as User for WordPress - v1.7.2 (free version)
+ # Login as User for WordPress - v1.7.3 (free version)
  # -------------------------------------------------------
  # Author: Web357
  # Copyright © 2014-2024 Web357. All rights reserved.
@@ -8,12 +8,18 @@
  # Website: https://www.web357.com/login-as-user-wordpress-plugin
  # Demo: https://login-as-user-wordpress-demo.web357.com/wp-admin/
  # Support: https://www.web357.com/support
- # Last modified: Monday 25 May 2026, 10:38:10 AM
+ # Last modified: Wednesday 19 August 2026, 11:46:40 PM
  ========================================================= */
+
+// If this file is called directly, abort.
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 // Settings page
 ?>
 <div class="wrap">
-	<h1><?php echo $this->plugin_name; ?> v<?php echo $this->version; ?></h1>
+	<h1><?php echo esc_html($this->plugin_name); ?> v<?php echo esc_html($this->version); ?></h1>
     <div class="lau-settings">
         <div class="lau-about">
             <h2>
@@ -121,16 +127,23 @@
             <hr> 
                 <h4><?php echo esc_html__( 'Need support?', 'login-as-user'); ?></h4>
                 <?php
-                echo sprintf(
-                    __( '<p>If you are having problems with this plugin, please <a href="%1$s" target="_blank">contact us</a> and we will reply as soon as possible.</p>', 'login-as-user' ),
-                    esc_url( 'https://www.web357.com/support/?utm_source=SettingsPage&utm_medium=SupportLink&utm_content=loginasuserwp&utm_campaign=support-link' )
+                printf(
+                    '<p>%s</p>',
+                    wp_kses(
+                        sprintf(
+                            /* translators: %1$s: URL of the Web357 support page. */
+                            __( 'If you are having problems with this plugin, please <a href="%1$s" target="_blank">contact us</a> and we will reply as soon as possible.', 'login-as-user' ),
+                            esc_url( 'https://www.web357.com/support/?utm_source=SettingsPage&utm_medium=SupportLink&utm_content=loginasuserwp&utm_campaign=support-link' )
+                        ),
+                        array( 'a' => array( 'href' => array(), 'target' => array() ) )
+                    )
                 );
                 ?>
             </div>
 
             <div style="margin-top: 20px;" class="lac-developed-by">
             <hr> 
-                <span><?php echo __('Developed by', 'login-as-user'); ?></span>
+                <span><?php esc_html_e('Developed by', 'login-as-user'); ?></span>
                 <a href="<?php echo esc_url('https://www.web357.com/?utm_source=SettingsPage&utm_medium=LogoLink&utm_content=loginasuserwp&utm_campaign=logo-link'); ?>" target="_blank">
                     <img src="<?php echo esc_url( plugins_url( 'img', (__FILE__) ) ); ?>/web357-logo.png" alt="Web357 logo" />
                 </a>
@@ -141,14 +154,19 @@
             <h2>
                 <?php echo esc_html__( 'How it works?', 'login-as-user' ); ?>
             </h2>
-            <?php echo wp_kses( __( '<p style="color:red">You have to navigate to the <a href="users.php"><strong>Users page</strong></a> and then you will see a button with the name "<strong>Login as: `username`</strong>", at the right side of each username. If you click on this button you will login at the front-end of the website as this User.</p>', 'login-as-user' ), array( 'strong' => array(), 'br' => array(), 'p' => array(), 'a' => array('href'=>array()) ) ); ?>
+            <p style="color:red"><?php
+            echo wp_kses(
+                __( 'You have to navigate to the <a href="users.php"><strong>Users page</strong></a> and then you will see a button with the name "<strong>Login as: `username`</strong>", at the right side of each username. If you click on this button you will login at the front-end of the website as this User.', 'login-as-user' ),
+                array( 'strong' => array(), 'br' => array(), 'a' => array( 'href' => array() ) )
+            );
+            ?></p>
             <div class="wrap">
 
                 <h2 class="nav-tab-wrapper">
-                    <a href="?page=login-as-user&tab=settings" class="nav-tab <?= $active_tab == 'settings' ? 'nav-tab-active' : ''; ?>">
+                    <a href="?page=login-as-user&tab=settings" class="nav-tab <?php echo $active_tab == 'settings' ? 'nav-tab-active' : ''; ?>">
                         <?php esc_html_e('Settings', 'login-as-user'); ?>
                     </a>
-                    <a href="?page=login-as-user&tab=appearance" class="nav-tab <?= $active_tab == 'appearance' ? 'nav-tab-active' : ''; ?>">
+                    <a href="?page=login-as-user&tab=appearance" class="nav-tab <?php echo $active_tab == 'appearance' ? 'nav-tab-active' : ''; ?>">
                         <?php esc_html_e('Appearance', 'login-as-user'); ?>
                     </a>
                 </h2>
@@ -157,13 +175,13 @@
                     <div>
                         <ul class="subsubsub">
                             <li>
-                                <a href="?page=login-as-user&tab=appearance&subtab=login-button" class="subtab <?= $active_subtab == 'login-button' ? 'current' : ''; ?>">
+                                <a href="?page=login-as-user&tab=appearance&subtab=login-button" class="subtab <?php echo $active_subtab == 'login-button' ? 'current' : ''; ?>">
                                     <?php esc_html_e('Login Button', 'login-as-user'); ?>
                                 </a>
                             </li>
                             <li>|</li>
                             <li>
-                                <a href="?page=login-as-user&tab=appearance&subtab=frontend-bar" class="subtab <?= $active_subtab == 'frontend-bar' ? 'current' : ''; ?>">
+                                <a href="?page=login-as-user&tab=appearance&subtab=frontend-bar" class="subtab <?php echo $active_subtab == 'frontend-bar' ? 'current' : ''; ?>">
                                     <?php esc_html_e('Message', 'login-as-user'); ?>
                                 </a>
                             </li>

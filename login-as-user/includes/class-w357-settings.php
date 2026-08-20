@@ -1,6 +1,6 @@
 <?php
 /* ======================================================
- # Login as User for WordPress - v1.7.2 (free version)
+ # Login as User for WordPress - v1.7.3 (free version)
  # -------------------------------------------------------
  # Author: Web357
  # Copyright © 2014-2024 Web357. All rights reserved.
@@ -8,9 +8,14 @@
  # Website: https://www.web357.com/login-as-user-wordpress-plugin
  # Demo: https://login-as-user-wordpress-demo.web357.com/wp-admin/
  # Support: https://www.web357.com/support
- # Last modified: Monday 25 May 2026, 10:38:10 AM
+ # Last modified: Wednesday 19 August 2026, 11:46:40 PM
  ========================================================= */
- 
+
+// If this file is called directly, abort.
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 /**
  * Define the internationalization functionality
  */
@@ -81,8 +86,13 @@ class LoginAsUser_settings {
     public function options_page_content()
     {
         // Get the active tab
-        $active_tab = isset($_GET['tab']) && in_array($_GET['tab'], ['appearance', 'settings']) ? sanitize_text_field($_GET['tab']) : 'settings';
-        $active_subtab = $active_tab === 'appearance' && isset($_GET['subtab']) && in_array($_GET['subtab'], ['login-button', 'frontend-bar', 'css']) ? sanitize_text_field($_GET['subtab']) : 'login-button';
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only navigation state, validated against an allowlist below.
+        $requestedTab = isset($_GET['tab']) ? sanitize_key(wp_unslash($_GET['tab'])) : '';
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only navigation state, validated against an allowlist below.
+        $requestedSubtab = isset($_GET['subtab']) ? sanitize_key(wp_unslash($_GET['subtab'])) : '';
+
+        $active_tab = in_array($requestedTab, ['appearance', 'settings'], true) ? $requestedTab : 'settings';
+        $active_subtab = ($active_tab === 'appearance' && in_array($requestedSubtab, ['login-button', 'frontend-bar', 'css'], true)) ? $requestedSubtab : 'login-button';
         if ($active_subtab === 'css') {
             /* enqueue CSS editor */
             $cmsSettings['codeEditor'] = wp_enqueue_code_editor(['type' => 'text/css']);
@@ -141,13 +151,17 @@ class LoginAsUser_settings {
                     switch ($fieldName) {
                         case 'redirect_to':
                             $redirect_to = trim($fields['redirect_to']);
-                            $redirect_to = strip_tags(stripslashes($redirect_to));
+                            $redirect_to = wp_strip_all_tags(stripslashes($redirect_to));
                             $redirect_to_frontend_url = esc_url_raw(home_url('/') . $redirect_to);
                             if (wp_http_validate_url($redirect_to_frontend_url) && substr($redirect_to, 0, 1) != '/' && substr($redirect_to, 0, 1) != '\\' && substr($redirect_to, 0, 8) != 'wp-admin' && substr($redirect_to, 0, 8) != 'wp-login') {
                                 $valid_fields['redirect_to'] = $redirect_to;
                             } else {
                                 $valid_fields['redirect_to'] = '';
-                                $message = __('Error. The URL is not valid: ' . home_url('/') . $fields['redirect_to'] . '.', 'login-as-user');
+                                $message = sprintf(
+                                    /* translators: %s: The invalid URL that was entered. */
+                                    __('Error. The URL is not valid: %s.', 'login-as-user'),
+                                    home_url('/') . $fields['redirect_to']
+                                );
                                 $message .= (substr($redirect_to, 0, 1) == '/' || substr($redirect_to, 0, 1) == '\\') ? __('<br>Please remove the slash in front of URL.', 'login-as-user') : '';
                                 $message .= (substr($redirect_to, 0, 8) == 'wp-admin') ? __('<br>You can\'t redirect the user to the admin page.', 'login-as-user') : '';
                                 $message .= (substr($redirect_to, 0, 8) == 'wp-login') ? __('<br>You can\'t redirect the user to the login page.', 'login-as-user') : '';
@@ -160,7 +174,11 @@ class LoginAsUser_settings {
                                 $valid_fields['logout_redirect_url'] = $logout_redirect_url;
                             } else {
                                 $valid_fields['logout_redirect_url'] = '';
-                                throw new \Exception(__('Error. The URL is not valid: ' . home_url('/') . $fields['logout_redirect_url'] . '.', 'login-as-user'));
+                                throw new \Exception(sprintf(
+                                    /* translators: %s: The invalid URL that was entered. */
+                                    __('Error. The URL is not valid: %s.', 'login-as-user'),
+                                    home_url('/') . $fields['logout_redirect_url']
+                                ));
                             }
                             break;
                         case 'login_as_type':
@@ -170,7 +188,7 @@ class LoginAsUser_settings {
                         case 'enable_ping_animation':
                         case 'license_key':
                             $value = trim($fields[$fieldName]);
-                            $value = strip_tags(stripslashes($value));
+                            $value = wp_strip_all_tags(stripslashes($value));
                             $valid_fields[$fieldName] = $value;
                             break;
                         case 'preserve_wc_cart_on_switch':
@@ -205,7 +223,15 @@ class LoginAsUser_settings {
             add_settings_error('my_option_notice', 'my_option_notice', $e->getMessage(), 'error');
         }
 
-        return apply_filters('validateSettings', $valid_fields, array_keys($valid_fields));
+        $valid_fields = apply_filters('login_as_user_validate_settings', $valid_fields, array_keys($valid_fields));
+
+        // Deprecated, non-prefixed hook. Kept so existing integrations keep working.
+        return apply_filters_deprecated( // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Deprecated hook kept for backwards compatibility.
+            'validateSettings',
+            array($valid_fields, array_keys($valid_fields)),
+            '1.7.3',
+            'login_as_user_validate_settings'
+        );
     }
 
 	/**

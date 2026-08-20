@@ -60,7 +60,7 @@ class LoginAsUser_WooCommerce_Integration extends LoginAsUser_Integration_Abstra
         if ('loginasuser_col' === $column) {
             global $post;
             $order = wc_get_order($post->ID);
-            echo $this->loginasuser_col_content_hp($column, $order);
+            $this->loginasuser_col_content_hp($column, $order);
         }
     }
 
@@ -70,15 +70,15 @@ class LoginAsUser_WooCommerce_Integration extends LoginAsUser_Integration_Abstra
             
 
              
-            echo $this->main->onlyInProTextLink();
+            $this->echoHtml($this->main->onlyInProTextLink());
              
         }
     }
 
     public function add_login_as_user_metabox()
     {
-        add_meta_box('login_as_user_metabox', __('Login as User'), [$this, 'login_as_user_metabox'], 'shop_order', 'side', 'core');
-        add_meta_box('login_as_user_metabox', __('Login as User'), [$this, 'login_as_user_metabox'], 'woocommerce_page_wc-orders', 'side', 'core');
+        add_meta_box('login_as_user_metabox', __('Login as User', 'login-as-user'), [$this, 'login_as_user_metabox'], 'shop_order', 'side', 'core');
+        add_meta_box('login_as_user_metabox', __('Login as User', 'login-as-user'), [$this, 'login_as_user_metabox'], 'woocommerce_page_wc-orders', 'side', 'core');
     }
 
     public function login_as_user_metabox($post)
@@ -86,7 +86,7 @@ class LoginAsUser_WooCommerce_Integration extends LoginAsUser_Integration_Abstra
         
 
          
-        echo $this->main->onlyInProTextLink();
+        $this->echoHtml($this->main->onlyInProTextLink());
          
     }
 

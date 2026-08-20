@@ -1,13 +1,13 @@
 === Login as User ===
-Contributors: yiannistaos, johnbillion
+Contributors: yiannistaos, johnbillion, web357
 Tags: user, login, admin, login as user, web357
 Donate link: https://www.paypal.me/web357
 Requires at least: 5.3
-Tested up to: 7.0
+Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.7.2
-License: GPLv2 or later
-License URI: http://www.gnu.org/licenses/gpl-3.0.html
+Stable tag: 1.7.3
+License: GPLv3 or later
+License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
 Login as User is a free WordPress plugin that helps admins switch user accounts instantly to check data.
 
@@ -25,7 +25,7 @@ Login as User is a free WordPress plugin that helps admins switch user accounts 
 [youtube https://www.youtube.com/watch?v=OrptAiAQo04]
 
 == Basic Features ==
-- In the Admin area, you select Users in the left-hand side menu and click All Users in the sub-menu. Now, all users of your website appear on the screen along with the Login as... button besides each name. You can click the button of the user you want to switch account.
+- In the Admin area, you select Users in the left-hand side menu and click All Users in the sub-menu. Now, all users of your website appear on the screen along with the Login as... button besides each name. You can click the button of the user you want to switch accounts to.
 - Are you in a user’s profile and want to login as this user? Just click the button Login as:... at the top left-hand side and you will be able to check data and help this specific user with any problem.
 - **Positioning**: You can choose the position of the "Login as user" toolbar. There are two available positions, the top and the bottom.
 - **Multisite support**: Allows administrators to log in as any user across the network without needing SuperAdmin privileges. 
@@ -33,9 +33,9 @@ Login as User is a free WordPress plugin that helps admins switch user accounts 
 
 == PRO Features ==
 - **WooCommerce Integration**: Are you using the WooCommerce plugin? In the orders page, the Login as user button appears besides each customer to help you provide better customer support.
-- **WooCommerce Subscriptions Integration**: Is one of your customers having trouble with their order? Do you want to check the details of a customer’s order? You can easily check the customer’s problem from his/her perspective by switching with the Login as User button in the WooCommerce order details page.
+- **WooCommerce Subscriptions Integration**: Is one of your customers having trouble with their order? Do you want to check the details of a customer’s order? You can easily check the customer’s problem from their perspective by switching with the Login as User button in the WooCommerce order details page.
 - **[Role Management Permissions](https://docs.web357.com/article/118-role-management-permissions-in-login-as-user-plugin-pro-only?utm_source=wp_plugin_repo&utm_medium=wp_listing&utm_campaign=wp_repo_link&utm_content=wp_repo_link_to_plugin_page)**: The "Role Management Permissions" parameter in the "Login as User" plugin allows administrators to define which roles have the ability to manage (log in as) users of other roles. This feature enhances security and control by limiting the login-as-user capability to specific roles.
-- **[Shortcode](https://docs.web357.com/article/102-shortcode-login-as-user?utm_source=wp_plugin_repo&utm_medium=wp_listing&utm_campaign=wp_repo_link&utm_content=wp_repo_link_to_plugin_page)**: You can use the shortcode [login_as_user user_id="357"] to display the login as user button everywhere, event at the frontend. You just have to specify the user ID in the attribute.
+- **[Shortcode](https://docs.web357.com/article/102-shortcode-login-as-user?utm_source=wp_plugin_repo&utm_medium=wp_listing&utm_campaign=wp_repo_link&utm_content=wp_repo_link_to_plugin_page)**: You can use the shortcode [login_as_user user_id="357"] to display the login as user button everywhere, even on the frontend. You just have to specify the user ID in the attribute.
 
 == Installation ==
 The plugin is simple to install:
@@ -47,21 +47,39 @@ The plugin is simple to install:
 5. Configure the options from the `Settings > Login as User` page
 
 == Frequently Asked Questions ==
-= Why would I want to use this plugin? =
 
-This plugin is helpful if you are an admin and you want to sign in as any user, or if you would like to check and confirm if the users see the correct data into their account page. This plugin prevent admins to ask for login details (username and password).
+= Why would I want to use the Login as User plugin? =
+This plugin is ideal for site administrators, customer support agents, and store managers who need to troubleshoot issues from a specific user's perspective — without ever asking the user for their password. With one click, you can sign in as any registered user, see exactly what they see, fix the problem, and instantly go back to your admin account.
 
 = Is it safe to use this plugin on my website? =
-Yes, the "Login as User" plugin is designed with security in mind. It only allows administrators with the appropriate permissions to log in as other users. No user passwords are exposed or required, ensuring that sensitive information remains secure.
+Yes. Login as User is built with security in mind. Only administrators (or the specific roles you allow in the PRO version) can use the "Login as..." button. No user passwords are ever exposed, requested, or stored — admins switch sessions through WordPress's native authentication system.
 
-= Will the user know if I log in as them? =
-By default, users will not be notified if an admin logs in as them using this plugin. However, it's always best practice to inform users if you plan to access their accounts to maintain transparency and trust.
+= Will the user be notified when I log in as them? =
+By default, users are not notified when an admin logs in as them. However, we strongly recommend informing your customers when accessing their account is necessary for support, to maintain transparency and trust.
 
-= Can I log in as users with different roles (e.g., subscriber, editor, etc.)? =
-Yes, the "Login as User" plugin allows administrators to log in as any user, regardless of their role. This flexibility makes it easy to troubleshoot and support users across different levels of access.
+= Can I log in as users with any WordPress role? =
+Yes. You can log in as users with any role — Subscriber, Customer, Editor, Author, Contributor, Shop Manager, and even custom roles. The PRO version also lets you restrict which roles can impersonate which other roles, for stricter access control.
 
-= Does this plugin work with third-party plugins and custom user roles? =
-Yes, "Login as User" is designed to be compatible with most third-party plugins and custom user roles. It integrates seamlessly with the WordPress user management system, so you can log in as users created by other plugins or with custom roles.
+= Does Login as User work with WooCommerce? =
+Yes. The PRO version adds a "Login as User" button directly inside the WooCommerce Orders, Subscriptions, and Customers pages, so you can quickly help customers with their orders, refunds, abandoned carts, or checkout issues — and the WooCommerce Cart Preservation feature keeps their cart items intact when you log in.
+
+= Does it integrate with WooCommerce Subscriptions, MemberPress, SureCart, and other membership plugins? =
+Yes. The PRO version integrates with WooCommerce Subscriptions, MemberPress, SureCart, and other popular membership / e-commerce plugins, so you can log in as members and subscribers directly from each plugin's admin views.
+
+= Does Login as User support WordPress Multisite? =
+Yes. Administrators can log in as any user across the entire network, without needing SuperAdmin privileges.
+
+= Can I display a "Login as User" button on the frontend or on a custom page? =
+Yes, with the PRO version. Use the shortcode [login_as_user user_id="123"] to place a login button anywhere — on a custom dashboard, a CRM page, or even a landing page. You can also pass redirect_to and button_name parameters to fully customize the experience.
+
+= How do I switch back to my admin account after impersonating a user? =
+After logging in as a user, a notification bar appears at the top or bottom of the screen with a "Go back to admin as..." link. Clicking it instantly restores your original admin session — no manual logout required.
+
+= Does it work with custom user roles and third-party plugins? =
+Yes. Login as User integrates with WordPress's native user management system and is compatible with most third-party plugins (WooCommerce, LearnDash, MemberPress, Tutor LMS, LiteSpeed Cache, and more), as well as custom user roles created by other plugins.
+
+= Is this plugin GDPR-compliant? =
+The plugin itself does not collect or transmit any personal data outside your site. However, since logging in as a user lets you view their account, we recommend documenting the practice in your privacy policy and only using it when necessary for legitimate support purposes.
 
 == Screenshots ==
 1. In the Admin area, you select Users in the left-hand side menu and click All Users in the sub-menu. Now, all users of your website appear on the screen along with the Login as… button besides each name. You can click the button of the user you want to switch account.
@@ -71,6 +89,9 @@ Yes, "Login as User" is designed to be compatible with most third-party plugins 
 5. Settings.
 
 == Changelog ==
+= 20-Aug-2026 : v1.7.3 =
+* Improved compatibility with WordPress 7.1.
+
 = 25-May-2026 : v1.7.2 =
 * Full compatibility with WordPress 7.x.
 * Minor fixes and improvements.
@@ -204,7 +225,7 @@ Yes, "Login as User" is designed to be compatible with most third-party plugins 
 * [Compatibility] Fully compatible with WordPress v6.2.x and WooCommerce v7.7.x
 * Compatible with the WooCommerce Mobile App
 * After login as a user, in the notification bar show the email instead of username. Example: "go back to admin as Yiannis Christodoulou (yiannis [@] web357 [.] com)"
-* Bug fixed after going back to admin dashboard. Bug message: "The link you followed as expired." 
+* Bug fixed after going back to admin dashboard. Bug message: "The link you followed has expired." 
 * PHP Warning fixed: Undefined array key "SERVER_NAME" in .../wp-content/plugins/login-as-user-pro/login-as-user-pro.php on line 67
 * Minor fixes and improvements
 
@@ -216,12 +237,12 @@ Yes, "Login as User" is designed to be compatible with most third-party plugins 
 * Minor fixes and improvements
 
 = 11-Feb-2022 : v1.4.2 =
-* [New Feature] You can use the shortcode [login_as_user user_id="357"] to display the login as user button everywhere, event at the frontend. You just have to specify the user_id. Do not forget to replace the 357 with the user ID you want. (This feature included only in the Premium version)
+* [New Feature] You can use the shortcode [login_as_user user_id="357"] to display the login as user button everywhere, even on the frontend. You just have to specify the user_id. Do not forget to replace the 357 with the user ID you want. (This feature included only in the Premium version)
 * [Compatibility] Fully compatible with WordPress v5.9 and WooCommerce v6.2
 * Minor fixes and improvements
 
 = 28-Jul-2021 : v1.4.1 =
-* [Styling improvement] To fix the display of the login as user button when you have a lot of columns in Users/Orders area, we 've created a new option to decrease the width of "Login as User" column. Navigate to: Settings > Login as User > "Login as...«option»" button	> None (display only the user icon). [Thank you, Robert]
+* [Styling improvement] To fix the display of the login as user button when you have a lot of columns in Users/Orders area, we've created a new option to decrease the width of "Login as User" column. Navigate to: Settings > Login as User > "Login as...«option»" button	> None (display only the user icon). [Thank you, Robert]
 * [Compatibility] Fully compatible with WordPress v5.8 and WooCommerce v5.5
 * Minor fixes and improvements
 

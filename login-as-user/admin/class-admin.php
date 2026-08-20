@@ -1,6 +1,6 @@
 <?php
 /* ======================================================
- # Login as User for WordPress - v1.7.2 (free version)
+ # Login as User for WordPress - v1.7.3 (free version)
  # -------------------------------------------------------
  # Author: Web357
  # Copyright © 2014-2024 Web357. All rights reserved.
@@ -8,8 +8,14 @@
  # Website: https://www.web357.com/login-as-user-wordpress-plugin
  # Demo: https://login-as-user-wordpress-demo.web357.com/wp-admin/
  # Support: https://www.web357.com/support
- # Last modified: Monday 25 May 2026, 10:38:10 AM
+ # Last modified: Wednesday 19 August 2026, 11:46:40 PM
  ========================================================= */
+
+// If this file is called directly, abort.
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 class LoginAsUser_Admin {
 
 	/**
@@ -62,7 +68,7 @@ class LoginAsUser_Admin {
 
         // Enqueue Select2 CSS on settings page
         if ($this->is_settings_page()) {
-            wp_enqueue_style('select2', 'https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css', [], '4.1.0', 'all');
+            wp_enqueue_style('lau-select2', plugin_dir_url(__FILE__) . 'lib/select2/select2.min.css', [], '4.1.0-rc.0', 'all');
  
         }
 
@@ -80,13 +86,16 @@ class LoginAsUser_Admin {
 	 */
 	public function enqueue_scripts() 
 	{
-		wp_enqueue_script( $this->plugin_name_clean, plugin_dir_url( __FILE__ ) . 'js/admin.min.js', array( 'jquery', ), $this->version, true );
-		wp_localize_script( $this->plugin_name_clean, 'loginasuserAjax', array( 'loginasuser_ajaxurl' => admin_url( 'admin-ajax.php' )));
-		
-		// Enqueue Select2 JS on settings page
+		$dependencies = array( 'jquery' );
+
+		// Select2 is bundled with the plugin and only loaded on the settings page.
 		if ($this->is_settings_page()) {
-			wp_enqueue_script('select2', 'https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js', array('jquery'), '4.1.0', true);
+			wp_enqueue_script('lau-select2', plugin_dir_url(__FILE__) . 'lib/select2/select2.min.js', array('jquery'), '4.1.0-rc.0', true);
+			$dependencies[] = 'lau-select2';
 		}
+
+		wp_enqueue_script( $this->plugin_name_clean, plugin_dir_url( __FILE__ ) . 'js/admin.min.js', $dependencies, $this->version, true );
+		wp_localize_script( $this->plugin_name_clean, 'loginasuserAjax', array( 'loginasuser_ajaxurl' => admin_url( 'admin-ajax.php' )));
 	}
 
 	/**
