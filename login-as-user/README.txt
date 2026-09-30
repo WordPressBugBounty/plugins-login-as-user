@@ -1,94 +1,156 @@
-=== Login as User ===
+=== Login as User: See the Site as Any User ===
 Contributors: yiannistaos, johnbillion, web357
 Tags: user, login, admin, login as user, web357
 Donate link: https://www.paypal.me/web357
 Requires at least: 5.3
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.7.3
+Stable tag: 1.7.4
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
-Login as User is a free WordPress plugin that helps admins switch user accounts instantly to check data.
+Log in as any WordPress user with one click. Troubleshoot issues and support customers without asking for their password.
 
 == Description ==
-[Login as a User WordPress plugin](https://www.web357.com/login-as-user-wordpress-plugin?utm_source=wp_plugin_repo&utm_medium=wp_listing&utm_campaign=wp_repo_link&utm_content=wp_repo_link_to_plugin_page) **allows admins to have easy access to the frontend as a specific user** and thus solve problems or provide better and faster customer support. **With one click**, the admin logs in as the external user or customer and handles any situation without wasting any time at all. If you want a WordPress plugin to switch accounts in an instant, Login as User is for you.
 
-👉 [Live Demo](https://login-as-user-wordpress-demo.web357.com/wp-admin/)
-`
-    Username: demo_admin
-    Password: demo_password
-`
+The [Login as a User WordPress plugin](https://www.web357.com/login-as-user-wordpress-plugin?utm_source=loginasuserwp&utm_medium=wp_listing&utm_campaign=product_page&utm_content=readme_hero_product) lets you **see the site exactly as another user sees it**.
 
-== Video Description ==
+A customer says "my order is missing". A member cannot open a course. A subscriber sees the wrong menu. Instead of asking for their password, you click **Login as…** next to their name. You are now that user. When you are done, click **Go back to admin**. That is the whole plugin.
 
-[youtube https://www.youtube.com/watch?v=OrptAiAQo04]
+Full setup, settings, and integrations are in the [official documentation](https://docs.web357.com/login-as-a-user-wordpress-plugin/intro/?utm_source=loginasuserwp&utm_medium=wp_listing&utm_campaign=docs&utm_content=readme_hero_docs).
 
-== Basic Features ==
-- In the Admin area, you select Users in the left-hand side menu and click All Users in the sub-menu. Now, all users of your website appear on the screen along with the Login as... button besides each name. You can click the button of the user you want to switch accounts to.
-- Are you in a user’s profile and want to login as this user? Just click the button Login as:... at the top left-hand side and you will be able to check data and help this specific user with any problem.
-- **Positioning**: You can choose the position of the "Login as user" toolbar. There are two available positions, the top and the bottom.
-- **Multisite support**: Allows administrators to log in as any user across the network without needing SuperAdmin privileges. 
-- Compatible with the "User Insights" WordPress plugin. You just have to add a custom field with the name "loginasuser".
+👉 [Try the live demo](https://login-as-user-wordpress-demo.web357.com/wp-admin/?utm_source=loginasuserwp&utm_medium=wp_listing&utm_campaign=demo&utm_content=readme_live_demo). Credentials are shown on the login screen.
 
-== PRO Features ==
-- **WooCommerce Integration**: Are you using the WooCommerce plugin? In the orders page, the Login as user button appears besides each customer to help you provide better customer support.
-- **WooCommerce Subscriptions Integration**: Is one of your customers having trouble with their order? Do you want to check the details of a customer’s order? You can easily check the customer’s problem from their perspective by switching with the Login as User button in the WooCommerce order details page.
-- **[Role Management Permissions](https://docs.web357.com/article/118-role-management-permissions-in-login-as-user-plugin-pro-only?utm_source=wp_plugin_repo&utm_medium=wp_listing&utm_campaign=wp_repo_link&utm_content=wp_repo_link_to_plugin_page)**: The "Role Management Permissions" parameter in the "Login as User" plugin allows administrators to define which roles have the ability to manage (log in as) users of other roles. This feature enhances security and control by limiting the login-as-user capability to specific roles.
-- **[Shortcode](https://docs.web357.com/article/102-shortcode-login-as-user?utm_source=wp_plugin_repo&utm_medium=wp_listing&utm_campaign=wp_repo_link&utm_content=wp_repo_link_to_plugin_page)**: You can use the shortcode [login_as_user user_id="357"] to display the login as user button everywhere, even on the frontend. You just have to specify the user ID in the attribute.
+== How it works ==
+
+1. Go to **Users → All Users**.
+2. Click **Login as: username** next to the person you want to help.
+3. You land on the frontend as that user. Use **Go back to admin** in the message bar (or the WordPress admin bar) to return to your own account.
+
+No password is requested, stored, or exposed. You can also start from the user's profile page. See [Accessing the Settings](https://docs.web357.com/login-as-a-user-wordpress-plugin/getting-started/accessing-the-settings/?utm_source=loginasuserwp&utm_medium=wp_listing&utm_campaign=docs&utm_content=readme_how_it_works).
+
+== Free features ==
+
+- **Login from the Users list**: a "Login as…" button next to every user. [How to use it »](https://docs.web357.com/login-as-a-user-wordpress-plugin/getting-started/accessing-the-settings/?utm_source=loginasuserwp&utm_medium=wp_listing&utm_campaign=docs&utm_content=readme_free_users_list)
+- **Login from the user profile**: same button at the top of the Edit User screen.
+- **One-click switch back**: frontend message bar plus an optional link in the WordPress admin bar. [Frontend message settings »](https://docs.web357.com/login-as-a-user-wordpress-plugin/appearance/frontend-message/?utm_source=loginasuserwp&utm_medium=wp_listing&utm_campaign=docs&utm_content=readme_free_switch_back)
+- **Redirect after login / logout**: send yourself to `/my-account`, an order page, or back to Users when the session ends. [Configuration »](https://docs.web357.com/login-as-a-user-wordpress-plugin/configuration/?utm_source=loginasuserwp&utm_medium=wp_listing&utm_campaign=docs&utm_content=readme_free_redirect)
+- **WooCommerce cart preservation**: keep the customer's cart intact while you troubleshoot checkout. [Cart preservation »](https://docs.web357.com/login-as-a-user-wordpress-plugin/guides/integrations/?utm_source=loginasuserwp&utm_medium=wp_listing&utm_campaign=docs&utm_content=readme_free_cart#cart-preservation)
+- **Custom login button label**: show nickname, first name, last name, full name, or icon only, and optionally limit the number of characters. [Login button »](https://docs.web357.com/login-as-a-user-wordpress-plugin/appearance/login-button/?utm_source=loginasuserwp&utm_medium=wp_listing&utm_campaign=docs&utm_content=readme_free_button)
+- **Message bar position**: top, bottom, or hidden. Optional attention animation on the "Go back to admin" button.
+- **WordPress Multisite**: log in as users across the network without Super Admin privileges.
+- **User Insights compatible**: add a custom field named `loginasuser` to show the button in User Insights.
+- **Developer hooks**: filter login/logout redirects and WooCommerce cart behaviour. [Developer hooks »](https://docs.web357.com/login-as-a-user-wordpress-plugin/guides/developer-hooks/?utm_source=loginasuserwp&utm_medium=wp_listing&utm_campaign=docs&utm_content=readme_free_hooks)
+
+== PRO features ==
+
+Upgrade to [Login as User PRO](https://www.web357.com/login-as-user-wordpress-plugin?utm_source=loginasuserwp&utm_medium=wp_listing&utm_campaign=product_page&utm_content=readme_pro_upgrade) for store, membership, and team-permission tools.
+
+- **[WooCommerce](https://docs.web357.com/login-as-a-user-wordpress-plugin/guides/integrations/?utm_source=loginasuserwp&utm_medium=wp_listing&utm_campaign=docs&utm_content=readme_pro_woocommerce#woocommerce)**: "Login as User" on the Orders list and inside the order details metabox. Help with refunds, checkout, and missing orders from the customer's view.
+- **[WooCommerce Subscriptions](https://docs.web357.com/login-as-a-user-wordpress-plugin/guides/integrations/?utm_source=loginasuserwp&utm_medium=wp_listing&utm_campaign=docs&utm_content=readme_pro_subscriptions#woocommerce-subscriptions)**: same button on the subscriptions list and subscription details screen.
+- **[MemberPress](https://docs.web357.com/login-as-a-user-wordpress-plugin/guides/integrations/?utm_source=loginasuserwp&utm_medium=wp_listing&utm_campaign=docs&utm_content=readme_pro_memberpress#memberpress)**: log in as a member from Members, Subscriptions, and Transactions to verify access and protected content.
+- **[SureCart](https://docs.web357.com/login-as-a-user-wordpress-plugin/guides/integrations/?utm_source=loginasuserwp&utm_medium=wp_listing&utm_campaign=docs&utm_content=readme_pro_surecart#surecart)**: "Login as User" on Customers and Orders lists.
+- **[Role management permissions](https://docs.web357.com/login-as-a-user-wordpress-plugin/configuration/?utm_source=loginasuserwp&utm_medium=wp_listing&utm_campaign=docs&utm_content=readme_pro_roles#role-management-and-permissions)**: let Shop Managers log in as Customers only. Block them from impersonating Administrators or Editors.
+- **[Shortcode](https://docs.web357.com/login-as-a-user-wordpress-plugin/guides/shortcode/?utm_source=loginasuserwp&utm_medium=wp_listing&utm_campaign=docs&utm_content=readme_pro_shortcode)**: place a button anywhere: `[login_as_user user_id="357" redirect_to="/my-account" button_name="Login as $USER"]`.
+- **[List appearance](https://docs.web357.com/login-as-a-user-wordpress-plugin/appearance/login-button/?utm_source=loginasuserwp&utm_medium=wp_listing&utm_campaign=docs&utm_content=readme_pro_list_appearance#list-appearance)**: show or hide the column, set its position, and choose Small / Medium / Large on Users, WooCommerce, and SureCart tables.
+- **[Custom CSS](https://docs.web357.com/login-as-a-user-wordpress-plugin/appearance/custom-css/?utm_source=loginasuserwp&utm_medium=wp_listing&utm_campaign=docs&utm_content=readme_pro_css)**: style the frontend bar and admin buttons without editing plugin files.
+
+== Documentation ==
+
+- [Introduction](https://docs.web357.com/login-as-a-user-wordpress-plugin/intro/?utm_source=loginasuserwp&utm_medium=wp_listing&utm_campaign=docs&utm_content=readme_docs_intro)
+- [Installation](https://docs.web357.com/login-as-a-user-wordpress-plugin/getting-started/installation/?utm_source=loginasuserwp&utm_medium=wp_listing&utm_campaign=docs&utm_content=readme_docs_install)
+- [Accessing the settings](https://docs.web357.com/login-as-a-user-wordpress-plugin/getting-started/accessing-the-settings/?utm_source=loginasuserwp&utm_medium=wp_listing&utm_campaign=docs&utm_content=readme_docs_settings)
+- [Configuration](https://docs.web357.com/login-as-a-user-wordpress-plugin/configuration/?utm_source=loginasuserwp&utm_medium=wp_listing&utm_campaign=docs&utm_content=readme_docs_configuration)
+- [Login button appearance](https://docs.web357.com/login-as-a-user-wordpress-plugin/appearance/login-button/?utm_source=loginasuserwp&utm_medium=wp_listing&utm_campaign=docs&utm_content=readme_docs_login_button)
+- [Frontend message](https://docs.web357.com/login-as-a-user-wordpress-plugin/appearance/frontend-message/?utm_source=loginasuserwp&utm_medium=wp_listing&utm_campaign=docs&utm_content=readme_docs_frontend_message)
+- [Custom CSS](https://docs.web357.com/login-as-a-user-wordpress-plugin/appearance/custom-css/?utm_source=loginasuserwp&utm_medium=wp_listing&utm_campaign=docs&utm_content=readme_docs_custom_css)
+- [Shortcode](https://docs.web357.com/login-as-a-user-wordpress-plugin/guides/shortcode/?utm_source=loginasuserwp&utm_medium=wp_listing&utm_campaign=docs&utm_content=readme_docs_shortcode)
+- [Developer hooks](https://docs.web357.com/login-as-a-user-wordpress-plugin/guides/developer-hooks/?utm_source=loginasuserwp&utm_medium=wp_listing&utm_campaign=docs&utm_content=readme_docs_hooks)
+- [Integrations (WooCommerce, MemberPress, SureCart)](https://docs.web357.com/login-as-a-user-wordpress-plugin/guides/integrations/?utm_source=loginasuserwp&utm_medium=wp_listing&utm_campaign=docs&utm_content=readme_docs_integrations)
+- [FAQ](https://docs.web357.com/login-as-a-user-wordpress-plugin/faq/?utm_source=loginasuserwp&utm_medium=wp_listing&utm_campaign=docs&utm_content=readme_docs_faq)
+- [Get support](https://www.web357.com/support/?utm_source=loginasuserwp&utm_medium=wp_listing&utm_campaign=support&utm_content=readme_support)
 
 == Installation ==
-The plugin is simple to install:
 
-1. Download the file `login-as-user.zip`.
+The plugin is simple to install.
+
+**From the WordPress dashboard**
+
+1. Go to **Plugins → Add New**.
+2. Search for **Login as a User** by Web357.
+3. Click **Install Now**, then **Activate**.
+4. Open **Settings → Login as User**.
+
+**Manual upload**
+
+1. Download the `login-as-user.zip` file.
 2. Unzip it.
-3. Upload `login-as-user` directory to your `/wp-content/plugins` directory.
-4. Go to the plugin management page and enable the plugin.
-5. Configure the options from the `Settings > Login as User` page
+3. Upload the `login-as-user` directory to `/wp-content/plugins`.
+4. Activate the plugin.
+5. Configure options from **Settings → Login as User**.
+
+Step-by-step screenshots: [Installation guide](https://docs.web357.com/login-as-a-user-wordpress-plugin/getting-started/installation/?utm_source=loginasuserwp&utm_medium=wp_listing&utm_campaign=docs&utm_content=readme_install_docs).
 
 == Frequently Asked Questions ==
 
+= What does this plugin do, in one sentence? =
+It lets an administrator click a button and temporarily become another user, so they can see and fix problems from that user's point of view, then switch straight back.
+
 = Why would I want to use the Login as User plugin? =
-This plugin is ideal for site administrators, customer support agents, and store managers who need to troubleshoot issues from a specific user's perspective — without ever asking the user for their password. With one click, you can sign in as any registered user, see exactly what they see, fix the problem, and instantly go back to your admin account.
+This plugin is for site administrators, customer support agents, and store managers who need to troubleshoot issues from a specific user's perspective, without ever asking the user for their password. With one click, you sign in as any registered user, see exactly what they see, fix the problem, and go back to your admin account. [Getting started »](https://docs.web357.com/login-as-a-user-wordpress-plugin/getting-started/accessing-the-settings/?utm_source=loginasuserwp&utm_medium=wp_listing&utm_campaign=docs&utm_content=readme_faq_getting_started)
 
 = Is it safe to use this plugin on my website? =
-Yes. Login as User is built with security in mind. Only administrators (or the specific roles you allow in the PRO version) can use the "Login as..." button. No user passwords are ever exposed, requested, or stored — admins switch sessions through WordPress's native authentication system.
+Yes. Only administrators (or the specific roles you allow in the [PRO version](https://www.web357.com/login-as-user-wordpress-plugin?utm_source=loginasuserwp&utm_medium=wp_listing&utm_campaign=product_page&utm_content=readme_faq_safe_pro)) can use the "Login as…" button. No user passwords are ever exposed, requested, or stored. Admins switch sessions through WordPress's native authentication system.
 
 = Will the user be notified when I log in as them? =
-By default, users are not notified when an admin logs in as them. However, we strongly recommend informing your customers when accessing their account is necessary for support, to maintain transparency and trust.
+By default, users are not notified. If your privacy policy requires it, tell the customer when you need to access their account, and log the action internally. More in the [FAQ](https://docs.web357.com/login-as-a-user-wordpress-plugin/faq/?utm_source=loginasuserwp&utm_medium=wp_listing&utm_campaign=docs&utm_content=readme_faq_notification).
 
 = Can I log in as users with any WordPress role? =
-Yes. You can log in as users with any role — Subscriber, Customer, Editor, Author, Contributor, Shop Manager, and even custom roles. The PRO version also lets you restrict which roles can impersonate which other roles, for stricter access control.
+Yes. Subscriber, Customer, Editor, Author, Contributor, Shop Manager, and custom roles. [PRO](https://www.web357.com/login-as-user-wordpress-plugin?utm_source=loginasuserwp&utm_medium=wp_listing&utm_campaign=product_page&utm_content=readme_faq_roles_pro) lets you restrict which roles can impersonate which other roles, for example Shop Manager → Customer only. [Role management »](https://docs.web357.com/login-as-a-user-wordpress-plugin/configuration/?utm_source=loginasuserwp&utm_medium=wp_listing&utm_campaign=docs&utm_content=readme_faq_roles#role-management-and-permissions)
 
 = Does Login as User work with WooCommerce? =
-Yes. The PRO version adds a "Login as User" button directly inside the WooCommerce Orders, Subscriptions, and Customers pages, so you can quickly help customers with their orders, refunds, abandoned carts, or checkout issues — and the WooCommerce Cart Preservation feature keeps their cart items intact when you log in.
+Yes. The free version already lets you log in from **Users → All Users** and can [preserve the customer's cart](https://docs.web357.com/login-as-a-user-wordpress-plugin/guides/integrations/?utm_source=loginasuserwp&utm_medium=wp_listing&utm_campaign=docs&utm_content=readme_faq_woo_cart#cart-preservation). [PRO](https://www.web357.com/login-as-user-wordpress-plugin?utm_source=loginasuserwp&utm_medium=wp_listing&utm_campaign=product_page&utm_content=readme_faq_woo_pro) adds the button on WooCommerce **Orders**, **Subscriptions**, and the order/subscription detail screens.
 
-= Does it integrate with WooCommerce Subscriptions, MemberPress, SureCart, and other membership plugins? =
-Yes. The PRO version integrates with WooCommerce Subscriptions, MemberPress, SureCart, and other popular membership / e-commerce plugins, so you can log in as members and subscribers directly from each plugin's admin views.
+= Does it integrate with WooCommerce Subscriptions, MemberPress, and SureCart? =
+Yes, in PRO. The button appears on the relevant admin lists so you can log in as members and customers from each plugin's own screens. [Integrations »](https://docs.web357.com/login-as-a-user-wordpress-plugin/guides/integrations/?utm_source=loginasuserwp&utm_medium=wp_listing&utm_campaign=docs&utm_content=readme_faq_integrations)
 
 = Does Login as User support WordPress Multisite? =
-Yes. Administrators can log in as any user across the entire network, without needing SuperAdmin privileges.
+Yes. Administrators can log in as any user across the network, without needing Super Admin privileges.
 
 = Can I display a "Login as User" button on the frontend or on a custom page? =
-Yes, with the PRO version. Use the shortcode [login_as_user user_id="123"] to place a login button anywhere — on a custom dashboard, a CRM page, or even a landing page. You can also pass redirect_to and button_name parameters to fully customize the experience.
+Yes, with PRO. Use `[login_as_user user_id="123" redirect_to="/my-account" button_name="Login as $USER"]` on a dashboard, CRM page, or widget. [Shortcode docs »](https://docs.web357.com/login-as-a-user-wordpress-plugin/guides/shortcode/?utm_source=loginasuserwp&utm_medium=wp_listing&utm_campaign=docs&utm_content=readme_faq_shortcode)
 
 = How do I switch back to my admin account after impersonating a user? =
-After logging in as a user, a notification bar appears at the top or bottom of the screen with a "Go back to admin as..." link. Clicking it instantly restores your original admin session — no manual logout required.
+A notification bar appears at the top or bottom of the screen with **Go back to admin as…**. You can also use the WordPress admin bar. No manual logout required. [Frontend message »](https://docs.web357.com/login-as-a-user-wordpress-plugin/appearance/frontend-message/?utm_source=loginasuserwp&utm_medium=wp_listing&utm_campaign=docs&utm_content=readme_faq_switch_back)
+
+= The "Login as User" button is missing. What should I check? =
+1. Your account needs the `edit_users` capability (Administrators have this by default).
+2. In PRO, confirm the Users list column is not hidden under **Appearance → Login Button → List Appearance**.
+3. Another plugin that customizes user-table columns may be overriding the column.
+
+See the [troubleshooting FAQ](https://docs.web357.com/login-as-a-user-wordpress-plugin/faq/?utm_source=loginasuserwp&utm_medium=wp_listing&utm_campaign=docs&utm_content=readme_faq_missing_button).
 
 = Does it work with custom user roles and third-party plugins? =
-Yes. Login as User integrates with WordPress's native user management system and is compatible with most third-party plugins (WooCommerce, LearnDash, MemberPress, Tutor LMS, LiteSpeed Cache, and more), as well as custom user roles created by other plugins.
+Yes. It uses WordPress's native user system and works with most third-party plugins (WooCommerce, LearnDash, MemberPress, Tutor LMS, LiteSpeed Cache, and more), as well as custom roles created by other plugins.
 
 = Is this plugin GDPR-compliant? =
-The plugin itself does not collect or transmit any personal data outside your site. However, since logging in as a user lets you view their account, we recommend documenting the practice in your privacy policy and only using it when necessary for legitimate support purposes.
+The plugin does not collect or transmit personal data outside your site. Because logging in as a user lets you view their account, document the practice in your privacy policy and use it only when necessary for legitimate support.
+
+= Where is the full documentation? =
+Start here: [Login as a User docs](https://docs.web357.com/login-as-a-user-wordpress-plugin/intro/?utm_source=loginasuserwp&utm_medium=wp_listing&utm_campaign=docs&utm_content=readme_faq_docs). For help, [contact support](https://www.web357.com/support/?utm_source=loginasuserwp&utm_medium=wp_listing&utm_campaign=support&utm_content=readme_faq_support).
 
 == Screenshots ==
-1. In the Admin area, you select Users in the left-hand side menu and click All Users in the sub-menu. Now, all users of your website appear on the screen along with the Login as… button besides each name. You can click the button of the user you want to switch account.
-2. Are you in a user’s profile and want to login as this user? Just click the button Login as:… at the top left-hand side and you will be able to check data and help this specific user with any problem.
-3. Are you using the WooCommerce plugin? In the WooCommerce orders page, the Login as user button appears besides each customer to help you provide better customer support.
-4. Is one of your customers having trouble with their order? Do you want to check the details of a customer’s order? You can easily check the customer’s problem from his/her perspective by switching with the Login as User button in the WooCommerce order details page.
-5. Settings.
+
+1. Users list: click **Login as…** next to any user to see the site as they see it.
+2. User profile: the same button is available at the top of the Edit User screen.
+3. WooCommerce Orders (PRO): log in as the customer directly from the orders table.
+4. WooCommerce order details (PRO): open the customer's view from the order metabox.
+5. Settings: redirects, cart preservation, appearance, and role permissions.
 
 == Changelog ==
+= 30-Sep-2026 : v1.7.4 =
+* Minor fixes and improvements.
+
 = 20-Aug-2026 : v1.7.3 =
 * Improved compatibility with WordPress 7.1.
 
@@ -101,7 +163,7 @@ The plugin itself does not collect or transmit any personal data outside your si
 * Fixed an issue on WordPress Bedrock installs where “switch back” login links could fail due to incorrect WordPress URL routing (Replace home_url() with site_url() in back_url() method).
 
 = 02-May-2026 : v1.7.0 =
-* Fix: "Go back to admin" from the frontend was not restoring the original admin session (regression introduced in v1.6.9). Rolling back or logging out manually is no longer needed — the switch-back link now works correctly again.
+* Fix: "Go back to admin" from the frontend was not restoring the original admin session (regression introduced in v1.6.9). Rolling back or logging out manually is no longer needed. The switch-back link now works correctly again.
 
 = 14-Apr-2026 : v1.6.9 =
 * fix: LiteSpeed Cache Plugin: Logged-in User Sees login as user bottomBar From Another Session.
@@ -121,7 +183,7 @@ The plugin itself does not collect or transmit any personal data outside your si
 * Updated: New Web357 logo on the settings page.
 
 = 03-Oct-2025 : v1.6.5 =
-* Bug Fixed: The "Go back to admin..." is not displayed after logging in as a user.  
+* Bug Fixed: The "Go back to admin..." is not displayed after logging in as a user.
 * Manually clear WordPress authentication cookies without triggering clear_auth_cookie action. This prevents conflicts with other plugins (e.g. WP Activity Log) that hook into the action.
 
 = 17-Sep-2025 : v1.6.4 =
@@ -131,7 +193,7 @@ The plugin itself does not collect or transmit any personal data outside your si
 * Remove debug logging for WooCommerce cart preservation.
 
 = 08-Sep-2025 : v1.6.2 =
-* Added WooCommerce Cart Preservation, ensuring customer carts remain intact when admins log in as users — preventing lost items and improving checkout support. More: https://docs.web357.com/article/161-woocommerce-cart-preservation-keep-customer-carts-intact
+* Added WooCommerce Cart Preservation, ensuring customer carts remain intact when admins log in as users, preventing lost items and improving checkout support. More: https://docs.web357.com/login-as-a-user-wordpress-plugin/guides/integrations/#cart-preservation
 * Fixed invalid HTML output by moving the filter_login_message hook from wp_head to wp_footer, preventing layout issues caused by injected markup inside the head element.
 * Minor fixes and improvements
 
@@ -149,7 +211,7 @@ The plugin itself does not collect or transmit any personal data outside your si
 * Bug: Fix column width behavior for "Login as User" in WooCommerce Orders Table. Ensures layout is responsive and doesn't break with more columns or smaller screens.
 
 = 03-Apr-2025 : v1.6.0 =
-* Added: New setting "Enable Attention Animation" to allow turning off the pulsing (ping) effect on the admin button after logging in as a user. Disabled by default for a cleaner interface. [Docs »](https://docs.web357.com/article/144-how-to-enable-or-disable-the-attention-animation-in-the-admin-button)
+* Added: New setting "Enable Attention Animation" to allow turning off the pulsing (ping) effect on the admin button after logging in as a user. Disabled by default for a cleaner interface. [Docs »](https://docs.web357.com/login-as-a-user-wordpress-plugin/appearance/frontend-message/)
 
 = 29-Jan-2025 : v1.5.9 =
 * Fix callback method login_as_user_metabox in WooCommerce Subscriptions integration
@@ -186,20 +248,20 @@ The plugin itself does not collect or transmit any personal data outside your si
 
 = 01-Jul-2024 : v1.5.2 =
 * [Bug Fixed] PHP Fatal error: Uncaught Error: Call to undefined method WP_Post::get_customer_id() in /wp-content/plugins/login-as-user-pro/includes/class-w357-login-as-user.php:796
-        
+
 = 28-Jun-2024 : v1.5.1 =
 * Fully compatible with WooCommerce v9.0.x and WooCommerce Subscriptions v6.4.x
-* [New Feature]: Role Management Permissions in Login as User Plugin. Define which roles can log in as users of other roles, enhancing security and control by limiting this capability to specific roles. Learn more https://docs.web357.com/article/118-role-management-permissions-in-login-as-user-plugin-pro-only
+* [New Feature]: Role Management Permissions in Login as User Plugin. Define which roles can log in as users of other roles, enhancing security and control by limiting this capability to specific roles. Learn more https://docs.web357.com/login-as-a-user-wordpress-plugin/configuration/#role-management-and-permissions
 * [New Feature]: Added option to display the admin link in the topbar.
 * Fixed 'Login as User' column compatibility with WooCommerce Subscriptions 6.4.
 * [Bug Fix] Enhanced order column compatibility using WooCommerce's get_customer_id method.
 * [UI] Implemented minor fixes and improvements for a smoother user experience, including a go-back link in the WordPress top navbar.
-* Added button_name parameter to [login_as_user] shortcode for customizable button text, including support for dynamic user type placeholder  (e.g., [ login_as_user user_id="357" redirect_to="/my-account" button_name="Login as "]). [Thank you, Giorgos Iordanidis] Documentation updated: https://docs.web357.com/article/102-shortcode-login-as-user
+* Added button_name parameter to [login_as_user] shortcode for customizable button text, including support for dynamic user type placeholder  (e.g., [ login_as_user user_id="357" redirect_to="/my-account" button_name="Login as "]). [Thank you, Giorgos Iordanidis] Documentation updated: https://docs.web357.com/login-as-a-user-wordpress-plugin/guides/shortcode/
 * [Improvement] The default value for the message_display_position should be "bottom", not "top".
 * Minor fixes and Improvements.
 
 = 26-Apr-2024 : v1.5.0 =
-* Improved handling of user_id and redirect_to parameters in the [login_as_user] shortcode for enhanced functionality. Documentation updated: https://docs.web357.com/article/102-shortcode-login-as-user
+* Improved handling of user_id and redirect_to parameters in the [login_as_user] shortcode for enhanced functionality. Documentation updated: https://docs.web357.com/login-as-a-user-wordpress-plugin/guides/shortcode/
 
 = 18-Apr-2024 : v1.4.9 =
 * Fully compatible with WordPress v6.5.x and WooCommerce v8.8.x
@@ -225,7 +287,7 @@ The plugin itself does not collect or transmit any personal data outside your si
 * [Compatibility] Fully compatible with WordPress v6.2.x and WooCommerce v7.7.x
 * Compatible with the WooCommerce Mobile App
 * After login as a user, in the notification bar show the email instead of username. Example: "go back to admin as Yiannis Christodoulou (yiannis [@] web357 [.] com)"
-* Bug fixed after going back to admin dashboard. Bug message: "The link you followed has expired." 
+* Bug fixed after going back to admin dashboard. Bug message: "The link you followed has expired."
 * PHP Warning fixed: Undefined array key "SERVER_NAME" in .../wp-content/plugins/login-as-user-pro/login-as-user-pro.php on line 67
 * Minor fixes and improvements
 

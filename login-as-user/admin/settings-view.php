@@ -1,6 +1,6 @@
 <?php
 /* ======================================================
- # Login as User for WordPress - v1.7.3 (free version)
+ # Login as User for WordPress - v1.7.4 (free version)
  # -------------------------------------------------------
  # Author: Web357
  # Copyright © 2014-2024 Web357. All rights reserved.
@@ -8,7 +8,7 @@
  # Website: https://www.web357.com/login-as-user-wordpress-plugin
  # Demo: https://login-as-user-wordpress-demo.web357.com/wp-admin/
  # Support: https://www.web357.com/support
- # Last modified: Wednesday 19 August 2026, 11:46:40 PM
+ # Last modified: Tuesday 29 September 2026, 09:41:23 PM
  ========================================================= */
 
 // If this file is called directly, abort.
@@ -100,7 +100,7 @@ if ( ! defined( 'ABSPATH' ) ) {
                     <tr>
                         <td class="lau-feature-info">
                             <div class="lau-feature-title">Shortcode for “Login as User”</div>
-                            <div class="lau-feature-desc">The &#91;login_as_user&#93; shortcode allows you to add a "Login as User" button to any post, page, or widget on your WordPress site. This feature facilitates easy and direct login as a specific user, which is particularly useful for administrators who need to quickly view or manage the site from another user's perspective. Learn more <a target="_blank" href="https://docs.web357.com/article/102-shortcode-login-as-user">here</a>.</div>
+                            <div class="lau-feature-desc">The &#91;login_as_user&#93; shortcode allows you to add a "Login as User" button to any post, page, or widget on your WordPress site. This feature facilitates easy and direct login as a specific user, which is particularly useful for administrators who need to quickly view or manage the site from another user's perspective. Learn more <a target="_blank" href="https://docs.web357.com/login-as-a-user-wordpress-plugin/guides/shortcode/">here</a>.</div>
                         </td>
                          <td><span class="lau-icon lau-icon-x"></span></td> 
                         <td><span class="lau-icon lau-icon-tick"></span></td>
@@ -108,7 +108,7 @@ if ( ! defined( 'ABSPATH' ) ) {
                     <tr>
                         <td class="lau-feature-info">
                             <div class="lau-feature-title">Role Management Permissions in Login as User Plugin</div>
-                            <div class="lau-feature-desc">Define which roles can log in as users of other roles, enhancing security and control by limiting this capability to specific roles. Learn more <a target="_blank" href="https://docs.web357.com/article/118-role-management-permissions-in-login-as-user-plugin-pro-only">here</a>.</div>
+                            <div class="lau-feature-desc">Define which roles can log in as users of other roles, enhancing security and control by limiting this capability to specific roles. Learn more <a target="_blank" href="https://docs.web357.com/login-as-a-user-wordpress-plugin/configuration/#role-management-and-permissions">here</a>.</div>
                         </td>
                          <td><span class="lau-icon lau-icon-x"></span></td> 
                         <td><span class="lau-icon lau-icon-tick"></span></td>
