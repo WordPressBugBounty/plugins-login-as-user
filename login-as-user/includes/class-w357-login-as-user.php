@@ -1,6 +1,6 @@
 <?php
 /* ======================================================
- # Login as User for WordPress - v1.7.4 (free version)
+ # Login as User for WordPress - v1.7.5 (free version)
  # -------------------------------------------------------
  # Author: Web357
  # Copyright © 2014-2024 Web357. All rights reserved.
@@ -8,7 +8,7 @@
  # Website: https://www.web357.com/login-as-user-wordpress-plugin
  # Demo: https://login-as-user-wordpress-demo.web357.com/wp-admin/
  # Support: https://www.web357.com/support
- # Last modified: Tuesday 29 September 2026, 09:41:23 PM
+ # Last modified: Tuesday 27 October 2026, 10:54:50 PM
  ========================================================= */
 
 // If this file is called directly, abort.
@@ -217,6 +217,11 @@ class w357LoginAsUser
 
 		if ('' === $requestedAction) {
 			return;
+		}
+
+		// The switch URLs are one-time and repeat byte-for-byte after a switch-back; never let a browser/proxy reuse their redirects.
+		if (in_array($requestedAction, ['login_as_user', 'login_as_olduser'], true)) {
+			nocache_headers();
 		}
 
 		$current_user = (is_user_logged_in()) ? wp_get_current_user() : null;

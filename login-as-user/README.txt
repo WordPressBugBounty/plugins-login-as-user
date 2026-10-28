@@ -5,7 +5,7 @@ Donate link: https://www.paypal.me/web357
 Requires at least: 5.3
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.7.4
+Stable tag: 1.7.5
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -148,6 +148,11 @@ Start here: [Login as a User docs](https://docs.web357.com/login-as-a-user-wordp
 5. Settings: redirects, cart preservation, appearance, and role permissions.
 
 == Changelog ==
+
+= 28-Oct-2026 : v1.7.5 =
+* Fixed an issue where switching to the same user a second time could silently fail.
+* Fixed a crash when trying to log in as a user that no longer exists.
+
 = 30-Sep-2026 : v1.7.4 =
 * Minor fixes and improvements.
 
