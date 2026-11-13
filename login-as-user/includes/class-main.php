@@ -1,6 +1,6 @@
 <?php
 /* ======================================================
- # Login as User for WordPress - v1.7.5 (free version)
+ # Login as User for WordPress - v1.7.6 (free version)
  # -------------------------------------------------------
  # Author: Web357
  # Copyright © 2014-2024 Web357. All rights reserved.
@@ -8,7 +8,7 @@
  # Website: https://www.web357.com/login-as-user-wordpress-plugin
  # Demo: https://login-as-user-wordpress-demo.web357.com/wp-admin/
  # Support: https://www.web357.com/support
- # Last modified: Tuesday 27 October 2026, 10:54:50 PM
+ # Last modified: Friday 13 November 2026, 08:19:52 AM
  ========================================================= */
 
 // If this file is called directly, abort.
@@ -105,16 +105,6 @@ class LoginAsUser {
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-i18n.php';
 
 		/**
-		 * The class with the form fields for settings
-		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-w357-custom-fields.php';
-
-		/**
-		 * The class with the settings
-		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-w357-settings.php';
-
-		/**
 		 * The class responsible for defining all actions that occur in the admin area.
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-admin.php';
@@ -159,11 +149,7 @@ class LoginAsUser {
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
 		
-		// Plugin settings
-		$plugin_settings = new LoginAsUser_settings( $this->get_plugin_name(), $this->get_version() );
-		$this->loader->add_action( 'admin_menu', $plugin_settings, 'options_page' );
-		$this->loader->add_action( 'admin_init', $plugin_settings, 'settings_init' );
-		$this->loader->add_filter( 'plugin_action_links_'.$this->plugin_basename, $plugin_settings, 'settings_link' );
+		// The settings page is now the React admin app (src/Hooks/AdminPageHook.php).
 
 		
 	}

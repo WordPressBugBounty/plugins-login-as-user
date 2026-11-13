@@ -1,6 +1,6 @@
 <?php
 /* ======================================================
- # Login as User for WordPress - v1.7.5 (free version)
+ # Login as User for WordPress - v1.7.6 (free version)
  # -------------------------------------------------------
  # Author: Web357
  # Copyright © 2014-2024 Web357. All rights reserved.
@@ -8,7 +8,7 @@
  # Website: https://www.web357.com/login-as-user-wordpress-plugin
  # Demo: https://login-as-user-wordpress-demo.web357.com/wp-admin/
  # Support: https://www.web357.com/support
- # Last modified: Tuesday 27 October 2026, 10:54:50 PM
+ # Last modified: Friday 13 November 2026, 08:19:52 AM
  ========================================================= */
 
 // If this file is called directly, abort.
@@ -62,6 +62,7 @@ class w357LoginAsUser
          
         if (static::$pluginSettings->isPluginActive('login-as-user-pro')) {
             add_action('admin_notices', [$this, 'disableFreeVersionNotice']);
+            add_action('admin_post_w357_lau_deactivate_free', [$this, 'deactivateFreeVersion']);
             remove_action('personal_options', [$this, 'w357_personal_options']);
             remove_filter('wp_head', array($this, 'login_message_style'), 1);
             remove_filter('wp_footer', array($this, 'add_login_message'), 1);
@@ -163,27 +164,42 @@ class w357LoginAsUser
      
     
     /**
-     * Deactivate the FREE version after installing the PRO.
+     * Tells the admin the FREE version is redundant while the PRO is active. Shown only on the Plugins screen, with a
+     * one-click button that deactivates the FREE version in place (the plugin's own page shows it inside the admin app).
      */
     public function disableFreeVersionNotice()
     {
-        if (static::$pluginSettings->isPluginActive('login-as-user-pro')) {
-            $deactivateUrl = current_user_can('deactivate_plugins') ? wp_nonce_url(
-                admin_url('plugins.php?action=deactivate&plugin=login-as-user/login-as-user.php'),
-                'deactivate-plugin_login-as-user/login-as-user.php'
-            ) : '';
-
-            $notice = wp_kses(
-                __('You need to deactivate and delete the old <b>Login as User (Free) version of plugin</b> on the plugins page.', 'login-as-user'),
-                array('b' => array(), 'strong' => array())
-            );
-
-            if ($deactivateUrl) {
-                $notice .= '&nbsp;<a href="' . esc_url($deactivateUrl) . '">' . esc_html__('Click here to Deactivate it', 'login-as-user') . '</a>';
-            }
-
-            echo wp_kses_post('<div class="notice notice-warning is-dismissible"><p>' . $notice . '</p></div>');
+        if (!static::$pluginSettings->isPluginActive('login-as-user-pro')) {
+            return;
         }
+
+        $screen = function_exists('get_current_screen') ? get_current_screen() : null;
+        if (!$screen || 'plugins' !== $screen->id) {
+            return;
+        }
+
+        $notice = esc_html__('Login as User Pro is active, so the free version of Login as User is no longer needed.', 'login-as-user');
+        if (current_user_can('deactivate_plugins')) {
+            $url = wp_nonce_url(admin_url('admin-post.php?action=w357_lau_deactivate_free'), 'w357_lau_deactivate_free');
+            $notice .= ' <a class="button button-primary" href="' . esc_url($url) . '">' . esc_html__('Deactivate free version', 'login-as-user') . '</a>';
+        }
+
+        echo wp_kses_post('<div class="notice notice-warning"><p>' . $notice . '</p></div>');
+    }
+
+    /**
+     * Deactivates the FREE version and sends the admin back to the screen the button was on.
+     */
+    public function deactivateFreeVersion()
+    {
+        check_admin_referer('w357_lau_deactivate_free');
+        if (!current_user_can('deactivate_plugins')) {
+            wp_die(esc_html__('Sorry, you are not allowed to deactivate plugins.', 'login-as-user'), '', ['response' => 403]);
+        }
+
+        deactivate_plugins('login-as-user/login-as-user.php');
+        wp_safe_redirect(wp_get_referer() ?: admin_url('plugins.php'));
+        exit;
     }
 
      
@@ -237,14 +253,15 @@ class w357LoginAsUser
 				}
                 $target_wp_user = $user_id ? get_userdata($user_id) : '';
 
+                // Check intent first: a denied attempt is only audited once the request carries a valid nonce, so a cross-site GET cannot flood the audit log.
+                check_admin_referer("login_as_user_{$user_id}");
+
                 // Check authentication:
                 if (!current_user_can('login_as_user', $user_id)) {
                     self::log(sprintf('Web357LoginAsUser: User "%s" (%d) is not allowed to login as user "%s" (%d).', $current_user ? $current_user->user_login : '', $current_user ? $current_user->ID : 0, $target_wp_user ? $target_wp_user->user_login : $target_wp_user, $target_wp_user ? $target_wp_user->ID : 0));
+                    
                     wp_die(esc_html__('Could not login as user.', 'login-as-user'));
                 }
-
-				// Check intent:
-				check_admin_referer("login_as_user_{$user_id}");
 
 				// Prevent WooCommerce from clearing carts during the impersonation switch
                 if (static::$pluginSettings->preserveWooCart) {
@@ -260,6 +277,7 @@ class w357LoginAsUser
 				// Switch user:
 				$user = $this->login_as_user($user_id, self::remember_me());
 				if ($user) {
+					
 					$redirect_to = self::get_redirect($user, $current_user);
 
 					// Redirect to the dashboard or the home URL depending on capabilities:
@@ -301,6 +319,7 @@ class w357LoginAsUser
 					exit;
 				} else {
                     self::log(sprintf('Web357LoginAsUser: Could not login as user, target user "%s" (%d) not found', (string)($target_wp_user ? $target_wp_user->user_login : $target_wp_user), (int)($target_wp_user ? $target_wp_user->ID : 0)));
+                    
                     wp_die(esc_html__('Could not login as user.', 'login-as-user'));
 				}
 				break;
@@ -310,18 +329,20 @@ class w357LoginAsUser
 				// Fetch the originating user data:
 				$old_user = $this->get_old_user();
 				if (!$old_user) {
+                    // No nonce can exist without an original user, so this is not audited (an unauthenticated-intent GET must not write rows).
                     self::log('Web357LoginAsUser: Old user not found');
                     wp_die(esc_html__('Could not login as user.', 'login-as-user'));
 				}
 
+				// Check intent first (see login_as_user): no audit rows for requests without a valid nonce.
+				check_admin_referer("login_as_olduser_{$old_user->ID}");
+
 				// Check authentication:
 				if (!self::authenticate_old_user($old_user)) {
                     self::log(sprintf('Web357LoginAsUser: Authentication failed for old user "%s" (%d)', (string)($old_user->user_login), $old_user->ID));
+                    
                     wp_die(esc_html__('Could not login as user.', 'login-as-user'));
 				}
-
-				// Check intent:
-				check_admin_referer("login_as_olduser_{$old_user->ID}");
 
 				// Prevent WooCommerce from clearing carts during the switch-back
                 if (static::$pluginSettings->preserveWooCart) {
@@ -336,6 +357,7 @@ class w357LoginAsUser
 
 				// Switch user:
 				if ($this->login_as_user($old_user->ID, self::remember_me(), false)) {
+					
 
 					if (!empty($_REQUEST['interim-login'])) {
 						$GLOBALS['interim_login'] = 'success'; // @codingStandardsIgnoreLine
@@ -447,28 +469,13 @@ class w357LoginAsUser
 		if ($old_user instanceof WP_User) {		
 
 			
-			if (is_admin_bar_showing() && $message_display_position_option == 'top') 
-			{
-				$css = 'body { margin-top: 60px !important; padding-top: 70px !important; } .login-as-user-top { top: 32px!important; } @media only screen and (max-width: 782px) { .login-as-user-top { top: 46px!important; } }';
+			// --lau-bar-height is set from the bar's measured height by public.min.js (0 while collapsed).
+			$css = 'top' === $message_display_position_option
+				? 'body { padding-top: var(--lau-bar-height, 46px) !important; }'
+				: 'body { padding-bottom: var(--lau-bar-height, 46px) !important; }';
+			if ('top' === $message_display_position_option && is_admin_bar_showing()) {
+				$css .= ' .login-as-user-top { top: 32px!important; } @media only screen and (max-width: 782px) { .login-as-user-top { top: 46px!important; } }';
 			}
-			elseif (is_admin_bar_showing() && $message_display_position_option == 'bottom') 
-			{
-				$css = 'body { margin-bottom: 60px !important; padding-bottom: 70px !important; } .login-as-user-bottom { bottom: 0; }';
-			} 
-			elseif ( $message_display_position_option == 'top') 
-			{
-				$css = 'body { margin-top: 60px !important; padding-top: 70px !important; } .login-as-user-top { top: 32px!important; } @media only screen and (max-width: 782px) { .login-as-user-top { top: 46px!important; } }';
-			}
-			elseif ($message_display_position_option == 'bottom') 
-			{
-				$css = 'body { margin-bottom: 60px !important; padding-bottom: 70px !important; } .login-as-user-bottom { bottom: 0; }';
-			} 
-			else 
-			{
-				$css = 'body { padding-top: 70px !important; } @media only screen and (max-width: 420px) { body { padding-top: 120px !important; } }';
-			}
-
-			// Inline CSS
 			wp_add_inline_style('login-as-user-inline-style', $css);
 
 			// Add the class to the body
@@ -489,12 +496,6 @@ class w357LoginAsUser
         
         $old_user = $this->get_old_user();
         if ($old_user instanceof WP_User) {
-            $link = sprintf(
-            /* Translators: 1: user display name; 2: username; */
-                __('go back to admin as %1$s (%2$s)', 'login-as-user'),
-                $old_user->display_name,
-                $old_user->user_email
-            );
             $url = self::back_url($old_user);
 
             // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only display logic; no state is changed here.
@@ -514,23 +515,29 @@ class w357LoginAsUser
 
             $current_user = (is_user_logged_in()) ? wp_get_current_user() : null;
             $current_user_name = '';
-            if (is_object($current_user) && !empty($current_user->display_name) && !empty($current_user->user_login)) {
-                $current_user_name = sprintf(
-                /* Translators: 1: user display name; 2: username; */
-                    __('%1$s (%2$s)', 'login-as-user'),
-                    $current_user->display_name,
-                    $current_user->user_login
-                );
+            if (is_object($current_user)) {
+                $current_user_name = !empty($current_user->display_name) ? $current_user->display_name : $current_user->user_login;
             }
-            // Output the message
+            // Output the message. The admin's email is deliberately never printed here (screen-shares, recordings).
+            // Two views of the same bar: .login-as-user-inner (full width) and .login-as-user-mini (collapsed card).
+            $backTitle = esc_attr__('Returns you to the admin page you came from', 'login-as-user');
+            $backClasses = 'button w357-login-as-user-btn w357-login-as-user-frontend-btn';
             $message = '';
-            $message .= '<div class="login-as-user login-as-user-' . esc_attr(static::$pluginSettings->messageDisplayPosition) . '">';
+            $message .= '<div class="login-as-user login-as-user-' . esc_attr(static::$pluginSettings->messageDisplayPosition) . '" role="region" aria-label="' . esc_attr__('Login as User session', 'login-as-user') . '">';
             $message .= '<div class="login-as-user-inner">';
             $message .= '<div class="login-as-user-content">';
-            /* translators: %1$s: The display name and username of the user you are currently logged in as. */
-            $message .= '<div class="login-as-user-msg">' . sprintf(__('You have been logged in as the user <strong>%1$s</strong>', 'login-as-user'), esc_html($current_user_name)) . '</div>';
-            $message .= '<a class="button w357-login-as-user-btn w357-login-as-user-frontend-btn" href="' . esc_url($url) . '">' . esc_html($link) . '</a>';
+            /* translators: %1$s: The display name of the user you are currently logged in as. */
+            $message .= '<div class="login-as-user-msg" aria-live="polite">' . sprintf(__('Viewing the site as <strong>%1$s</strong>', 'login-as-user'), esc_html($current_user_name)) . '</div>';
+            $message .= '<div class="login-as-user-actions">';
+            $message .= '<a class="' . $backClasses . '" href="' . esc_url($url) . '" title="' . $backTitle . '">' . esc_html__('Go back to admin', 'login-as-user') . '</a>';
+            $message .= '<button type="button" class="login-as-user-toggle" aria-expanded="true" aria-label="' . esc_attr__('Switch to the compact view', 'login-as-user') . '" title="' . esc_attr__('Compact view', 'login-as-user') . '"></button>';
             $message .= '</div>';
+            $message .= '</div>';
+            $message .= '</div>';
+            $message .= '<div class="login-as-user-mini">';
+            $message .= '<div class="login-as-user-mini-head"><span class="login-as-user-label">' . esc_html__('Viewing as', 'login-as-user') . '</span><strong class="login-as-user-name">' . esc_html($current_user_name) . '</strong>';
+            $message .= '<button type="button" class="login-as-user-expand" aria-expanded="false" aria-label="' . esc_attr__('Switch to the full bar', 'login-as-user') . '" title="' . esc_attr__('Full bar', 'login-as-user') . '"></button></div>';
+            $message .= '<a class="' . $backClasses . '" href="' . esc_url($url) . '" title="' . $backTitle . '">' . esc_html__('Go back to admin', 'login-as-user') . '</a>';
             $message .= '</div>';
             $message .= '</div>';
             echo wp_kses_post($message);
@@ -585,8 +592,8 @@ class w357LoginAsUser
 						'class' => 'logged-in-successfully',
 						/* translators: %1$s: The display name and username of the user you are currently logged in as. */
 						'title' => sprintf(__('You have been logged in as the user "%1$s".', 'login-as-user'), $current_user_name) . ' ' . sprintf(
-							/* translators: 1: The original user's display name. 2: The original user's email address. */
-							__('Click here to go back to admin dashboard as %1$s (%2$s).', 'login-as-user'), $old_user->display_name, $old_user->user_email
+							/* translators: %1$s: The original user's display name. */
+							__('Click here to go back to admin dashboard as %1$s.', 'login-as-user'), $old_user->display_name
 						),
 					)
 				);

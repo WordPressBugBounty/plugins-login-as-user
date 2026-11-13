@@ -20,7 +20,7 @@ class LoginAsUser_Plugin_Settings
     public $loginAsTypeCharactersLimit = 0;
 
     /** @var string */
-    public $messageDisplayPosition = 'top';
+    public $messageDisplayPosition = 'bottom';
 
     /** @var bool */
     public $showAdminLinkInTopbar = true;

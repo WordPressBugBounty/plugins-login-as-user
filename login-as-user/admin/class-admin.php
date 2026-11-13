@@ -1,6 +1,6 @@
 <?php
 /* ======================================================
- # Login as User for WordPress - v1.7.5 (free version)
+ # Login as User for WordPress - v1.7.6 (free version)
  # -------------------------------------------------------
  # Author: Web357
  # Copyright © 2014-2024 Web357. All rights reserved.
@@ -8,7 +8,7 @@
  # Website: https://www.web357.com/login-as-user-wordpress-plugin
  # Demo: https://login-as-user-wordpress-demo.web357.com/wp-admin/
  # Support: https://www.web357.com/support
- # Last modified: Tuesday 27 October 2026, 10:54:50 PM
+ # Last modified: Friday 13 November 2026, 08:19:52 AM
  ========================================================= */
 
 // If this file is called directly, abort.
@@ -66,12 +66,6 @@ class LoginAsUser_Admin {
     {
         wp_enqueue_style($this->plugin_name_clean, plugin_dir_url(__FILE__) . 'css/admin.min.css', [], $this->version, 'all');
 
-        // Enqueue Select2 CSS on settings page
-        if ($this->is_settings_page()) {
-            wp_enqueue_style('lau-select2', plugin_dir_url(__FILE__) . 'lib/select2/select2.min.css', [], '4.1.0-rc.0', 'all');
- 
-        }
-
         $css = w357LoginAsUser::$pluginSettings->loginButtonDisplayAs == 'only_icon' ? '.column-loginasuser_col { --column-loginasuser_col-width: 7%} ' : '';
         
         if ($css) {
@@ -86,26 +80,7 @@ class LoginAsUser_Admin {
 	 */
 	public function enqueue_scripts() 
 	{
-		$dependencies = array( 'jquery' );
-
-		// Select2 is bundled with the plugin and only loaded on the settings page.
-		if ($this->is_settings_page()) {
-			wp_enqueue_script('lau-select2', plugin_dir_url(__FILE__) . 'lib/select2/select2.min.js', array('jquery'), '4.1.0-rc.0', true);
-			$dependencies[] = 'lau-select2';
-		}
-
-		wp_enqueue_script( $this->plugin_name_clean, plugin_dir_url( __FILE__ ) . 'js/admin.min.js', $dependencies, $this->version, true );
-		wp_localize_script( $this->plugin_name_clean, 'loginasuserAjax', array( 'loginasuser_ajaxurl' => admin_url( 'admin-ajax.php' )));
-	}
-
-	/**
-	 * Check if we're on the plugin settings page
-	 *
-	 * @return bool
-	 */
-	private function is_settings_page() {
-		$screen = get_current_screen();
-		return $screen && $screen->id === 'settings_page_login-as-user';
+		wp_enqueue_script( $this->plugin_name_clean, plugin_dir_url( __FILE__ ) . 'js/admin.min.js', array( 'jquery' ), $this->version, true );
 	}
 
 	

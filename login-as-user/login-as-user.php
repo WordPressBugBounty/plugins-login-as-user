@@ -3,7 +3,7 @@
  * Plugin Name:       Login as User
  * Plugin URI:        https://www.web357.com/login-as-user-wordpress-plugin
  * Description:       Login as User is a free WordPress plugin that helps admins switch user accounts instantly to check data.
- * Version:           1.7.5
+ * Version:           1.7.6
  * Author:            Web357
  * Author URI:        https://www.web357.com/
  * License:           GPLv3 or later
@@ -19,8 +19,23 @@ defined( 'ABSPATH' ) || exit;
  * Currently plugin version.
  */
 if ( !defined( 'LOGINASUSER_VERSION' ) ) {
-	define( 'LOGINASUSER_VERSION', '1.7.5' );
+	define( 'LOGINASUSER_VERSION', '1.7.6' );
 }
+
+/**
+ * Autoloader for the namespaced admin app layer (src/). The legacy classes in includes/ are required directly.
+ */
+spl_autoload_register( static function ( string $class ): void {
+	$prefix = 'Web357\\WP\\LoginAsUser\\';
+	if ( strncmp( $class, $prefix, strlen( $prefix ) ) !== 0 ) {
+		return;
+	}
+	$file = __DIR__ . '/src/' . str_replace( '\\', '/', substr( $class, strlen( $prefix ) ) ) . '.php';
+	if ( is_file( $file ) ) {
+		require_once $file;
+	}
+} );
+
 
 
 /**
@@ -58,6 +73,7 @@ function login_as_user_run()
 		$LoginAsUser = new LoginAsUser();
 	}
 	$LoginAsUser->run();
+	\Web357\WP\LoginAsUser\Engine::init();
 }
 
 // Initialize plugin on plugins_loaded to ensure WordPress is fully loaded

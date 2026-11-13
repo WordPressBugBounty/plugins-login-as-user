@@ -1,7 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2021-01-09 01:34+0200\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/login-as-user\n"
+"POT-Creation-Date: 2026-10-25T11:02:21+00:00\n"
 "PO-Revision-Date: 2021-01-09 01:35+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -12,176 +13,299 @@ msgstr ""
 "X-Generator: Poedit 2.4.2\n"
 "X-Poedit-Basepath: ..\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Poedit-KeywordsList: __;_e;esc_html;esc_html__;esc_att;esc_attr__;"
-"esc_attr_e;esc_html_e\n"
+"X-Poedit-KeywordsList: "
+"__;_e;esc_html;esc_html__;esc_att;esc_attr__;esc_attr_e;esc_html_e\n"
 "X-Poedit-SearchPath-0: .\n"
 
-#: admin/class-admin.php:76
-msgid "The License Key cannot be empty."
+#. Plugin Name of the plugin
+#: login-as-user.php
+msgid "[PLUGIN_REAL_NAME]"
 msgstr ""
 
-#: admin/settings-view.php:9
-msgid "About Login as User"
-msgstr "Σύνδεση ως χρήστης"
+#. Plugin URI of the plugin
+#: login-as-user.php
+msgid "https://www.web357.com/login-as-user-wordpress-plugin"
+msgstr ""
 
-#: admin/settings-view.php:72
+#. Description of the plugin
+#: login-as-user.php
+msgid "[PLUGIN_SHORT_DESCRIPTION]"
+msgstr ""
+
+#. Author of the plugin
+#: login-as-user.php
+msgid "Web357"
+msgstr ""
+
+#. Author URI of the plugin
+#: login-as-user.php
+msgid "https://www.web357.com/"
+msgstr ""
+
+#: admin/settings-view.php:26
+msgid "About"
+msgstr ""
+
+#: admin/settings-view.php:36
+msgid ""
+"Login as a User is a powerful WordPress plugin that lets you instantly "
+"access any user’s account with just one click — no password needed. Perfect "
+"for support, QA, and admin teams, it allows you to see exactly what your "
+"users see, making issue resolution faster and easier. Seamlessly integrated "
+"with WooCommerce and supporting role-based restrictions, it ensures both "
+"flexibility and security. Say goodbye to guesswork and endless email "
+"threads, support users in real time, from their exact perspective."
+msgstr ""
+
+#: admin/settings-view.php:36
+msgid "Read more &raquo;"
+msgstr ""
+
+#: admin/settings-view.php:132
 msgid "Need support?"
 msgstr "Xρειάζεστε βοήθεια;"
 
-#: admin/settings-view.php:75
+#. translators: %1$s: URL of the Web357 support page.
+#: admin/settings-view.php:139
 #, php-format
 msgid ""
-"<p>If you are having problems with this plugin, please <a href=\"%1$s"
-"\">contact us</a> and we will reply as soon as possible.</p>"
+"If you are having problems with this plugin, please <a href=\"%1$s\" "
+"target=\"_blank\">contact us</a> and we will reply as soon as possible."
 msgstr ""
 
-#: admin/settings-view.php:83
+#: admin/settings-view.php:150
 msgid "Developed by"
 msgstr ""
 
-#: admin/settings-view.php:92
+#: admin/settings-view.php:159
 msgid "How it works?"
 msgstr ""
 
-#: admin/settings-view.php:94
+#: admin/settings-view.php:163
 msgid ""
-"<p style=\"color:red\">You have to navigate to the <a href=\"users.php"
-"\"><strong>Users page</strong></a> and then you will see a button with the "
-"name \"<strong>Login as: `username`</strong>\", at the right side of each "
-"username. If you click on this button you will login at the front-end of the "
-"website as this User.</p>"
+"You have to navigate to the <a href=\"users.php\"><strong>Users page</"
+"strong></a> and then you will see a button with the name \"<strong>Login as: "
+"`username`</strong>\", at the right side of each username. If you click on "
+"this button you will login at the front-end of the website as this User."
 msgstr ""
 
-#: admin/settings-view.php:97 includes/class-w357-settings.php:139
+#: admin/settings-view.php:171 includes/class-w357-settings.php:338
 msgid "Settings"
 msgstr "Ρυθμίσεις"
 
-#: admin/settings-view.php:102
+#: admin/settings-view.php:174
+msgid "Appearance"
+msgstr ""
+
+#: admin/settings-view.php:183
+msgid "Login Button"
+msgstr ""
+
+#: admin/settings-view.php:189
+msgid "Message"
+msgstr ""
+
+#: admin/settings-view.php:196 includes/class-w357-settings.php:684
+msgid "Custom CSS"
+msgstr ""
+
+#: admin/settings-view.php:215
 msgid "Save Settings"
 msgstr "Αποθήκευση Ρυθμίσεων"
 
-#: includes/class-w357-custom-fields.php:92
-msgid ""
-"Call with web357.com has been failed. Please, try again later or contact us "
-"at support@web357.com."
+#: includes/class-w357-custom-fields.php:279
+#: includes/class-w357-settings.php:637
+msgid "None"
 msgstr ""
 
-#: includes/class-w357-custom-fields.php:100
-#: includes/class-w357-custom-fields.php:105
-#, fuzzy
-#| msgid "License Key"
-msgid "Your License Key <strong>"
-msgstr "Κλειδί Άδειας Χρήσης"
-
-#: includes/class-w357-custom-fields.php:115
+#. translators: 1: The manager role label. 2: A comma separated list of role names.
+#: includes/class-w357-custom-fields.php:305
+#, php-format
 msgid ""
-"Call with Web357's License Manager has been failed. <br>Please, try again "
-"later or contact us at support@web357.com."
+"The <strong>%1$ss</strong> could be able to log in as any User with the "
+"following role(s): <strong>%2$s</strong>."
 msgstr ""
 
-#: includes/class-w357-custom-fields.php:125
-#, fuzzy
-#| msgid "License Key"
-msgid "Activate License Key"
-msgstr "Κλειδί Άδειας Χρήσης"
+#. translators: %s: The manager role label.
+#: includes/class-w357-custom-fields.php:314
+#, php-format
+msgid ""
+"The <strong>%ss</strong> are <strong>not</strong> able to log in as any User."
+msgstr ""
 
-#: includes/class-w357-login-as-user.php:83
-#: includes/class-w357-login-as-user.php:123
-#: includes/class-w357-login-as-user.php:132
-#: includes/class-w357-login-as-user.php:137
+#: includes/class-w357-custom-fields.php:434
+msgid "Last column"
+msgstr ""
+
+#: includes/class-w357-custom-fields.php:484
+msgid "always enabled"
+msgstr ""
+
+#: includes/class-w357-login-as-user.php:177
+msgid ""
+"You need to deactivate and delete the old <b>Login as User (Free) version of "
+"plugin</b> on the plugins page."
+msgstr ""
+
+#: includes/class-w357-login-as-user.php:182
+msgid "Click here to Deactivate it"
+msgstr ""
+
+#: includes/class-w357-login-as-user.php:243
+#: includes/class-w357-login-as-user.php:304
+#: includes/class-w357-login-as-user.php:314
+#: includes/class-w357-login-as-user.php:320
 msgid "Could not login as user."
 msgstr "Δεν ήταν δυνατή η σύνδεση ως χρήστης."
 
-#: includes/class-w357-login-as-user.php:167
+#: includes/class-w357-login-as-user.php:358
 msgid "Could not switch users."
 msgstr "Δεν ήταν δυνατή η εναλλαγή χρηστών."
 
-#: includes/class-w357-login-as-user.php:259
-#, php-format
-msgid "go back to admin as %1$s (%2$s)"
-msgstr "επιστροφή στη διαχείριση ως  %1$s (%2$s)"
+#: includes/class-w357-login-as-user.php:501
+msgid "Returns you to the admin page you came from"
+msgstr "Σας επιστρέφει στη σελίδα διαχείρισης από την οποία ξεκινήσατε"
 
-#: includes/class-w357-login-as-user.php:278
+#: includes/class-w357-login-as-user.php:504
+msgid "Login as User session"
+msgstr "Συνεδρία σύνδεσης ως χρήστης"
+
+#. translators: %1$s: The display name of the user you are currently logged in as.
+#: includes/class-w357-login-as-user.php:508
+#, php-format
+msgid "Viewing the site as <strong>%1$s</strong>"
+msgstr "Προβολή του ιστότοπου ως <strong>%1$s</strong>"
+
+#: includes/class-w357-login-as-user.php:510
+msgid "Go back to admin"
+msgstr "Επιστροφή στη διαχείριση"
+
+#: includes/class-w357-login-as-user.php:511
+msgid "Collapse the Login as User bar"
+msgstr "Σύμπτυξη της μπάρας Login as User"
+
+#: includes/class-w357-login-as-user.php:511
+msgid "Collapse"
+msgstr "Σύμπτυξη"
+
+#: includes/class-w357-login-as-user.php:516
+msgid "Viewing as"
+msgstr "Προβολή ως"
+
+#: includes/class-w357-login-as-user.php:517
+msgid "Expand the Login as User bar"
+msgstr "Ανάπτυξη της μπάρας Login as User"
+
+#: includes/class-w357-login-as-user.php:517
+msgid "Expand"
+msgstr "Ανάπτυξη"
+
+#. Translators: 1: user display name; 2: username;
+#: includes/class-w357-login-as-user.php:557
 #, php-format
 msgid "%1$s (%2$s)"
 msgstr ""
 
-#: includes/class-w357-login-as-user.php:371
+#. translators: %1$s: The original user's display name.
+#: includes/class-w357-login-as-user.php:567
 #, php-format
-msgid "You have been logged in as the user <strong>%1$s</strong>"
-msgstr "Έχετε συνδεθεί ως χρήστης  <strong>%1$s</strong>"
+msgid "Go back as %1$s"
+msgstr "Επιστροφή ως %1$s"
 
-#: includes/class-w357-login-as-user.php:592
-#: includes/class-w357-login-as-user.php:793
-msgid "Login as User"
-msgstr "Σύνδεση ως χρήστης"
+#. translators: %1$s: The display name and username of the user you are currently logged in as.
+#: includes/class-w357-login-as-user.php:572
+#, php-format
+msgid "You have been logged in as the user \"%1$s\"."
+msgstr "Έχετε συνδεθεί ως ο χρήστης «%1$s»."
 
-#: includes/class-w357-login-as-user.php:616
-msgid " "
-msgstr ""
+#. translators: %1$s: The original user's display name.
+#: includes/class-w357-login-as-user.php:574
+#, php-format
+msgid "Click here to go back to admin dashboard as %1$s."
+msgstr "Κάντε κλικ εδώ για να επιστρέψετε στον πίνακα διαχείρισης ως %1$s."
 
-#: includes/class-w357-login-as-user.php:657
-#: includes/class-w357-login-as-user.php:747
-msgid "No user exists for this order."
-msgstr "Η παραγγελία δεν έχει χρήστη."
-
-#: includes/class-w357-login-as-user.php:661
-#: includes/class-w357-login-as-user.php:689
-#: includes/class-w357-login-as-user.php:721
-#: includes/class-w357-login-as-user.php:751
+#: includes/class-w357-login-as-user.php:903
+#: includes/class-w357-login-as-user.php:1191
+#: includes/class-w357-login-as-user.php:1299
+#: includes/class-w357-login-btn.php:82 includes/class-w357-login-btn.php:84
 msgid "Login as"
 msgstr "Σύνδεση ως"
 
-#: includes/class-w357-login-as-user.php:669
-#: includes/class-w357-login-as-user.php:694
-#: includes/class-w357-login-as-user.php:713
-#: includes/class-w357-login-as-user.php:757
+#: includes/class-w357-login-as-user.php:909
+#: includes/class-w357-login-as-user.php:1183
+#: includes/class-w357-login-as-user.php:1287
+#: includes/class-w357-login-as-user.php:1309
+#: includes/class-w357-login-btn.php:28
 msgid "Could not login as this user."
 msgstr "Δεν ήταν δυνατή η σύνδεση ως χρήστης."
 
-#: includes/class-w357-login-as-user.php:673
-#: includes/class-w357-login-as-user.php:698
-#: includes/class-w357-login-as-user.php:761
+#: includes/class-w357-login-as-user.php:913
+#: includes/class-w357-login-as-user.php:1306
+#: includes/class-w357-login-btn.php:27
 msgid "You are already logged in."
 msgstr "Είστε ήδη συνδεδεμένος."
 
-#: includes/class-w357-login-as-user.php:718
+#: includes/class-w357-login-as-user.php:921
+msgid ""
+"The Login as User functionality for WooCommerce is only available in the PRO "
+"version."
+msgstr ""
+
+#: includes/class-w357-login-as-user.php:1188
 msgid "Already logged in."
 msgstr "Είστε ήδη συνδεδεμένος."
 
-#: includes/class-w357-settings.php:55
+#: includes/class-w357-login-as-user.php:1235
+msgid "Login as $USER"
+msgstr ""
+
+#: includes/class-w357-login-as-user.php:1313
+msgid "You cannot login as this user."
+msgstr ""
+
+#: includes/class-w357-login-btn.php:29
+msgid "No user exists"
+msgstr ""
+
+#: includes/class-w357-settings.php:72
 msgid "Login as User settings"
 msgstr "Σύνδεση ως χρήστης"
 
-#: includes/class-w357-settings.php:91
-msgid "Settings saved successfully!"
+#. translators: %s: The invalid URL that was entered.
+#: includes/class-w357-settings.php:162 includes/class-w357-settings.php:179
+#, php-format
+msgid "Error. The URL is not valid: %s."
 msgstr ""
 
-#: includes/class-w357-settings.php:98
-msgid "Error. The URL is not valid: "
-msgstr ""
-
-#: includes/class-w357-settings.php:99
+#: includes/class-w357-settings.php:165
 msgid "<br>Please remove the slash in front of URL."
 msgstr ""
 
-#: includes/class-w357-settings.php:100
+#: includes/class-w357-settings.php:166
 msgid "<br>You can't redirect the user to the admin page."
 msgstr ""
 
-#: includes/class-w357-settings.php:101
+#: includes/class-w357-settings.php:167
 msgid "<br>You can't redirect the user to the login page."
 msgstr ""
 
-#: includes/class-w357-settings.php:179
+#: includes/class-w357-settings.php:312
+msgid "Settings saved successfully!"
+msgstr ""
+
+#: includes/class-w357-settings.php:361
+msgid "General Settings"
+msgstr ""
+
+#: includes/class-w357-settings.php:376
 msgid "URL Redirection"
 msgstr ""
 
-#: includes/class-w357-settings.php:190
+#: includes/class-w357-settings.php:387 includes/class-w357-settings.php:407
 msgid "example: my-account/orders"
 msgstr ""
 
-#: includes/class-w357-settings.php:191
+#: includes/class-w357-settings.php:388
 msgid ""
 "This is the URL path that you (Admin) will be redirected after logging in as "
 "a User.<br> For example: maybe you want to be redirected in user's orders "
@@ -190,42 +314,85 @@ msgid ""
 "redirected to the home page (default)"
 msgstr ""
 
-#: includes/class-w357-settings.php:199
+#: includes/class-w357-settings.php:396
+msgid "Logout Redirect URL"
+msgstr ""
+
+#: includes/class-w357-settings.php:408
+msgid ""
+"Enter a custom URL to redirect to after logging out from a \"Login as User\" "
+"session. Leave blank to use the previous page."
+msgstr ""
+
+#: includes/class-w357-settings.php:417 includes/class-w357-settings.php:437
+msgid "License Key"
+msgstr "Κλειδί Άδειας Χρήσης"
+
+#: includes/class-w357-settings.php:428 includes/class-w357-settings.php:448
+msgid "Enter your license key from web357.com"
+msgstr ""
+
+#: includes/class-w357-settings.php:429 includes/class-w357-settings.php:449
+msgid ""
+"In order to update commercial Web357 plugins, you have to enter the Web357 "
+"License Key.<br>You can find the License Key in your account settings at "
+"Web357.com, in the <a href=\"//www.web357.com/my-account/web357-license-"
+"manager\" target=\"_blank\"><strong>Web357 License Key Manager</strong></a> "
+"section."
+msgstr ""
+
+#: includes/class-w357-settings.php:457
+msgid "Preserve WooCommerce cart on switch"
+msgstr ""
+
+#: includes/class-w357-settings.php:467
+msgid "Do not clear/forget carts during Login as User flows"
+msgstr ""
+
+#: includes/class-w357-settings.php:485
+msgid "Login button"
+msgstr ""
+
+#: includes/class-w357-settings.php:493
 msgid "\"Login as...«option»\" button"
 msgstr ""
 
-#: includes/class-w357-settings.php:207
-msgid "Nickname (username)"
+#: includes/class-w357-settings.php:501
+msgid "Username"
 msgstr ""
 
-#: includes/class-w357-settings.php:208
+#: includes/class-w357-settings.php:502
 msgid "First name"
 msgstr ""
 
-#: includes/class-w357-settings.php:209
+#: includes/class-w357-settings.php:503
 msgid "Last name"
 msgstr ""
 
-#: includes/class-w357-settings.php:210
+#: includes/class-w357-settings.php:504
 msgid "Full name (first & last)"
 msgstr ""
 
-#: includes/class-w357-settings.php:212
+#: includes/class-w357-settings.php:505
+msgid "None (display only the user icon)"
+msgstr ""
+
+#: includes/class-w357-settings.php:507
 msgid ""
 "Choose which string will be displayed on the \"Login as User\" button."
 "<br>For example Login as «Yiannis», or Login as «Christodoulou», or Login as "
 "«Johnathan99», or Login as «Yiannis Christodoulou»."
 msgstr ""
 
-#: includes/class-w357-settings.php:219
+#: includes/class-w357-settings.php:514
 msgid "Show only the first X characters on the \"Login as...«option»\" button"
 msgstr ""
 
-#: includes/class-w357-settings.php:227
+#: includes/class-w357-settings.php:522
 msgid "All characters (default)"
 msgstr ""
 
-#: includes/class-w357-settings.php:244
+#: includes/class-w357-settings.php:539
 msgid ""
 "Show only the first X characters of the username, or first/last name, or "
 "full name, on the \"Login as...«option»\" button. <br>For example, if you "
@@ -233,84 +400,178 @@ msgid ""
 "«Chris...», or Login as «Johna...», or Login as «Yiann...»."
 msgstr ""
 
-#: includes/class-w357-settings.php:251
-msgid "Toolbar's position"
+#: includes/class-w357-settings.php:546
+msgid "List Appearance"
 msgstr ""
 
-#: includes/class-w357-settings.php:259
+#: includes/class-w357-settings.php:561
+msgid "Display Button"
+msgstr ""
+
+#: includes/class-w357-settings.php:571 includes/class-w357-settings.php:654
+#: includes/class-w357-settings.php:671
+msgid "Yes"
+msgstr ""
+
+#: includes/class-w357-settings.php:572 includes/class-w357-settings.php:655
+#: includes/class-w357-settings.php:672
+msgid "No"
+msgstr ""
+
+#: includes/class-w357-settings.php:580
+msgid "Button Position"
+msgstr ""
+
+#: includes/class-w357-settings.php:595
+msgid "Button Size"
+msgstr ""
+
+#: includes/class-w357-settings.php:605
+msgid "Small"
+msgstr ""
+
+#: includes/class-w357-settings.php:606
+msgid "Medium"
+msgstr ""
+
+#: includes/class-w357-settings.php:607
+msgid "Large"
+msgstr ""
+
+#: includes/class-w357-settings.php:619
+msgid "Frontend Message"
+msgstr ""
+
+#: includes/class-w357-settings.php:627
+msgid "Message Display Position"
+msgstr ""
+
+#: includes/class-w357-settings.php:635
 msgid "Top"
 msgstr ""
 
-#: includes/class-w357-settings.php:260
+#: includes/class-w357-settings.php:636
 msgid "Bottom"
 msgstr ""
 
-#: includes/class-w357-settings.php:262
-msgid "Choose the position of the \"Login as user\" toolbar."
-msgstr ""
-
-#: includes/class-w357-settings.php:269
-msgid "License Key"
-msgstr "Κλειδί Άδειας Χρήσης"
-
-#: includes/class-w357-settings.php:282
-msgid "Enter your license key from web357.com"
-msgstr ""
-
-#: includes/class-w357-settings.php:283
+#: includes/class-w357-settings.php:639
 msgid ""
-"In order to update commercial Web357 plugins, you have to enter your License "
-"key. The key can be found in your account details at web357.com."
+"Choose where the login message should appear on the frontend. Only Admins "
+"and Managers with \"login-as-a-user\" privileges can see this message."
 msgstr ""
 
-#: includes/plugin-update-checker/Puc/v4p6/Plugin/Ui.php:54
-msgid "View details"
+#: includes/class-w357-settings.php:646
+msgid "Show Admin Link in Topbar"
 msgstr ""
 
-#: includes/plugin-update-checker/Puc/v4p6/Plugin/Ui.php:77
-#, php-format
-msgid "More information about %s"
+#: includes/class-w357-settings.php:657
+msgid ""
+"Display a link in the WordPress topbar to navigate back to dashboard as "
+"Admin."
 msgstr ""
 
-#: includes/plugin-update-checker/Puc/v4p6/Plugin/Ui.php:128
-msgid "Check for updates"
+#: includes/class-w357-settings.php:663
+msgid "Enable Attention Animation"
 msgstr ""
 
-#: includes/plugin-update-checker/Puc/v4p6/Plugin/Ui.php:223
-#, php-format
-msgid "Unknown update checker status \"%s\""
+#: includes/class-w357-settings.php:674
+msgid "Show ping animation on the admin button after logging in as a user."
 msgstr ""
 
-#: includes/plugin-update-checker/Puc/v4p6/Vcs/PluginUpdateChecker.php:98
-msgid "There is no changelog available."
+#: includes/class-w357-settings.php:692
+msgid "Frontend"
 msgstr ""
 
-#: login-as-user.php:71
+#: includes/class-w357-settings.php:703
+msgid ""
+"Add custom CSS for styling the Login as User button and other frontend "
+"elements.<br>Available classes: <code>.login-as-user-top</code>, "
+"<code>.login-as-user-bottom</code>, <code>.login-as-user-inner</code>, "
+"<code>.login-as-user-content</code>, <code>.login-as-user-msg</code>, "
+"<code>a.button.w357-login-as-user-btn</code>"
+msgstr ""
+
+#: includes/class-w357-settings.php:710
+msgid "Backend"
+msgstr ""
+
+#: includes/class-w357-settings.php:721
+msgid ""
+"Add custom CSS for styling the login bar in the admin area.<br>Available "
+"classes: <code>th.column-loginasuser_col</code>, <code>td.column-"
+"loginasuser_col</code>, <code>a.button.w357-login-as-user-col-btn</code>, "
+"<code>a.button.w357-login-as-user-woo-col-btn</code>, <code>a.button.w357-"
+"login-as-user-metabox-btn</code>, <code>a.button.w357-login-as-user-personal-"
+"options-btn</code>"
+msgstr ""
+
+#: includes/class-w357-settings.php:740
+msgid "Edit Users Capability Assignment"
+msgstr ""
+
+#: includes/class-w357-settings.php:740
+msgid " (Select which roles should have the ability to edit users)"
+msgstr ""
+
+#: includes/class-w357-settings.php:747
+msgid ""
+"Check the roles that should have the <code>edit_users</code> capability. "
+"Click \"Save Changes\" to apply the capability modifications."
+msgstr ""
+
+#: includes/class-w357-settings.php:766
+msgid "Role Management Permissions"
+msgstr ""
+
+#: includes/class-w357-settings.php:766
+msgid ""
+" (Define which roles have the ability to manage log in as users of other "
+"roles.)"
+msgstr ""
+
+#: includes/class-w357-settings.php:785
+msgid ""
+"Configure the 'Login as User' button size and table column position (leave "
+"empty for defaults)."
+msgstr ""
+
+#: includes/integrations/class-memberpress.php:29
+#: includes/integrations/class-surecart.php:44
+#: includes/integrations/class-surecart.php:101
+#: includes/integrations/class-woocommerce-subscriptions.php:34
+#: includes/integrations/class-woocommerce-subscriptions.php:39
+#: includes/integrations/class-woocommerce-subscriptions.php:44
+#: includes/integrations/class-woocommerce-subscriptions.php:50
+#: includes/integrations/class-woocommerce-subscriptions.php:76
+#: includes/integrations/class-woocommerce.php:34
+#: includes/integrations/class-woocommerce.php:39
+#: includes/integrations/class-woocommerce.php:44
+#: includes/integrations/class-woocommerce.php:50
+#: includes/integrations/class-woocommerce.php:84
+#: includes/integrations/class-woocommerce.php:85
+#: includes/integrations/class-wp-userlist.php:26
+#: includes/integrations/class-wp-userlist.php:31
+#: includes/integrations/class-wp-userlist.php:36
+#: includes/integrations/class-wp-userlist.php:42
+msgid "Login as User"
+msgstr "Σύνδεση ως χρήστης"
+
+#: includes/integrations/class-surecart.php:81
+#: includes/integrations/class-surecart.php:112
+#: includes/integrations/class-woocommerce-subscriptions.php:22
+#: includes/integrations/class-woocommerce.php:22
+msgid "No user exists for this order."
+msgstr "Η παραγγελία δεν έχει χρήστη."
+
+#: includes/integrations/class-wp-userlist.php:14
+msgid "It's me."
+msgstr ""
+
+#. translators: 1: URL of the plugin settings page. 2: URL of the plans and pricing page.
+#: login-as-user.php:73
 #, php-format
 msgid ""
-"To enable updates, please enter your license key on the <a href=\"%s\">Login "
-"as User</a> page. If you don't have a licence key, please see <a href=\"%s\" "
-"target=\"_blank\">Plans & Pricing</a>."
+"To enable updates, please enter your license key on the <a "
+"href=\"%1$s\">Login as User</a> page. If you don't have a licence key, "
+"please see <a href=\"%2$s\" target=\"_blank\">Plans &amp; Pricing</a>."
 msgstr ""
-
-#: login-as-user.php:122
-#, php-format
-msgid ""
-"You need to deactivate and delete the old <b>Login as User (Free) version of "
-"plugin</b> on the plugins page. %sClick here to Deactivate it%s."
-msgstr ""
-
-#~ msgid "Description"
-#~ msgstr "Περιγραφή"
-
-#~ msgid "Do you like this plugin?"
-#~ msgstr "Σας άρεσε το Plugin;"
-
-#~ msgid "About Web357"
-#~ msgstr "Λίγα λόγια για την Web357"
-
-#~ msgid "After logging in as User<br>redirect me to"
-#~ msgstr "After logging in as User<br>redirect me to"
-
-#~ msgid "Base Settings"
-#~ msgstr "Ρυθμίσεις"

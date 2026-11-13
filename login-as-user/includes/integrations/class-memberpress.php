@@ -67,15 +67,4 @@ class LoginAsUser_MemberPress_Integration extends LoginAsUser_Integration_Abstra
             $this->echoHtml($this->render_login_cell($rec, $attributes, 'login'));
         }
     }
-
-    public function loginasuser_col_style() {
-        $options = (object) get_option('login_as_user_options');
-        if (!empty($options->login_as_type) && $options->login_as_type == 'only_icon') {
-            $css = 'th#col_login_as_user { width: 8% !important; }';
-        } else {
-            $css = 'th#col_login_as_user { width: 20% !important; }';
-        }
-
-        wp_add_inline_style('woocommerce_admin_styles', $css);
-    }
 }
